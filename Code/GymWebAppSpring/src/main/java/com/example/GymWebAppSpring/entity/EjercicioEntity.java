@@ -5,39 +5,12 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ejercicio", schema = "tawbd", catalog = "")
+@jakarta.persistence.Table(name = "ejercicio", schema = "tawbd", catalog = "")
 public class EjercicioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID")
+    @jakarta.persistence.Column(name = "ID")
     private int id;
-    @Basic
-    @Column(name = "NOMBRE")
-    private String nombre;
-    @Basic
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
-    @Basic
-    @Column(name = "MUSCULO")
-    private int musculo;
-    @Basic
-    @Column(name = "EQUIPAMIENTO")
-    private String equipamiento;
-    @Basic
-    @Column(name = "TIPOFUERZA")
-    private int tipofuerza;
-    @Basic
-    @Column(name = "MUSCULO_SECUNDARIO")
-    private Integer musculoSecundario;
-    @Basic
-    @Column(name = "VIDEO")
-    private String video;
-    @Basic
-    @Column(name = "LOGO")
-    private String logo;
-    @Basic
-    @Column(name = "CATEGORIA")
-    private int categoria;
 
     public int getId() {
         return id;
@@ -47,6 +20,10 @@ public class EjercicioEntity {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "NOMBRE")
+    private String nombre;
+
     public String getNombre() {
         return nombre;
     }
@@ -54,6 +31,10 @@ public class EjercicioEntity {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Basic
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
 
     public String getDescripcion() {
         return descripcion;
@@ -63,6 +44,10 @@ public class EjercicioEntity {
         this.descripcion = descripcion;
     }
 
+    @Basic
+    @Column(name = "MUSCULO")
+    private int musculo;
+
     public int getMusculo() {
         return musculo;
     }
@@ -70,6 +55,10 @@ public class EjercicioEntity {
     public void setMusculo(int musculo) {
         this.musculo = musculo;
     }
+
+    @Basic
+    @Column(name = "EQUIPAMIENTO")
+    private String equipamiento;
 
     public String getEquipamiento() {
         return equipamiento;
@@ -79,6 +68,10 @@ public class EjercicioEntity {
         this.equipamiento = equipamiento;
     }
 
+    @Basic
+    @Column(name = "TIPOFUERZA")
+    private int tipofuerza;
+
     public int getTipofuerza() {
         return tipofuerza;
     }
@@ -86,6 +79,10 @@ public class EjercicioEntity {
     public void setTipofuerza(int tipofuerza) {
         this.tipofuerza = tipofuerza;
     }
+
+    @Basic
+    @Column(name = "MUSCULO_SECUNDARIO")
+    private Integer musculoSecundario;
 
     public Integer getMusculoSecundario() {
         return musculoSecundario;
@@ -95,6 +92,10 @@ public class EjercicioEntity {
         this.musculoSecundario = musculoSecundario;
     }
 
+    @Basic
+    @Column(name = "VIDEO")
+    private String video;
+
     public String getVideo() {
         return video;
     }
@@ -103,6 +104,10 @@ public class EjercicioEntity {
         this.video = video;
     }
 
+    @Basic
+    @Column(name = "LOGO")
+    private String logo;
+
     public String getLogo() {
         return logo;
     }
@@ -110,6 +115,10 @@ public class EjercicioEntity {
     public void setLogo(String logo) {
         this.logo = logo;
     }
+
+    @Basic
+    @Column(name = "CATEGORIA")
+    private int categoria;
 
     public int getCategoria() {
         return categoria;

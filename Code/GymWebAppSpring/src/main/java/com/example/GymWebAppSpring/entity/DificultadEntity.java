@@ -5,18 +5,12 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "dificultad", schema = "tawbd", catalog = "")
+@jakarta.persistence.Table(name = "dificultad", schema = "tawbd", catalog = "")
 public class DificultadEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID")
+    @jakarta.persistence.Column(name = "ID")
     private int id;
-    @Basic
-    @Column(name = "NOMBRE")
-    private String nombre;
-    @Basic
-    @Column(name = "LOGO")
-    private String logo;
 
     public int getId() {
         return id;
@@ -26,6 +20,10 @@ public class DificultadEntity {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "NOMBRE")
+    private String nombre;
+
     public String getNombre() {
         return nombre;
     }
@@ -33,6 +31,10 @@ public class DificultadEntity {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Basic
+    @Column(name = "LOGO")
+    private String logo;
 
     public String getLogo() {
         return logo;

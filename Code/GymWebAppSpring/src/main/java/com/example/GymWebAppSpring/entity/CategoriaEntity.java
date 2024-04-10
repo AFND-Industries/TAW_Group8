@@ -5,24 +5,12 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "categoria", schema = "tawbd", catalog = "")
+@jakarta.persistence.Table(name = "categoria", schema = "tawbd", catalog = "")
 public class CategoriaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID")
+    @jakarta.persistence.Column(name = "ID")
     private int id;
-    @Basic
-    @Column(name = "NOMBRE")
-    private String nombre;
-    @Basic
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
-    @Basic
-    @Column(name = "TIPOS_BASE")
-    private String tiposBase;
-    @Basic
-    @Column(name = "ICONO")
-    private String icono;
 
     public int getId() {
         return id;
@@ -32,6 +20,10 @@ public class CategoriaEntity {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "NOMBRE")
+    private String nombre;
+
     public String getNombre() {
         return nombre;
     }
@@ -39,6 +31,10 @@ public class CategoriaEntity {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Basic
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
 
     public String getDescripcion() {
         return descripcion;
@@ -48,6 +44,10 @@ public class CategoriaEntity {
         this.descripcion = descripcion;
     }
 
+    @Basic
+    @Column(name = "TIPOS_BASE")
+    private String tiposBase;
+
     public String getTiposBase() {
         return tiposBase;
     }
@@ -55,6 +55,10 @@ public class CategoriaEntity {
     public void setTiposBase(String tiposBase) {
         this.tiposBase = tiposBase;
     }
+
+    @Basic
+    @Column(name = "ICONO")
+    private String icono;
 
     public String getIcono() {
         return icono;

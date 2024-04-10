@@ -5,24 +5,12 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ejerciciosesion", schema = "tawbd", catalog = "")
+@jakarta.persistence.Table(name = "ejerciciosesion", schema = "tawbd", catalog = "")
 public class EjerciciosesionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID")
+    @jakarta.persistence.Column(name = "ID")
     private int id;
-    @Basic
-    @Column(name = "ORDEN")
-    private int orden;
-    @Basic
-    @Column(name = "ESPECIFICACIONES")
-    private String especificaciones;
-    @Basic
-    @Column(name = "SESIONENTRENAMIENTO_ID")
-    private int sesionentrenamientoId;
-    @Basic
-    @Column(name = "EJERCICIO_ID")
-    private int ejercicioId;
 
     public int getId() {
         return id;
@@ -32,6 +20,10 @@ public class EjerciciosesionEntity {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "ORDEN")
+    private int orden;
+
     public int getOrden() {
         return orden;
     }
@@ -39,6 +31,10 @@ public class EjerciciosesionEntity {
     public void setOrden(int orden) {
         this.orden = orden;
     }
+
+    @Basic
+    @Column(name = "ESPECIFICACIONES")
+    private String especificaciones;
 
     public String getEspecificaciones() {
         return especificaciones;
@@ -48,6 +44,10 @@ public class EjerciciosesionEntity {
         this.especificaciones = especificaciones;
     }
 
+    @Basic
+    @Column(name = "SESIONENTRENAMIENTO_ID")
+    private int sesionentrenamientoId;
+
     public int getSesionentrenamientoId() {
         return sesionentrenamientoId;
     }
@@ -55,6 +55,10 @@ public class EjerciciosesionEntity {
     public void setSesionentrenamientoId(int sesionentrenamientoId) {
         this.sesionentrenamientoId = sesionentrenamientoId;
     }
+
+    @Basic
+    @Column(name = "EJERCICIO_ID")
+    private int ejercicioId;
 
     public int getEjercicioId() {
         return ejercicioId;
