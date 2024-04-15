@@ -17,22 +17,36 @@
 </head>
 <body>
     <div class="container text-center mt-2">
-        <h1 class="mb-2">This is an example JSP page</h1>
-        <%
-            for(Usuario usuario : usuarios) {
-        %>
-            <h2><%=usuario.getNombre()%></h2>
-        <%
-            }
-        %>
+        <h1 class="mb-2">Listado de usuarios</h1>
+        <table class="table">
+            <thead>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Genero</th>
+                <th>Edad</th>
+                <th>DNI</th>
+                <th>Tipo usuario</th>
+            </thead>
+            <tbody>
+            <%
+                for(Usuario usuario : usuarios) {
+            %>
+            <tr>
+                <td><%= usuario.getId() %></td>
+                <td><%= usuario.getNombre() %></td>
+                <td><%= usuario.getApellidos() %></td>
+                <td><%= usuario.getGenero() %></td>
+                <td><%= usuario.getEdad() %></td>
+                <td><%= usuario.getDni() %></td>
+                <td><%= usuario.getTipo().getNombre() %></td>
+            </tr>
+            <%
+                }
+            %>
+            </tbody>
+        </table>
 
-        <%
-            if(usuarios.isEmpty()){
-        %>
-            <h3>La lista está vacía :(</h3>
-        <%
-            }
-        %>
     </div>
 </body>
 </html>
