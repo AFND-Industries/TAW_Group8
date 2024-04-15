@@ -1,7 +1,7 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.UsuarioRepository;
-import com.example.GymWebAppSpring.entity.UsuarioEntity;
+import com.example.GymWebAppSpring.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ public class Controlador {
 
     @GetMapping("/")
     public String example(Model model) {
-        List<UsuarioEntity> usuario = this.usuarioRepository.findAll();
+        List<Usuario> usuario = this.usuarioRepository.findAll();
 
         model.addAttribute("usuarios", usuario);
 

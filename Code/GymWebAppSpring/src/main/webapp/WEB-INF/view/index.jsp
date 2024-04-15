@@ -1,4 +1,4 @@
-<%@ page import="com.example.GymWebAppSpring.entity.UsuarioEntity" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: tonib
@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-    List<UsuarioEntity> usuarios = (List<UsuarioEntity>) request.getAttribute("usuarios");
+    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
 %>
 <html>
 <head>
@@ -19,9 +19,17 @@
     <div class="container text-center mt-2">
         <h1 class="mb-2">This is an example JSP page</h1>
         <%
-            for(UsuarioEntity usuario : usuarios) {
+            for(Usuario usuario : usuarios) {
         %>
-            <h1><%=usuario.getNombre()%></h1>
+            <h2><%=usuario.getNombre()%></h2>
+        <%
+            }
+        %>
+
+        <%
+            if(usuarios.isEmpty()){
+        %>
+            <h3>La lista está vacía :(</h3>
         <%
             }
         %>
