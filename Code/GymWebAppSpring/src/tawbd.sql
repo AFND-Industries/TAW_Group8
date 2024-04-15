@@ -227,6 +227,16 @@ VALUES ('Hipertrofia', 'Ejercicios para aumentar el tamaño muscular'),
        ('Resistencia', 'Ejercicios para mejorar la resistencia muscular'),
        ('Fuerza máxima', 'Ejercicios para levantar el máximo peso posible');
 
+INSERT INTO tawbd.tipousuario (NOMBRE)
+VALUES ('Cliente'),
+       ('Entrenador'),
+       ('Administrador');
+
+
+INSERT INTO tawbd.usuario (NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
+VALUES ('Eulogo', 'Quemadisima', 'm', 33, '11111111A', 'eullinqt', 1),
+       ('Tiko', 'Toko', 'm', 33, '22222222B', 'tikotoko', 1);
+
 -- Insertar datos en la tabla 'ejercicio' (no funciona)
 INSERT INTO ejercicio (NOMBRE, DESCRIPCION, MUSCULO, EQUIPAMIENTO, TIPOFUERZA, MUSCULO_SECUNDARIO, VIDEO, LOGO,
                        CATEGORIA)
@@ -238,13 +248,3 @@ VALUES ('Press de banca', 'Ejercicio para trabajar el pectoral mayor acostado en
         'img/ejercicio/dominadas.mp4', 'img/ejercicio/dominadas.jpg', 2),
        ('Remo con barra', 'Ejercicio para trabajar la espalda, bíceps y braquial anterior', 6, 'Barra', 1, NULL,
         'img/ejercicio/remo barra.mp4', 'img/ejercicio/remo barra.jpg', 2);
-
-INSERT INTO tawbd.tipousuario (NOMBRE)
-VALUES ('Cliente'),
-       ('Entrenador'),
-       ('Administrador');
-
-
-INSERT INTO tawbd.usuario (NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
-VALUES ('Eulogo', 'Quemadisima', 'm', 33, '11111111A', 'eullinqt', 1),
-       ('Tiko', 'Toko', 'm', 33, '22222222B', 'tikotoko', 1);
