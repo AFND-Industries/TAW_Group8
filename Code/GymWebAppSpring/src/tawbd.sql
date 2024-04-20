@@ -241,13 +241,13 @@ VALUES ('Eulogo', 'Quemadisima', 'm', 33, '11111111A', '1B22CEE6348A210E0E9CAD70
        ('Paco', 'Fiestas', 'm', 18, '33333333C', '3C6138A5C4C65E1C00ED79F2607C2B3B786403CF60798B4EF015F6F9EEFD6A85', 3);
 
 -- Insertar datos en la tabla 'ejercicio' (no funciona)
-INSERT INTO ejercicio (NOMBRE, DESCRIPCION, MUSCULO, EQUIPAMIENTO, TIPOFUERZA, MUSCULO_SECUNDARIO, VIDEO, LOGO,
+INSERT INTO tawbd.ejercicio (NOMBRE, DESCRIPCION, MUSCULO, EQUIPAMIENTO, TIPOFUERZA, MUSCULO_SECUNDARIO, VIDEO, LOGO,
                        CATEGORIA)
 VALUES ('Press de banca', 'Ejercicio para trabajar el pectoral mayor acostado en un banco horizontal', 1, 'Barra', 1, 3,
         'img/ejercicio/press banca.mp4', 'img/ejercicio/press banca.jpg', 1),
-       ('Sentadillas con barra', 'Ejercicio para trabajar los cuádriceps, glúteos e isquiotibiales', 4, 'Barra', 1, 1,
+       ('Sentadillas con barra', 'Ejercicio para trabajar los cuádriceps, glúteos e isquiotibiales', 2, 'Barra', 1, 1,
         'img/ejercicio/sentadilla barra.mp4', 'img/ejercicio/sentadilla barra.jpg', 1),
-       ('Dominadas', 'Ejercicio para trabajar la espalda, bíceps y braquial anterior', 6, 'Sin equipo', 1, NULL,
+       ('Dominadas', 'Ejercicio para trabajar la espalda, bíceps y braquial anterior', 3, 'Sin equipo', 1, NULL,
         'img/ejercicio/dominadas.mp4', 'img/ejercicio/dominadas.jpg', 2),
-       ('Remo con barra', 'Ejercicio para trabajar la espalda, bíceps y braquial anterior', 6, 'Barra', 1, NULL,
+       ('Remo con barra', 'Ejercicio para trabajar la espalda, bíceps y braquial anterior', 2, 'Barra', 1, NULL,
         'img/ejercicio/remo barra.mp4', 'img/ejercicio/remo barra.jpg', 2);
