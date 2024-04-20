@@ -118,7 +118,7 @@ create table usuario
     GENERO    char        not null,
     EDAD      int         not null,
     DNI       varchar(32) not null,
-    CLAVE     varchar(60) not null,
+    CLAVE     varchar(64) not null,
     TIPO      int         not null,
     constraint USUARIO_TIPOUSUARIO_1
         foreign key (TIPO) references tipousuario (ID)
@@ -232,10 +232,13 @@ VALUES ('Cliente'),
        ('Entrenador'),
        ('Administrador');
 
-
+-- Clave de 'Eulogo' -> 'eullinqt'
+-- Clave de 'Tiko' -> 'tikotoko'
+-- Clave de 'Paco' -> 'pacofiestas'
 INSERT INTO tawbd.usuario (NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
-VALUES ('Eulogo', 'Quemadisima', 'm', 33, '11111111A', 'eullinqt', 1),
-       ('Tiko', 'Toko', 'm', 33, '22222222B', 'tikotoko', 1);
+VALUES ('Eulogo', 'Quemadisima', 'm', 33, '11111111A', '1B22CEE6348A210E0E9CAD705D35D7482378C08B743A515D8181635D27EF5841', 1),
+       ('Tiko', 'Toko', 'm', 33, '22222222B', 'CEFF528A2A0202D27153524FE2DFEE5EA2F53CFA0107A7E13791ADCA00D05D0E', 1),
+       ('Paco', 'Fiestas', 'm', 18, '33333333C', '3C6138A5C4C65E1C00ED79F2607C2B3B786403CF60798B4EF015F6F9EEFD6A85', 3);
 
 -- Insertar datos en la tabla 'ejercicio' (no funciona)
 INSERT INTO ejercicio (NOMBRE, DESCRIPCION, MUSCULO, EQUIPAMIENTO, TIPOFUERZA, MUSCULO_SECUNDARIO, VIDEO, LOGO,

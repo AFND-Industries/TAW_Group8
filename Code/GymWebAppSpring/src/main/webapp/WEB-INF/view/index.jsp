@@ -9,6 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
     List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+    Usuario user = (Usuario) session.getAttribute("user");
 %>
 <html>
 <head>
@@ -17,6 +18,16 @@
 </head>
 <body>
     <div class="container text-center mt-2">
+        <div class="container">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a href=<%=user != null ? "/logout" : "#"%>><button class="btn btn-outline-danger" <%=user == null ? "disabled":""%>>Cerrar sesión</button></a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/login"><button class="btn btn-primary">Iniciar sesión</button></a>
+                </div>
+            </div>
+        </div>
         <h1 class="mb-2">Listado de usuarios</h1>
         <table class="table">
             <thead>
@@ -46,7 +57,13 @@
             %>
             </tbody>
         </table>
-
+        <%
+            if (user != null){
+        %>
+        <h6>Sesión iniciada como: <%=user.getNombre()%></h6>
+        <%
+            }
+        %>
     </div>
 </body>
 </html>
