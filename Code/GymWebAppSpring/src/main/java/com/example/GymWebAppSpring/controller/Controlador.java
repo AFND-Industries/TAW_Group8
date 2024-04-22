@@ -43,8 +43,8 @@ public class Controlador {
         return "redirect:/";
     }
 
-    @GetMapping("/error")
-    public String doError(){
-        return "error";
-    }
+//    @GetMapping("/error")
+//    public String doError(){
+//        return "error";
+//    }
 }
