@@ -13,12 +13,17 @@
 <head>
     <title>Mi espacio personal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="/header.js"></script>
 </head>
-<body class="vh-100 d-flex justify-content-center align-items-center">
-    <div class="card">
-        <div class="card-body text-center px-5">
-            <h2 class="card-title">Iniciar Sesión</h2>
-            <h1>Mi espacio personal</h1>
+<body>
+    <div id="header"></div>
+    <script> createHeader("rutinas");</script>
+
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card">
+            <div class="card-body text-center px-5">
+                <h1>Mi espacio personal</h1>
+            </div>
         </div>
     </div>
 </body>
