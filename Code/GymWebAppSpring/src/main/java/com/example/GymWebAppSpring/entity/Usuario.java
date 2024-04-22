@@ -28,7 +28,7 @@ public class Usuario {
     @Column(name = "CLAVE", nullable = false, length = 60)
     private String clave;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "TIPO", nullable = false)
     private Tipousuario tipo;
 

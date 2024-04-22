@@ -23,11 +23,13 @@ public class AuthUtils {
         return user != null && user.getTipo().getNombre().equals("Administrador");
     }
 
+
     /**
      * Devuelve un booleano si un usuario es un cliente
      * @param session Sesión HTTP activa
      * @return True si el usuario está loggeado y es un cliente, False en caso contrario
      */
+
     public static boolean isClient(HttpSession session){
         Usuario user = (Usuario) session.getAttribute("user");
         return user != null && user.getTipo().getNombre().equals("Cliente");
