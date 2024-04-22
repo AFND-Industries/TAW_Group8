@@ -81,6 +81,7 @@ public class Controlador {
         return "redirect:/";
     }
 
+
     @PostMapping("/register")
     public String register(
             @RequestParam("dni") String dni,
@@ -106,4 +107,9 @@ public class Controlador {
         return "redirect:/";
     }
     /* ------------------------- End Register Functions */
+
+    @GetMapping("/error")
+    public String doError(){
+        return "error";
+    }
 }
