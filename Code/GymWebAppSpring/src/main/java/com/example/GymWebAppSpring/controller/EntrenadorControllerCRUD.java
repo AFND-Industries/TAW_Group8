@@ -10,4 +10,9 @@ public class EntrenadorControllerCRUD {
     public String doInicio() {
         return "/entrenador/inicio";
     }
+
+    @GetMapping("/entrenador/rutinas")
+    public String doRutinas() {
+        return "/entrenador/crud/rutinas";
+    }
 }
