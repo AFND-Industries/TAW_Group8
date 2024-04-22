@@ -24,7 +24,7 @@
     <div id="header"></div>
     <script> createHeader("rutinas");</script>
 
-    <div class="container mt-3">
+    <div class="container">
         <div class="row mb-3">
             <div class="col-4">
                 <h1>Tus rutinas</h1>

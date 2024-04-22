@@ -1,6 +1,6 @@
 function createHeader(pagina) {
     document.getElementById("header").innerHTML = `
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/entrenador">TAW PROJECT</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
