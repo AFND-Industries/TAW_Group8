@@ -61,7 +61,6 @@
             <div class="col-6">
                 <span class="h4 text-secondary">Dificultad</span><br/>
                 <select class="form-select mt-2" id="dificultad">
-                    <option value="5">No seleccionado</option>
                     <option value="1">Fácil</option>
                     <option value="2">Medio</option>
                     <option value="3">Difícil</option>
