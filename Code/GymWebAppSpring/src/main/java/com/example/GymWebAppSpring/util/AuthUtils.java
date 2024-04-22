@@ -42,4 +42,13 @@ public class AuthUtils {
         Usuario user = (Usuario) session.getAttribute("user");
         return user != null && user.getTipo().getNombre().equals("Entrenador");
     }
+
+    /**
+     * Devuelve la entidad del usuario que está loggeado
+     * @param session Sesión HTTP activa
+     * @return Devuelve la entidad del usuario o un valor null si no está loggeado
+     */
+    public static Usuario getUser(HttpSession session){
+        return (Usuario) session.getAttribute("user");
+    }
 }
