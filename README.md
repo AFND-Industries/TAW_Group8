@@ -8,6 +8,6 @@ Tareas por hacer (según roles):
   - [x] Autenticación de usuarios
   - [ ] CRUD (con filtros de búsqueda) de usuarios
   - [ ] asignación de clientes a entrenadores
-  - [ ] CRUD (con filtros de búsqueda) de ejercicios, alimentos, dimensiones de ejercicios,
+  - [ ] CRUD (con filtros de búsqueda) de ejercicios, dimensiones de ejercicios,
     etc.
 - **Cliente**

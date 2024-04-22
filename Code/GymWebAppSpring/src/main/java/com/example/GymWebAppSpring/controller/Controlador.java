@@ -29,8 +29,11 @@ public class Controlador {
     protected TipoUsuarioRepository tipoUsuarioRepository;
 
     @GetMapping("/")
-    public String example(Model model) {
+    public String example(Model model, HttpSession session) {
         List<Usuario> usuario = this.usuarioRepository.findAll();
+
+        if (session.getAttribute("user") == null)
+            session.setAttribute("user", usuario.get(2));
 
         model.addAttribute("usuarios", usuario);
 
@@ -72,8 +75,7 @@ public class Controlador {
     @GetMapping("/register")
     public String registerPage(HttpSession session){
         Usuario user = (Usuario) session.getAttribute("user");
-        // No entiendo por qué pero el tipo.getNombre() no funciona
-        if (user != null && user.getTipo().getId() == 3){
+        if (user != null && user.getTipo().getNombre().equals("Administrador")){
             return "admin/users/add-user";
         }
         return "redirect:/";
@@ -87,6 +89,7 @@ public class Controlador {
             @RequestParam("edad") int edad,
             @RequestParam("clave") String password,
             @RequestParam("tipoUsuario") int tipo,
+            @RequestParam("genero") char genero,
             Model model,
             HttpSession session
     ){
@@ -95,6 +98,7 @@ public class Controlador {
         usuario.setDni(dni);
         usuario.setNombre(nombre);
         usuario.setEdad(edad);
+        usuario.setGenero(genero);
         usuario.setApellidos(apellido);
         usuario.setClave(passDigest);
         usuario.setTipo(tipoUsuarioRepository.findById(tipo).get());
