@@ -10,7 +10,7 @@
 
 <%
     List<Integer> rutinas = new ArrayList<>();
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
         rutinas.add(i+1);
 %>
 
@@ -65,6 +65,7 @@
                         </div>
                         <div class="col-4 d-flex align-items-center">
                             <select class="form-select" id="num-sesiones">
+                                <option value="4">No seleccionado</option>
                                 <option value="1">Igual</option>
                                 <option value="2">Mayor</option>
                                 <option value="3">Menor</option>
@@ -83,11 +84,11 @@
                         </div>
                         <div class="col-9 d-flex align-items-center">
                             <select class="form-select" id="dificultad">
+                                <option value="5">No seleccionado</option>
                                 <option value="1">Fácil</option>
                                 <option value="2">Medio</option>
                                 <option value="3">Difícil</option>
                                 <option value="4">Muy difícil</option>
-                                <option value="5">No seleccionado</option>
                             </select>
                         </div>
                     </div>
@@ -109,7 +110,7 @@
             <div class="col-8 d-flex justify-content-end align-items-center">
                 <div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filter-modal" >Filtros de búsqueda</button>
-                    <button class="btn btn-primary">Crear nueva rutina</button>
+                    <a class="btn btn-primary" href="/entrenador/rutinas/crear">Crear nueva rutina</a>
                 </div>
             </div>
         </div>

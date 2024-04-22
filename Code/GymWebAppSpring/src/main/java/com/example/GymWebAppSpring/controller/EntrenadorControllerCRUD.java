@@ -15,4 +15,9 @@ public class EntrenadorControllerCRUD {
     public String doRutinas() {
         return "/entrenador/crud/rutinas";
     }
+
+    @GetMapping("/entrenador/rutinas/crear")
+    public String doCrearRutina() {
+        return "/entrenador/crud/crear_rutina";
+    }
 }
