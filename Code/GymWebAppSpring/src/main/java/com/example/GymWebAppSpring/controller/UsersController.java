@@ -50,16 +50,18 @@ public class UsersController {
     /* ------------------------- End Auth Functions */
 
     /* ------------------------- Register Functions */
-    @GetMapping("/register")
-    public String registerPage(HttpSession session){
+    @GetMapping("/admin/register")
+    public String registerPage(Model model, HttpSession session){
         if (!isAdmin(session)){
             return "redirect:/";
         }
+
+        model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
         return "admin/users/edit-user";
     }
 
 
-    @PostMapping("/register")
+    @PostMapping("/admin/register")
     public String register(
             @RequestParam("dni") String dni,
             @RequestParam("nombre") String nombre,
@@ -74,15 +76,14 @@ public class UsersController {
         if (!isAdmin(session)){
             return "redirect:/";
         }
-        Usuario usuario = new Usuario(){{
-            setDni(dni);
-            setNombre(nombre);
-            setEdad(edad);
-            setGenero(genero);
-            setApellidos(apellido);
-            setClave(HashUtils.hashString(password));
-            setTipo(tipoUsuarioRepository.findById(tipo).get());
-        }};
+        Usuario usuario = new Usuario();
+        usuario.setDni(dni);
+        usuario.setNombre(nombre);
+        usuario.setEdad(edad);
+        usuario.setGenero(genero);
+        usuario.setApellidos(apellido);
+        usuario.setClave(HashUtils.hashString(password));
+        usuario.setTipo(tipoUsuarioRepository.findById(tipo).get());
 
         usuarioRepository.save(usuario);
         return "redirect:/";
@@ -90,23 +91,24 @@ public class UsersController {
     /* ------------------------- End Register Functions */
 
     /* ------------------------- Edit Functions */
-    @GetMapping("/edit")
+    @GetMapping("/admin/edit")
     public String editPage(@RequestParam("id") Usuario user, Model model, HttpSession session){
         if (!isAdmin(session)){
             return "redirect:/";
         }
         model.addAttribute("user",user);
+        model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
         return "admin/users/edit-user";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/admin/edit")
     public String doEdit(
             @RequestParam("id") Usuario usuario,
             @RequestParam("dni") String dni,
             @RequestParam("nombre") String nombre,
             @RequestParam("apellidos") String apellido,
             @RequestParam("edad") int edad,
-            @RequestParam("clave") String password,
+            @RequestParam(value = "clave", required = false) String password,
             @RequestParam("tipoUsuario") int tipo,
             @RequestParam("genero") char genero,
             HttpSession session
@@ -119,10 +121,33 @@ public class UsersController {
         usuario.setEdad(edad);
         usuario.setGenero(genero);
         usuario.setApellidos(apellido);
-        usuario.setClave(HashUtils.hashString(password));
+        if(password != null && !password.isBlank())
+            usuario.setClave(HashUtils.hashString(password));
         usuario.setTipo(tipoUsuarioRepository.findById(tipo).get());
         usuarioRepository.save(usuario);
-        return "redirect:/";
+        return "redirect:/admin/users";
     }
     /* ------------------------- End Edit Functions*/
+
+    /* ------------------------- Delete Functions */
+    @GetMapping("/admin/delete")
+    public String delete(@RequestParam("id") Usuario usuario, HttpSession session){
+        if (!isAdmin(session)){
+            return "redirect:/";
+        }
+        usuarioRepository.delete(usuario);
+        return "redirect:/admin/users";
+    }
+    /* ------------------------- End Delete Functions */
+
+    /* ------------------------- List Functions */
+    @GetMapping("/admin/users")
+    public String listUsers(Model model, HttpSession session){
+        if (!isAdmin(session)){
+            return "redirect:/";
+        }
+        model.addAttribute("users",usuarioRepository.findAll());
+        return "admin/users/list-users";
+    }
+    /* ------------------------- End List Functions */
 }
