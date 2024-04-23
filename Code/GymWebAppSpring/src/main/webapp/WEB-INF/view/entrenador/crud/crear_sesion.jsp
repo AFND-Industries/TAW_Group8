@@ -72,7 +72,7 @@
                 <span class="h4 text-secondary">Ejercicios</span><br/>
             </div>
             <div class="col-6 d-flex justify-content-end">
-                <a class="btn btn-primary">Añadir ejercicio</a>
+                <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Añadir ejercicio</a>
             </div>
         </div>
         <%
