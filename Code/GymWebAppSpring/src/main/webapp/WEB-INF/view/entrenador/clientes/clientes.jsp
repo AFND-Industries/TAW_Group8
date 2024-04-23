@@ -20,10 +20,7 @@
 
 </head>
 <body>
-    <header id="header"></header>
-    <script>
-        createHeader("clientes")
-    </script>
+    <%@include file="../../components/header.jsp"%>
     <div class="container">
         <div class="row mb-4">
             <div class="col-4">
@@ -39,10 +36,10 @@
             for(Usuario cliente : clientes){
         %>
         <div class="row">
-            <div class="col-8 d-flex align-items-center">
-                <i class="bi bi-person-square" style="font-size: 40px"></i>
-                <button class="btn ms-3" style="font-size: 20px;  background-color:transparent; border: transparent"> <%= cliente.getNombre()%> <%= cliente.getApellidos()%></button>
-            </div>
+                <div class="col-8 d-flex align-items-center">
+                    <i class="bi bi-person-square" style="font-size: 40px"></i>
+                    <a class="btn ms-3" style="font-size: 20px; border: transparent" href="/entrenador/clientes/rutinas?id=<%= cliente.getId()%>"> <%= cliente.getNombre() %> <%= cliente.getApellidos() %></a>
+                </div>
         </div>
         <hr>
         <%
