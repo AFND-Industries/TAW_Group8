@@ -7,63 +7,32 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%
-    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
-    Usuario user = (Usuario) session.getAttribute("user");
-%>
 <html>
 <head>
-    <title>Example jsp</title>
+    <title>Welcome!</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
+    <%@include file="components/header.jsp" %>
     <div class="container text-center mt-2">
-        <div class="container">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <a href=<%=user != null ? "/logout" : "#"%>><button class="btn btn-outline-danger" <%=user == null ? "disabled":""%>>Cerrar sesión</button></a>
-                </div>
-                <div class="col-md-6">
-                    <a href="/login"><button class="btn btn-primary">Iniciar sesión</button></a>
+        <h1>¡Bienvenido a tu gimnasio!</h1>
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-start">
+                        <h3 class="card-title">Prueba nuestro gimnasio online</h3>
+                        <p style="text-align: justify">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas odio nibh, convallis sed porttitor id, blandit id metus. Nulla sagittis metus mi, sit amet imperdiet eros condimentum ut. Mauris faucibus commodo nibh, in vestibulum nibh venenatis et. Morbi aliquet mauris odio, in mattis arcu tempor eget. Curabitur tincidunt eros dignissim, interdum dolor eu, dignissim leo.
+                        </p>
+                    </div>
                 </div>
             </div>
+            <div class="col-lg-6 d-flex align-items-center">
+                <img src="https://t3.ftcdn.net/jpg/04/31/55/92/360_F_431559277_rkkDdPgYlypnPwf4EoDIlvkVDiWNBBft.jpg" class="rounded-2 w-100" />
+            </div>
         </div>
-        <h1 class="mb-2">Listado de usuarios</h1>
-        <table class="table">
-            <thead>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Genero</th>
-                <th>Edad</th>
-                <th>DNI</th>
-                <th>Tipo usuario</th>
-            </thead>
-            <tbody>
-            <%
-                for(Usuario usuario : usuarios) {
-            %>
-            <tr>
-                <td><%= usuario.getId() %></td>
-                <td><%= usuario.getNombre() %></td>
-                <td><%= usuario.getApellidos() %></td>
-                <td><%= usuario.getGenero() %></td>
-                <td><%= usuario.getEdad() %></td>
-                <td><%= usuario.getDni() %></td>
-                <td><%= usuario.getTipo().getNombre() %></td>
-            </tr>
-            <%
-                }
-            %>
-            </tbody>
-        </table>
-        <%
-            if (user != null){
-        %>
-        <h6>Sesión iniciada como: <%=user.getNombre()%></h6>
-        <%
-            }
-        %>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

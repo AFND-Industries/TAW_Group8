@@ -28,13 +28,6 @@ public class Controlador {
 
     @GetMapping("/")
     public String example(Model model, HttpSession session) {
-        List<Usuario> usuario = this.usuarioRepository.findAll();
-
-        if (session.getAttribute("user") == null)
-            session.setAttribute("user", usuario.get(2));
-
-        model.addAttribute("usuarios", usuario);
-
         return "index";
     }
 
