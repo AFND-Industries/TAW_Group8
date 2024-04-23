@@ -49,6 +49,8 @@ public class UsersController {
     }
     /* ------------------------- End Auth Functions */
 
+    // CRUD Functions
+
     /* ------------------------- Register Functions */
     @GetMapping("/admin/register")
     public String registerPage(Model model, HttpSession session){
@@ -98,7 +100,7 @@ public class UsersController {
         }
         model.addAttribute("user",user);
         model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
-        return "admin/users/edit-user";
+        return "admin/users-crud/edit-user";
     }
 
     @PostMapping("/admin/edit")
@@ -147,7 +149,7 @@ public class UsersController {
             return "redirect:/";
         }
         model.addAttribute("users",usuarioRepository.findAll());
-        return "admin/users/list-users";
+        return "admin/users-crud/list-users";
     }
     /* ------------------------- End List Functions */
 }

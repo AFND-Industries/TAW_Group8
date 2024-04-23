@@ -8,18 +8,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Usuario user = (Usuario) session.getAttribute("user");
+    System.out.println(request.getRequestURI());
 %>
 <header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/entrenador">TAW PROJECT</a>
+            <a class="navbar-brand" href="/entrenador"><i class="bi bi-person-arms-up me-1"></i>TAW PROJECT</a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("/entrenador/clientes") ? "active" : "")%>" href="/entrenador/clientes" >Clientes</a>
+                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("clientes.jsp") ? "active" : "")%>" href="/entrenador/clientes" >Clientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("/entrenador/rutinas") ? "active" : "")%>" href="/entrenador/rutinas">Rutinas</a>
+                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("rutinas.jsp") ? "active" : "")%>" href="/entrenador/rutinas">Rutinas</a>
                     </li>
                 </ul>
             </div>
@@ -42,9 +43,14 @@
                     <%
                         } else if (user.getTipo().getNombre().equals("Entrenador")){
                     %>
+                    <li><a class="dropdown-item" href="/entrenador"><i class="bi bi-file-earmark-person me-2" style="font-size: 16px"></i>Mi Espacio Personal</a></li>
                     <li><a class="dropdown-item" href="/entrenador/clientes"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Clientes</a></li>
                     <li><a class="dropdown-item" href="/entrenador/rutinas"><i class="bi bi-card-checklist me-2" style="font-size: 16px"></i>Rutinas</a></li>
 
+                    <%
+                        } else if (user.getTipo().getNombre().equals("Cliente")){
+                    %>
+                        <li><a class="dropdown-item" href="#">Action</a></li>
                     <%
                         }
                     %>
