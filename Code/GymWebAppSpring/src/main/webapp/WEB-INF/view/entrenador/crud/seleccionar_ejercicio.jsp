@@ -46,8 +46,8 @@
                 </div>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <a style="cursor: pointer;" href="/entrenador/rutinas/crear/ejercicio">
-                    <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                <a style="cursor: pointer;" href="/entrenador/rutinas/crear/ejercicio/ver">
+                    <img src="/svg/eye.svg" alt="Ver" style="width:50px; height:50px">
                 </a>
             </div>
         </div>

@@ -28,11 +28,16 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/entrenador/rutinas/crear/ejercicio")
     public String doCrearEjercicio() {
-        return "/entrenador/crud/crear_ejercicio";
+        return "/entrenador/crud/crear_ejercicio_sesion";
     }
 
     @GetMapping("/entrenador/rutinas/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio() {
         return "/entrenador/crud/seleccionar_ejercicio";
+    }
+
+    @GetMapping("/entrenador/rutinas/crear/ejercicio/ver")
+    public String doEjercicioBase() {
+        return "/entrenador/crud/ejercicio_base";
     }
 }
