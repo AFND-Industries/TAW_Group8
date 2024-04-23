@@ -1,4 +1,6 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
@@ -9,6 +11,7 @@
 
 <%
     Usuario cliente = (Usuario) request.getAttribute("usuario");
+    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
 %>
 <html>
 <head>
@@ -22,33 +25,42 @@
 <body>
 <div class="text-center">
     <h1 class="">Mi espacio personal</h1>
-    <h2 class="">Bienvenido de vuelta <%=cliente.getNombre() + " "+ cliente.getApellidos()%>>!</h2>
+    <h2 class="">Bienvenido de vuelta <%=cliente.getNombre() + " " + cliente.getApellidos()%>!</h2>
 </div>
 <p></p>
 <div class="container-fluid">
     <div class="row d-flex justify-content-center align-items-center ">
-        <div class="col flex-column mx-5">
-            <div class="list-group w-100">
-                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                    The current link item
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-                <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-                <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
-                <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a>
+        <div class="col-6 flex-column mx-5 border border-primary border-3 rounded" style="height: 400px">
+            <div class="list-group my-2">
+<%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
+<%--                    The current link item--%>
+<%--                </a>--%>
+                <%
+                    for (Rutina r : rutinas) {
+
+
+                %>
+                <a href="#" class="list-group-item list-group-item-action"> <%=r.getNombre()%></a>
+                        <%
+                        }
+                    %>
+<%--                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>--%>
+<%--                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--%>
+<%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>
+<%--                        item</a>--%>
             </div>
-            <div class="d-flex justify-content-center align-items-center " >
+            <div class="d-flex justify-content-center">
                 <nav aria-label="..." class="mt-1 ">
                     <ul class="pagination">
                         <li class="page-item disabled">
                             <a class="page-link">Previous</a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item active" aria-current="page">
+                        <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item">
                             <a class="page-link" href="#">2</a>
                         </li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
+                        <li class="page-item disabled">
                             <a class="page-link" href="#">Next</a>
                         </li>
                     </ul>
