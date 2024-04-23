@@ -16,10 +16,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/entrenador/clientes">Clientes</a>
+                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("/entrenador/clientes") ? "active" : "")%>" href="/entrenador/clientes" >Clientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/entrenador/rutinas">Rutinas</a>
+                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("/entrenador/rutinas") ? "active" : "")%>" href="/entrenador/rutinas">Rutinas</a>
                     </li>
                 </ul>
             </div>
@@ -40,7 +40,13 @@
                     %>
                     <li><a class="dropdown-item" href="/admin/users"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Usuarios</a></li>
                     <%
-                        }
+                        } else if (user.getTipo().getNombre().equals("Entrenador")){
+                    %>
+                    <li><a class="dropdown-item" href="/entrenador/clientes"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Clientes</a></li>
+                    <li><a class="dropdown-item" href="/entrenador/rutinas"><i class="bi bi-card-checklist me-2" style="font-size: 16px"></i>Rutinas</a></li>
+
+                    <%
+
                     %>
                     <!-- List items template
                     <li><a class="dropdown-item" href="#">Action</a></li>
