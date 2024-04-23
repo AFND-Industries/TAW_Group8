@@ -46,7 +46,7 @@
                     <li><a class="dropdown-item" href="/entrenador/rutinas"><i class="bi bi-card-checklist me-2" style="font-size: 16px"></i>Rutinas</a></li>
 
                     <%
-
+                        }
                     %>
                     <!-- List items template
                     <li><a class="dropdown-item" href="#">Action</a></li>
