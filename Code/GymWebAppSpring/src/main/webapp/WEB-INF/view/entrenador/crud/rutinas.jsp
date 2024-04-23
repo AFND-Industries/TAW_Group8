@@ -10,7 +10,7 @@
 
 <%
     List<Integer> rutinas = new ArrayList<>();
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 5; i++)
         rutinas.add(i+1);
 %>
 
