@@ -34,7 +34,7 @@
                 <span class="h3 text-dark">Ejercicio X (Categoría X)</span><br/>
             </div>
             <div class="col-6 d-flex justify-content-end">
-                <a class="btn btn-primary">Seleccionar ejercicio</a>
+                <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio/seleccionar">Seleccionar ejercicio</a>
             </div>
         </div>
         <div class="row mb-3 d-flex align-items-center">
