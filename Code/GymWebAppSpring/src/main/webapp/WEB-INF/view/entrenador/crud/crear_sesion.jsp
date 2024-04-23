@@ -9,9 +9,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Integer> sesiones = new ArrayList<>();
+    List<Integer> ejercicios = new ArrayList<>();
     for (int i = 0; i < 2; i++)
-        sesiones.add(i+1);
+        ejercicios.add(i+1);
 %>
 
 <html>
@@ -29,11 +29,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="delete-modal-label">Eliminar sesión</h1>
+                    <h1 class="modal-title fs-5" id="delete-modal-label">Eliminar ejercicio</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ¿Estás seguro de que quieres eliminar la sesión?
+                    ¿Estás seguro de que quieres eliminar el ejercicio?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
@@ -45,50 +45,46 @@
 
     <div class="container">
         <div class="row mb-3">
-            <div class="col-4">
-                <h1>Crear nueva rutina</h1>
+            <div class="col-8">
+                <h1>Añadir sesión de entrenamiento</h1>
             </div>
-            <div class="col-8 d-flex justify-content-end align-items-center">
-                <a class="btn btn-primary" href="/entrenador/rutinas">Volver</a>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <a class="btn btn-primary" href="/entrenador/rutinas/crear">Volver</a>
             </div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-6">
-                <span class="h4 text-secondary">Nombre de la rutina</span><br/>
-                <input type="text" class="form-control mt-2">
+            <div class="col-12">
+                <span class="h4 text-secondary">Nombre de la sesión</span><br/>
             </div>
-            <div class="col-6">
-                <span class="h4 text-secondary">Dificultad</span><br/>
-                <select class="form-select mt-2" id="dificultad">
-                    <option value="1">Fácil</option>
-                    <option value="2">Medio</option>
-                    <option value="3">Difícil</option>
-                    <option value="4">Muy difícil</option>
-                </select>
+            <div class="col-12">
+                <input type="text" class="form-control mt-2">
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-12">
-                <span class="h4 text-secondary">Descripción de la rutina</span><br/>
+                <span class="h4 text-secondary">Descripción de la sesión</span><br/>
                 <textarea class="form-control mt-2" style="resize:none;" rows="3"></textarea>
             </div>
         </div>
         <div class="row mb-2">
             <div class="col-6">
-                <span class="h4 text-secondary">Sesiones de entrenamiento</span><br/>
+                <span class="h4 text-secondary">Ejercicios</span><br/>
             </div>
             <div class="col-6 d-flex justify-content-end">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Añadir sesión de entrenamiento</a>
+                <a class="btn btn-primary">Añadir ejercicio</a>
             </div>
         </div>
         <%
-            for (Integer sesion : sesiones) {
+            for (Integer ejercicio : ejercicios) {
         %>
         <div class="row">
             <div class="col-8 d-flex align-items-center" style="height:75px">
                 <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                <span class="ms-3 h2">Sesion <%=sesion%></span>
+                <div>
+                    <span class="ms-3 h2">Ejercicio <%=ejercicio%></span></br>
+                    <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+                </div>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -104,7 +100,7 @@
 
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
-                <a class="btn btn-primary" href="/entrenador/rutinas">Crear</a>
+                <a class="btn btn-primary" href="/entrenador/rutinas/crear">Añadir</a>
             </div>
         </div>
     </div>
