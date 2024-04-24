@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-<%@include file="../../components/header.jsp"%>
+<jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h1 class="text-center mb-2">Listado de usuarios</h1>
     <table class="table table-striped">

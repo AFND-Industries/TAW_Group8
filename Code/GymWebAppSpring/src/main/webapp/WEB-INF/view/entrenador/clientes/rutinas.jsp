@@ -24,7 +24,7 @@
     <script src="/header.js"></script>
 </head>
 <body>
-<%@include file="../../components/header.jsp" %>
+<jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <div class="row mb-3">
         <h1> Rutinas de <%= usuario.getNombre()%> <%= usuario.getApellidos() %>

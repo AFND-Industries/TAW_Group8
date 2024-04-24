@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-<%@include file="../../components/header.jsp"%>
+<jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h2 class="text-center"><%=user != null ? "Editar" : "Registro de un nuevo"%> usuario</h2>
     <form class="row g-3 was-validated" method="post" action="<%=user != null ? "/admin/edit" : "/admin/register"%>">

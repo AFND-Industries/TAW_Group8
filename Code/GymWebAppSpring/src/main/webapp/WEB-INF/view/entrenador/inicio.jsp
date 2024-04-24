@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <%@include file="../components/header.jsp"%>
+<jsp:include page="../components/header.jsp"/>
     <div class="container d-flex justify-content-center align-items-center">
         <div class="card">
             <div class="card-body text-center px-5">

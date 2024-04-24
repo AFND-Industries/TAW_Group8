@@ -26,7 +26,7 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<%@include file="../components/header.jsp"%>
+<jsp:include page="../components/header.jsp"/>
 <div class="text-center">
     <h1 class="">Mi espacio personal</h1>
     <h2 class="">Bienvenido de vuelta <%=cliente.getNombre() + " " + cliente.getApellidos()%>!</h2>

@@ -22,7 +22,7 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<%@ include file="../../components/header.jsp" %>
+<jsp:include page="../../components/header.jsp"/>
 
 <div class="container">
     <div class="row mb-3">
