@@ -39,7 +39,7 @@ public class EntrenadorControllerCientes {
     private EjercicioSesionRepository ejercicioSesionRepository;
 
     @Autowired
-    private SesionentrenamientoRepository sesionentrenamientoRepository;
+    private SesionRutinaRepository sesionRutinaRepository;
 
     @Autowired
     private InformacionSesionRepository informacionSesionRepository;

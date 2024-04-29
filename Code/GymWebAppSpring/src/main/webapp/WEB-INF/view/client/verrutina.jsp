@@ -1,10 +1,8 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionrutina" %>
 <%@ page import="java.time.DayOfWeek" %>
-<%@ page import="java.time.LocalDate" %><%--
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="com.example.GymWebAppSpring.entity.*" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
@@ -16,7 +14,7 @@
 <%
     DayOfWeek diaSemanaActual = LocalDate.now().getDayOfWeek();
     Usuario cliente = (Usuario) request.getAttribute("usuario");
-    List<Sesionrutina> sesiones = (List<Sesionrutina>) request.getAttribute("sesiones");
+    Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = (Map<Sesionrutina, List<Ejerciciosesion>>) request.getAttribute("sesionesEjercicios");
 %>
 <html>
 <head>
@@ -42,13 +40,13 @@
     <div class="row d-flex justify-content-center align-items-center ">
         <div class="col-6 flex-column mx-5 border border-primary border-3 rounded" style="height: 400px">
             <%
-                if (sesiones.isEmpty()) {
+                if (sesionesEjercicios.isEmpty()) {
             %>
             <h1 class="text-center"> No hay sesiones!</h1>
             <%
             } else {
             %>
-            <table class="table">
+            <table class="table ">
                 <thead>
                 <tr>
                     <th scope="col">Nombre</th>
@@ -59,15 +57,15 @@
                 </thead>
                 <tbody>
                 <%
-                    for (Sesionrutina s : sesiones) {
+                    for (Sesionrutina s : sesionesEjercicios.keySet()) {
                         boolean esHoy = diaSemanaActual.getValue() == s.getDia();
 
                 %>
                 <tr class="<%=esHoy ? "table-primary" : ""%>">
 
-                    <td>Sesion de <%=s.getSesionentrenamiento().getNombre()%>
+                    <td><a  role="button" class="<%=esHoy ? "btn btn-warning" : "btn btn-outline-primary"%>" href="/client">Sesion de <%=s.getSesionentrenamiento().getNombre()%></a>
                     </td>
-                    <td>Otto</td>
+                    <td> <%=sesionesEjercicios.get(s).size()!=0 ? (sesionesEjercicios.get(s).size()*100/sesionesEjercicios.get(s).size()) : "Nan"%>% completada! </td>
                     <td class="text-end">
 
                             <%

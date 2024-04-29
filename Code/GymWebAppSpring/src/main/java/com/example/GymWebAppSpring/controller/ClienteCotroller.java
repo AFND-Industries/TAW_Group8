@@ -1,11 +1,9 @@
 package com.example.GymWebAppSpring.controller;
 
+import com.example.GymWebAppSpring.dao.EjercicioSesionRepository;
 import com.example.GymWebAppSpring.dao.RutinaUsuarioRepository;
 import com.example.GymWebAppSpring.dao.SesionRutinaRepository;
-import com.example.GymWebAppSpring.entity.Rutina;
-import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
-import com.example.GymWebAppSpring.entity.Sesionrutina;
-import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/client")
@@ -28,6 +28,8 @@ public class ClienteCotroller {
     @Autowired
     private SesionRutinaRepository sesionRutinaRepository;
 
+    @Autowired
+    private EjercicioSesionRepository ejerciciosesionRepository;
     @GetMapping("")
     public String doClient(HttpSession sesion, Model modelo) {
         if (!AuthUtils.isClient(sesion))
@@ -45,10 +47,18 @@ public class ClienteCotroller {
     public String doVerRutina(@RequestParam("rutinaElegida") Rutina rutina,HttpSession sesion, Model modelo  ) {
         if (!AuthUtils.isClient(sesion))
             return "redirect:/";
+        Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = new HashMap<>();
+
+
         Usuario user = (Usuario) sesion.getAttribute("user");
         modelo.addAttribute("usuario", user);
         List<Sesionrutina> sesiones = sesionRutinaRepository.findSesionRutinaByRutina(rutina);
-        modelo.addAttribute("sesiones", sesiones);
+        for(Sesionrutina s : sesiones){
+            List<Ejerciciosesion> ejercicos = ejerciciosesionRepository.findEjerciciosBySesion(s.getSesionentrenamiento());
+            sesionesEjercicios.put(s, ejercicos);
+        }
+
+        modelo.addAttribute("sesionesEjercicios", sesionesEjercicios);
 
 
         return "client/verrutina";
