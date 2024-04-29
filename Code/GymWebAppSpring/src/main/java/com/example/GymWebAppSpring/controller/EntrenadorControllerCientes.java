@@ -19,17 +19,25 @@ public class EntrenadorControllerCientes {
 
     @Autowired
     private RutinaUsuarioRepository rutinaUsuarioRepository;
+
     @Autowired
     private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
+
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Autowired
     private SesionRutinaRepository sesioRutinaRepository;
+
     @Autowired
     private RutinaClienteReporsitory rutinaClienteReporsitory;
+
     @Autowired
     private RutinaRepository rutinaRepository;
+
+    @Autowired
     private EjercicioSesionRepository ejercicioSesionRepository;
+
     @Autowired
     private SesionentrenamientoRepository sesionentrenamientoRepository;
 
