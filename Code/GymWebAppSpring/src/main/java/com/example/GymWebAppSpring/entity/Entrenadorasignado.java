@@ -1,8 +1,6 @@
 package com.example.GymWebAppSpring.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "entrenadorasignado")
@@ -12,13 +10,11 @@ public class Entrenadorasignado {
 
     @MapsId("entrenador")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "ENTRENADOR", nullable = false)
     private Usuario entrenador;
 
     @MapsId("cliente")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "CLIENTE", nullable = false)
     private Usuario cliente;
 

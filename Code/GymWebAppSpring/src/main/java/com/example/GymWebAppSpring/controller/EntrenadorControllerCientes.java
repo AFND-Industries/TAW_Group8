@@ -17,8 +17,6 @@ import java.util.List;
 public class EntrenadorControllerCientes {
 
     @Autowired
-    private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
-    @Autowired
     private RutinaUsuarioRepository rutinaUsuarioRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;

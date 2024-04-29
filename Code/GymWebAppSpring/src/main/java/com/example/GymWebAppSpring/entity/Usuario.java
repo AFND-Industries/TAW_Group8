@@ -25,10 +25,10 @@ public class Usuario {
     @Column(name = "DNI", nullable = false, length = 32)
     private String dni;
 
-    @Column(name = "CLAVE", nullable = false, length = 60)
+    @Column(name = "CLAVE", nullable = false, length = 64)
     private String clave;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TIPO", nullable = false)
     private Tipousuario tipo;
 
