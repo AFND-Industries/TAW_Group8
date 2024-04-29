@@ -6,8 +6,8 @@ Tareas por hacer (según roles):
 - **Entrenador cross-training**
 - **Administrador**
   - [x] Autenticación de usuarios
-  - [ ] CRUD (con filtros de búsqueda) de usuarios
-  - [ ] asignación de clientes a entrenadores
+  - [x] CRUD (con filtros de búsqueda) de usuarios
+  - [x] Asignación de clientes a entrenadores
   - [ ] CRUD (con filtros de búsqueda) de ejercicios, dimensiones de ejercicios,
     etc.
 - **Cliente**

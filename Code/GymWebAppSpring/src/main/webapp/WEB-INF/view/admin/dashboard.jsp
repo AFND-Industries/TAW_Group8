@@ -15,6 +15,21 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons CSS Dependencies -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .card-btn{
+            cursor: pointer;
+            transition-duration: 300ms;
+        }
+
+        .card-btn:hover{
+            scale: 1.03;
+        }
+
+        a{
+            text-decoration: none;
+            color: black;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="../components/header.jsp" />
@@ -28,33 +43,32 @@
 </div>
 <div class="container">
     <div class="row g-5">
-        <div class="col-md-6 col-12">
-            <div class="card">
-                <div class="card-body d-flex justify-content-center align-items-center p-5">
-                    <i class="bi bi-person-lines-fill me-2 fs-4"></i> <span class="fs-4">Usuarios</span>
+        <div class="col-12">
+            <a href="/admin/users" class="text">
+                <div class="card card-btn">
+                    <div class="card-body d-flex justify-content-center align-items-center p-5">
+                        <i class="bi bi-person-lines-fill me-2 fs-4"></i> <span class="fs-4">Usuarios</span>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-6 col-12">
-            <div class="card">
-                <div class="card-body d-flex justify-content-center align-items-center  p-5">
-                    <i class="bi bi-list-nested me-2 fs-4"></i> <span class="fs-4">Ejercicios</span>
+            <a href="/admin/">
+                <div class="card card-btn">
+                    <div class="card-body d-flex justify-content-center align-items-center  p-5">
+                        <i class="bi bi-list-nested me-2 fs-4"></i> <span class="fs-4">Ejercicios</span>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-6 col-12">
-            <div class="card">
-                <div class="card-body d-flex justify-content-center align-items-center p-5">
-                    <i class="bi bi-person-lines-fill me-2 fs-4"></i> <span class="fs-4">Usuarios</span>
+            <a href="/admin/assign">
+                <div class="card card-btn">
+                    <div class="card-body d-flex justify-content-center align-items-center p-5">
+                        <i class="bi bi-person-lines-fill me-2 fs-4"></i> <span class="fs-4">Categorías</span>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-12">
-            <div class="card">
-                <div class="card-body d-flex justify-content-center align-items-center  p-5">
-                    <i class="bi bi-list-nested me-2 fs-4"></i> <span class="fs-4">Ejercicios</span>
-                </div>
-            </div>
+            </a>
         </div>
     </div>
 </div>

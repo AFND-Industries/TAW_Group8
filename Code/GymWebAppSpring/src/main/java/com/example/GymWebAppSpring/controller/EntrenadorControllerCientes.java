@@ -44,12 +44,11 @@ public class EntrenadorControllerCientes {
     @Autowired
     private InformacionSesionRepository informacionSesionRepository;
 
-
     @GetMapping("/entrenador/clientes")
     public String entrenadorClientes(Model model, HttpSession session) {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
-        List<Usuario> clientesAsignados = entrenadorAsignadoRepository.findClientsByEntrenadorID(AuthUtils.getUser(session).getId());
+        List<Usuario> clientesAsignados = entrenadorAsignadoRepository.findClientsByEntrenadorID(AuthUtils.getUser(session));
         model.addAttribute("clientes", clientesAsignados);
         return "/entrenador/clientes/clientes_entrenador";
     }

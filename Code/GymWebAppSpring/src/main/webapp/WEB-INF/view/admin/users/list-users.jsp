@@ -1,5 +1,6 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Tipousuario" %><%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 22/04/2024
@@ -9,6 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<Usuario> usuarios = (List<Usuario>) request.getAttribute("users");
+    List<Tipousuario> tipos = (List<Tipousuario>) request.getAttribute("tipos");
 %>
 <html>
 <head>
@@ -23,12 +25,28 @@
 <jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h1 class="text-center mb-2">Listado de usuarios</h1>
+    <form class="d-flex justify-content-between g-3" method="post" action="">
+        <input type="text" class="form-control" name="dni" placeholder="DNI" />
+        <input type="text" class="form-control ms-2" name="apellidos" placeholder="Apellidos" />
+        <input type="number" class="form-control ms-2" name="edad" placeholder="Edad" />
+        <select class="form-select ms-2" name="tipo">
+            <option disabled selected>Tipo de usuario</option>
+            <%
+                for (Tipousuario tipo : tipos){
+            %>
+                <option value="<%=tipo.getId()%>"><%=tipo.getNombre()%></option>
+            <%
+                }
+            %>
+        </select>
+        <button class="btn btn-primary d-flex align-items-center ms-2">
+            <i class="bi bi-funnel me-2"></i> Filtrar
+        </button>
+    </form>
     <table class="table table-striped">
         <thead>
-        <th>ID</th>
         <th>Nombre</th>
         <th>Apellidos</th>
-        <th>Genero</th>
         <th>Edad</th>
         <th>DNI</th>
         <th colspan="2">Tipo usuario</th>
@@ -37,19 +55,28 @@
         <%
             for(Usuario usuario : usuarios) {
         %>
-        <tr>
-            <td><%= usuario.getId() %></td>
-            <td><%= usuario.getNombre() %></td>
-            <td><%= usuario.getApellidos() %></td>
-            <td><%= usuario.getGenero() %></td>
-            <td><%= usuario.getEdad() %></td>
-            <td><%= usuario.getDni() %></td>
-            <td><%= usuario.getTipo().getNombre() %></td>
-            <td>
-                <a href="/admin/edit?id=<%=usuario.getId()%>"><i class="bi bi-pencil-square me-3"></i></a>
-                <a href="/admin/delete?id=<%=usuario.getId()%>"><i class="bi bi-trash3 me-3"></i></a>
-            </td>
-        </tr>
+        <a href="/admin/view?id=<%=usuario.getId()%>">
+            <tr>
+                <td><%= usuario.getNombre() %></td>
+                <td><%= usuario.getApellidos() %></td>
+                <td><%=usuario.getEdad()%></td>
+                <td><%= usuario.getDni() %></td>
+                <td><%= usuario.getTipo().getNombre() %></td>
+                <td>
+                    <a href="/admin/edit?id=<%=usuario.getId()%>"><i class="bi bi-pencil-square me-3"></i></a>
+                    <a href="/admin/delete?id=<%=usuario.getId()%>"><i class="bi bi-trash3 me-3"></i></a>
+                    <%
+                        if (usuario.getTipo().getNombre().equals("Cliente")){
+                    %>
+                    <a href="/admin/assign?id=<%=usuario.getId()%>"><i class="bi bi-person-check me-3"></i></a>
+
+                    <%
+                        }
+                    %>
+                </td>
+            </tr>
+        </a>
+
         <%
             }
         %>

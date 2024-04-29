@@ -11,6 +11,8 @@
 <%
     Usuario user = (Usuario) request.getAttribute("user");
     List<Tipousuario> tiposUsuario = (List<Tipousuario>) request.getAttribute("tiposUsuario");
+    Boolean edit = (Boolean) request.getAttribute("editable");
+    String editable = edit != null && !edit ? "disabled" : "";
 %>
 <html>
 <head>
@@ -31,6 +33,7 @@
             <label for="nombreInput" class="form-label">Nombre</label>
             <input type="text" class="form-control" maxlength="32" id="nombreInput" name="nombre"
                    value="<%=user != null ? user.getNombre() : ""%>"
+                   <%=editable%>
                    required>
             <div class="invalid-feedback">
                 Por favor, escriba un nombre válido
@@ -40,6 +43,7 @@
             <label for="apellidosInput" class="form-label">Apellidos</label>
             <input type="text" class="form-control" maxlength="32" id="apellidosInput" name="apellidos"
                    value="<%=user != null ? user.getApellidos() : ""%>"
+                   <%=editable%>
                    required>
             <div class="invalid-feedback">
                 Por favor, escriba un(os) apellido(s) válido(s)
@@ -47,7 +51,7 @@
         </div>
         <div class="col-md-4 mb-3">
             <label for="generoInput" class="form-label">Género</label>
-            <select class="form-select" id="generoInput" name="genero" required>
+            <select class="form-select" id="generoInput" name="genero" required <%=editable%>>
                 <option <%=user == null ? "selected" : ""%> disabled value="">Selecciona...</option>
                 <%
                     for (String str : new String[]{"Masculino", "Femenino"}) {
@@ -67,6 +71,7 @@
             <label for="edadInput" class="form-label">Edad</label>
             <input type="number" class="form-control" id="edadInput" name="edad"
                    value="<%=user != null ? user.getEdad() : ""%>"
+                   <%=editable%>
                    required>
             <div class="invalid-feedback">
                 Por favor, indique una edad válida
@@ -76,6 +81,7 @@
             <label for="dniInput" class="form-label">Documento de Identificación</label>
             <input type="text" class="form-control" maxlength="10" id="dniInput" name="dni"
                    value="<%=user != null ? user.getDni() : ""%>"
+                   <%=editable%>
                    required>
             <div class="invalid-feedback">
                 Por favor, indique un documento de identificación válido
@@ -84,15 +90,15 @@
         <div class="col-md-6 mb-3">
             <label for="claveInput" class="form-label">Clave</label>
             <input type="password" class="form-control" id="claveInput" name="clave"
-                   placeholder="<%=user != null ? "Si se deja vacío se mantiene la clave anterior" : ""%>"
-                   <%=user == null ? "required" : ""%>>
+                   placeholder="<%=user != null ? (edit ? "Si se deja vacío se mantiene la clave anterior" : "************") : ""%>"
+                   <%=user == null ? "required" : ""%> <%=editable%>>
             <div class="invalid-feedback">
                 Por favor, indique una clave válida
             </div>
         </div>
         <div class="col-md-6 mb-3">
             <label for="tipoUsuarioInput" class="form-label">Tipo de Usuario</label>
-            <select class="form-select" id="tipoUsuarioInput" name="tipoUsuario" required>
+            <select class="form-select" id="tipoUsuarioInput" name="tipoUsuario" required <%=editable%>>
                 <option selected disabled value="">Selecciona...</option>
                 <%
                     for (Tipousuario tipo : tiposUsuario) {
@@ -107,6 +113,17 @@
             </div>
         </div>
         <div class="col mb-3">
+            <%
+                if (!edit){
+            %>
+            <a href="/admin/dashboard">
+                    <button type="button" class="btn btn-primary w-100">
+                            <i class="bi bi-arrow-left me-1" style="font-size: 15px"></i> Volver atrás
+                    </button>
+            </a>
+            <%
+            }else{
+            %>
             <button type="submit" class="btn btn-primary w-100">
                 <%
                     if (user != null) {
@@ -120,6 +137,9 @@
                     }
                 %>
             </button>
+            <%
+                }
+            %>
         </div>
     </form>
 </div>
