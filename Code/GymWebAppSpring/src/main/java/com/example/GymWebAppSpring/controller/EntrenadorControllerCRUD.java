@@ -1,15 +1,29 @@
 package com.example.GymWebAppSpring.controller;
 
+import com.example.GymWebAppSpring.dao.RutinaRepository;
+import com.example.GymWebAppSpring.entity.Rutina;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/entrenador/rutinas")
 public class EntrenadorControllerCRUD {
 
+    @Autowired
+    protected RutinaRepository rutinaRepository;
+
     @GetMapping("")
-    public String doRutinas() {
+    public String doRutinas(Model model) {
+        // aqui hay que hacer un filtro para que solo coja las rutinas que ha creado el entrenador actual (getuser)
+        List<Rutina> rutinas = rutinaRepository.findAll();
+
+        model.addAttribute("rutinas", rutinas);
+
         return "/entrenador/crud/rutinas";
     }
 
