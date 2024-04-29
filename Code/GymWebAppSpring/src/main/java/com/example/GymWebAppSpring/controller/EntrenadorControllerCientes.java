@@ -46,7 +46,7 @@ public class EntrenadorControllerCientes {
         List<Rutina> rutinas = rutinaUsuarioRepository.findRutinaById(usuario.getId());
         int[] numSesiones = new int[rutinas.size()];
         for(Rutina rutina : rutinas){
-            numSesiones[rutinas.indexOf(rutina)] = sesioRutinaRepository.findSesionsByRutinaId(rutina.getId()).size();
+            numSesiones[rutinas.indexOf(rutina)] = sesioRutinaRepository.findSesionsByRutina(rutina).size();
         }
         model.addAttribute("numSesiones", numSesiones);
         model.addAttribute("rutinas", rutinas);

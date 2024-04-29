@@ -1,7 +1,10 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.RutinaUsuarioRepository;
+import com.example.GymWebAppSpring.dao.SesionRutinaRepository;
 import com.example.GymWebAppSpring.entity.Rutina;
+import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
+import com.example.GymWebAppSpring.entity.Sesionrutina;
 import com.example.GymWebAppSpring.entity.Usuario;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +25,9 @@ public class ClienteCotroller {
     @Autowired
     private RutinaUsuarioRepository rutinaUsuarioRepository;
 
+    @Autowired
+    private SesionRutinaRepository sesionRutinaRepository;
+
     @GetMapping("")
     public String doClient(HttpSession sesion, Model modelo) {
         if (!AuthUtils.isClient(sesion))
@@ -40,12 +46,12 @@ public class ClienteCotroller {
         if (!AuthUtils.isClient(sesion))
             return "redirect:/";
         Usuario user = (Usuario) sesion.getAttribute("user");
-        Rutina rutinaElegida = rutina;
+        modelo.addAttribute("usuario", user);
+        List<Sesionrutina> sesiones = sesionRutinaRepository.findSesionRutinaByRutina(rutina);
+        modelo.addAttribute("sesiones", sesiones);
 
 
-
-
-        return "client/clientePersonalSpace";
+        return "client/verrutina";
 
 
     }
