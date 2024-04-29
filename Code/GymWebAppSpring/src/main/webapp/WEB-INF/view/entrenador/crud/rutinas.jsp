@@ -84,11 +84,10 @@
                         </div>
                         <div class="col-9 d-flex align-items-center">
                             <select class="form-select" id="dificultad">
-                                <option value="5">No seleccionado</option>
-                                <option value="1">Fácil</option>
-                                <option value="2">Medio</option>
-                                <option value="3">Difícil</option>
-                                <option value="4">Muy difícil</option>
+                                <option value="0">No seleccionado</option>
+                                <option value="1">Principiante</option>
+                                <option value="2">Intermedio</option>
+                                <option value="3">Avanzado</option>
                             </select>
                         </div>
                     </div>
@@ -119,12 +118,12 @@
         %>
         <div class="row">
             <a class="col-8 d-flex align-items-center"  style="height:75px; text-decoration: none; cursor: pointer;"
-                 href="/entrenador/rutinas/ver">
-                <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+                 href="/entrenador/rutinas/ver?id=<%= rutina.getId() %>">
+                <img src="<%=rutina.getDificultad().getLogo()%>" alt="Dificultad" onerror="this.onerror=null;this.src='/svg/question-square.svg';" style="width:50px; height:50px">
                 <span class="ms-3 h2" style="color: black;"><%=rutina.getNombre()%></span>
             </a>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <a href="/entrenador/rutinas/editar" style="cursor: pointer; text-decoration: none;">
+                <a href="/entrenador/rutinas/editar?id=<%= rutina.getId() %>" style="cursor: pointer; text-decoration: none;">
                     <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                 </a>
                 <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
