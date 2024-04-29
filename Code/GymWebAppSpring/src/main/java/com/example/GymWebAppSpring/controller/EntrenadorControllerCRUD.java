@@ -2,41 +2,38 @@ package com.example.GymWebAppSpring.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/entrenador/rutinas")
 public class EntrenadorControllerCRUD {
 
-    @GetMapping("/entrenador")
-    public String doInicio() {
-        return "/entrenador/inicio";
-    }
-
-    @GetMapping("/entrenador/rutinas")
+    @GetMapping("")
     public String doRutinas() {
         return "/entrenador/crud/rutinas";
     }
 
-    @GetMapping("/entrenador/rutinas/crear")
+    @GetMapping("/crear")
     public String doCrearRutina() {
         return "/entrenador/crud/crear_rutina";
     }
 
-    @GetMapping("/entrenador/rutinas/crear/sesion")
+    @GetMapping("/crear/sesion")
     public String doCrearSesion() {
         return "/entrenador/crud/crear_sesion";
     }
 
-    @GetMapping("/entrenador/rutinas/crear/ejercicio")
+    @GetMapping("/crear/ejercicio")
     public String doCrearEjercicio() {
         return "/entrenador/crud/crear_ejercicio_sesion";
     }
 
-    @GetMapping("/entrenador/rutinas/crear/ejercicio/seleccionar")
+    @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio() {
         return "/entrenador/crud/seleccionar_ejercicio";
     }
 
-    @GetMapping("/entrenador/rutinas/crear/ejercicio/ver")
+    @GetMapping("/crear/ejercicio/ver")
     public String doEjercicioBase() {
         return "/entrenador/crud/ejercicio_base";
     }
