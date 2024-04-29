@@ -22,18 +22,14 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("")
     public String doRutinas(HttpSession session, Model model) {
+        if (!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
         Usuario entrenador = AuthUtils.getUser(session);
+        List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
+        model.addAttribute("rutinas", rutinas);
 
-        String strTo = "/entrenador/crud/rutinas";
-        if (!AuthUtils.isTrainer(session)) {
-            strTo = "redirect:/";
-        }
-        else {
-            List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
-            model.addAttribute("rutinas", rutinas);
-        }
-
-        return strTo;
+        return "/entrenador/crud/rutinas";
     }
 
     @GetMapping("/crear")
