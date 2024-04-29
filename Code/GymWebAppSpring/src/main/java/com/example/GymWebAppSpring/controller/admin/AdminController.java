@@ -1,4 +1,4 @@
-package com.example.GymWebAppSpring.controller;
+package com.example.GymWebAppSpring.controller.admin;
 
 import com.example.GymWebAppSpring.dao.TipoUsuarioRepository;
 import com.example.GymWebAppSpring.dao.UsuarioRepository;
@@ -10,12 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.example.GymWebAppSpring.util.AuthUtils.isAdmin;
 
 @Controller
-public class UsersController {
+@RequestMapping("/admin")
+public class AdminController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -23,36 +25,16 @@ public class UsersController {
     @Autowired
     private TipoUsuarioRepository tipoUsuarioRepository;
 
-    /* ------------------------- Auth Functions */
-    @GetMapping("/login")
-    public String loginPage(){
-        return "auth/login";
-    }
-
-    @PostMapping("/login")
-    public String login(@RequestParam("dni") String dni, @RequestParam("clave") String password, Model model, HttpSession session) {
-        String passDigest = HashUtils.hashString(password);
-        Usuario usuario = usuarioRepository.findUsuarioByDniAndClave(dni,passDigest);
-        if (usuario != null){
-            session.setAttribute("user",usuario);
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session){
+        if (!isAdmin(session)){
             return "redirect:/";
         }
-
-        model.addAttribute("error", "El usuario o la contraseña no son válidos");
-        return "auth/login";
+        return "admin/dashboard";
     }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session){
-        session.invalidate();
-        return "redirect:/";
-    }
-    /* ------------------------- End Auth Functions */
-
-    // CRUD Functions
 
     /* ------------------------- Register Functions */
-    @GetMapping("/admin/register")
+    @GetMapping("/register")
     public String registerPage(Model model, HttpSession session){
         if (!isAdmin(session)){
             return "redirect:/";
@@ -63,7 +45,7 @@ public class UsersController {
     }
 
 
-    @PostMapping("/admin/register")
+    @PostMapping("/register")
     public String register(
             @RequestParam("dni") String dni,
             @RequestParam("nombre") String nombre,
@@ -93,7 +75,7 @@ public class UsersController {
     /* ------------------------- End Register Functions */
 
     /* ------------------------- Edit Functions */
-    @GetMapping("/admin/edit")
+    @GetMapping("/edit")
     public String editPage(@RequestParam("id") Usuario user, Model model, HttpSession session){
         if (!isAdmin(session)){
             return "redirect:/";
@@ -103,7 +85,7 @@ public class UsersController {
         return "admin/users-crud/edit-user";
     }
 
-    @PostMapping("/admin/edit")
+    @PostMapping("/edit")
     public String doEdit(
             @RequestParam("id") Usuario usuario,
             @RequestParam("dni") String dni,
@@ -132,7 +114,7 @@ public class UsersController {
     /* ------------------------- End Edit Functions*/
 
     /* ------------------------- Delete Functions */
-    @GetMapping("/admin/delete")
+    @GetMapping("/delete")
     public String delete(@RequestParam("id") Usuario usuario, HttpSession session){
         if (!isAdmin(session)){
             return "redirect:/";
@@ -143,7 +125,7 @@ public class UsersController {
     /* ------------------------- End Delete Functions */
 
     /* ------------------------- List Functions */
-    @GetMapping("/admin/users")
+    @GetMapping("/users")
     public String listUsers(Model model, HttpSession session){
         if (!isAdmin(session)){
             return "redirect:/";
