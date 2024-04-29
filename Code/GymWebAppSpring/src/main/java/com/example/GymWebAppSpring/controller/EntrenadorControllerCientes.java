@@ -16,8 +16,11 @@ import java.util.List;
 @Controller
 public class EntrenadorControllerCientes {
 
+
     @Autowired
     private RutinaUsuarioRepository rutinaUsuarioRepository;
+    @Autowired
+    private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
