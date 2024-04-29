@@ -63,7 +63,7 @@ public class EntrenadorControllerCientes {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
         List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(id);
-        List<Rutina> rutinasEntrenador = rutinaRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session).getId());
+        List<Rutina> rutinasEntrenador = rutinaRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session));
 
         model.addAttribute("rutinasCliente", rutinasCliente);
         model.addAttribute("rutinasEntrenador", rutinasEntrenador);

@@ -29,8 +29,7 @@ public class EntrenadorControllerCRUD {
             strTo = "redirect:/";
         }
         else {
-            System.out.println(entrenador.getId());
-            List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(1);
+            List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
             model.addAttribute("rutinas", rutinas);
         }
 
