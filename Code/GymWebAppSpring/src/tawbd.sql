@@ -1,4 +1,4 @@
-create or replace table categoria
+create  table categoria
 (
     ID          int auto_increment
         primary key,
@@ -8,7 +8,7 @@ create or replace table categoria
     ICONO       varchar(256) not null
 );
 
-create or replace table dificultad
+create  table dificultad
 (
     ID     int auto_increment
         primary key,
@@ -16,7 +16,7 @@ create or replace table dificultad
     LOGO   varchar(256) not null
 );
 
-create or replace table musculo
+create  table musculo
 (
     ID          int auto_increment
         primary key,
@@ -25,7 +25,7 @@ create or replace table musculo
     IMAGEN      varchar(256) not null
 );
 
-create or replace table sesionentrenamiento
+create  table sesionentrenamiento
 (
     ID          int auto_increment
         primary key,
@@ -33,7 +33,7 @@ create or replace table sesionentrenamiento
     DESCRIPCION varchar(256) not null
 );
 
-create or replace table tipofuerza
+create  table tipofuerza
 (
     ID          int auto_increment
         primary key,
@@ -41,7 +41,7 @@ create or replace table tipofuerza
     DESCRIPCION varchar(256) not null
 );
 
-create or replace table ejercicio
+create  table ejercicio
 (
     ID                 int auto_increment
         primary key,
@@ -64,7 +64,7 @@ create or replace table ejercicio
         foreign key (CATEGORIA) references categoria (ID)
 );
 
-create or replace table ejerciciosesion
+create  table ejerciciosesion
 (
     ID                     int auto_increment
         primary key,
@@ -78,14 +78,14 @@ create or replace table ejerciciosesion
         foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
 );
 
-create or replace table tipousuario
+create  table tipousuario
 (
     ID     int auto_increment
         primary key,
     NOMBRE varchar(32) not null
 );
 
-create or replace table usuario
+create  table usuario
 (
     ID        int auto_increment
         primary key,
@@ -100,7 +100,7 @@ create or replace table usuario
         foreign key (TIPO) references tipousuario (ID)
 );
 
-create or replace table entrenadorasignado
+create  table entrenadorasignado
 (
     ENTRENADOR int not null,
     CLIENTE    int not null,
@@ -111,7 +111,7 @@ create or replace table entrenadorasignado
         foreign key (CLIENTE) references usuario (ID)
 );
 
-create or replace table informacionsesion
+create  table informacionsesion
 (
     ID                     int auto_increment
         primary key,
@@ -126,7 +126,7 @@ create or replace table informacionsesion
         foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
 );
 
-create or replace table informacionejercicio
+create  table informacionejercicio
 (
     ID                   int auto_increment
         primary key,
@@ -139,7 +139,7 @@ create or replace table informacionejercicio
         foreign key (INFORMACIONSESION_ID) references informacionsesion (ID)
 );
 
-create or replace table rutina
+create  table rutina
 (
     ID             int auto_increment
         primary key,
@@ -154,7 +154,7 @@ create or replace table rutina
         foreign key (ENTRENADOR) references usuario (ID)
 );
 
-create or replace table rutinacliente
+create  table rutinacliente
 (
     USUARIO_ID   int  not null,
     RUTINA_ID    int  not null,
@@ -166,7 +166,7 @@ create or replace table rutinacliente
         foreign key (USUARIO_ID) references usuario (ID)
 );
 
-create or replace table sesionrutinas
+create  table sesionrutinas
 (
     SESIONENTRENAMIENTO_ID int not null,
     RUTINA_ID              int not null,
