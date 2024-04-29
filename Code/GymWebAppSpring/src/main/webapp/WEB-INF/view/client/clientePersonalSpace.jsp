@@ -18,7 +18,8 @@
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons CSS Dependencies -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -38,7 +39,7 @@
             <%
                 if (rutinas.isEmpty()) {
             %>
-            <h1> No hay rutinas asignadas!</h1>
+            <h1 class="text-center"> No hay rutinas asignadas!</h1>
             <%
             } else {
             %>
@@ -47,16 +48,18 @@
                 <%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
                 <%--                    The current link item--%>
                 <%--                </a>--%>
+                    <form method="post" action="client/verrutina">
                 <%
                     for (Rutina r : rutinas) {
 
 
                 %>
-                <a href="#" class="list-group-item list-group-item-action"><%=r.getNombre()%>
-                </a>
+                        <button type="submit" class="list-group-item list-group-item-action" value="<%=r.getId()%>" name="rutinaElegida"><%=r.getNombre()%></button>
+
                 <%
                     }
                 %>
+                    </form>
                 <%--                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>--%>
                 <%--                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--%>
                 <%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>
