@@ -8,7 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Usuario user = (Usuario) session.getAttribute("user");
-    System.out.println(request.getRequestURI());
 %>
 <header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">

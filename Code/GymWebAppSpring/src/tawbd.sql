@@ -1,4 +1,4 @@
-create table categoria
+create  table categoria
 (
     ID          int auto_increment
         primary key,
@@ -8,7 +8,7 @@ create table categoria
     ICONO       varchar(256) not null
 );
 
-create table dificultad
+create  table dificultad
 (
     ID     int auto_increment
         primary key,
@@ -16,7 +16,7 @@ create table dificultad
     LOGO   varchar(256) not null
 );
 
-create table musculo
+create  table musculo
 (
     ID          int auto_increment
         primary key,
@@ -25,19 +25,7 @@ create table musculo
     IMAGEN      varchar(256) not null
 );
 
-create table rutina
-(
-    ID             int auto_increment
-        primary key,
-    NOMBRE         varchar(32)  not null,
-    DESCRIPCION    varchar(256) not null,
-    DIFICULTAD     int          not null,
-    FECHA_CREACION date         not null,
-    constraint RUTINA_DIFICULTADRUTINA_DIFICULTAD_fk
-        foreign key (DIFICULTAD) references dificultad (ID)
-);
-
-create table sesionentrenamiento
+create  table sesionentrenamiento
 (
     ID          int auto_increment
         primary key,
@@ -45,19 +33,7 @@ create table sesionentrenamiento
     DESCRIPCION varchar(256) not null
 );
 
-create table sesionrutinas
-(
-    SESIONENTRENAMIENTO_ID int not null,
-    RUTINA_ID              int not null,
-    DIA                    int not null,
-    primary key (RUTINA_ID, SESIONENTRENAMIENTO_ID),
-    constraint SESIONRUTINAS_ibfk_1
-        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID),
-    constraint SESIONRUTINAS_ibfk_2
-        foreign key (RUTINA_ID) references rutina (ID)
-);
-
-create table tipofuerza
+create  table tipofuerza
 (
     ID          int auto_increment
         primary key,
@@ -65,7 +41,7 @@ create table tipofuerza
     DESCRIPCION varchar(256) not null
 );
 
-create table ejercicio
+create  table ejercicio
 (
     ID                 int auto_increment
         primary key,
@@ -88,7 +64,7 @@ create table ejercicio
         foreign key (CATEGORIA) references categoria (ID)
 );
 
-create table ejerciciosesion
+create  table ejerciciosesion
 (
     ID                     int auto_increment
         primary key,
@@ -102,14 +78,14 @@ create table ejerciciosesion
         foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
 );
 
-create table tipousuario
+create  table tipousuario
 (
     ID     int auto_increment
         primary key,
     NOMBRE varchar(32) not null
 );
 
-create table usuario
+create  table usuario
 (
     ID        int auto_increment
         primary key,
@@ -124,7 +100,7 @@ create table usuario
         foreign key (TIPO) references tipousuario (ID)
 );
 
-create table entrenadorasignado
+create  table entrenadorasignado
 (
     ENTRENADOR int not null,
     CLIENTE    int not null,
@@ -135,7 +111,7 @@ create table entrenadorasignado
         foreign key (CLIENTE) references usuario (ID)
 );
 
-create table informacionsesion
+create  table informacionsesion
 (
     ID                     int auto_increment
         primary key,
@@ -150,7 +126,7 @@ create table informacionsesion
         foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
 );
 
-create table informacionejercicio
+create  table informacionejercicio
 (
     ID                   int auto_increment
         primary key,
@@ -163,7 +139,22 @@ create table informacionejercicio
         foreign key (INFORMACIONSESION_ID) references informacionsesion (ID)
 );
 
-create table rutinacliente
+create  table rutina
+(
+    ID             int auto_increment
+        primary key,
+    NOMBRE         varchar(32)  not null,
+    DESCRIPCION    varchar(256) not null,
+    DIFICULTAD     int          not null,
+    FECHA_CREACION date         not null,
+    ENTRENADOR     int          not null,
+    constraint RUTINA_DIFICULTADRUTINA_DIFICULTAD_fk
+        foreign key (DIFICULTAD) references dificultad (ID),
+    constraint RUTINA_USUARIO_FK
+        foreign key (ENTRENADOR) references usuario (ID)
+);
+
+create  table rutinacliente
 (
     USUARIO_ID   int  not null,
     RUTINA_ID    int  not null,
@@ -175,18 +166,17 @@ create table rutinacliente
         foreign key (USUARIO_ID) references usuario (ID)
 );
 
-create table rutinaentrenador
+create  table sesionrutinas
 (
-    USUARIO_ID int not null,
-    RUTINA_ID  int not null,
-    primary key (RUTINA_ID, USUARIO_ID),
-    constraint RUTINAENTRENADOR_USUARIO_2
-        foreign key (USUARIO_ID) references usuario (ID),
-    constraint RUTINAENTRENADOR_ibfk_1
+    SESIONENTRENAMIENTO_ID int not null,
+    RUTINA_ID              int not null,
+    DIA                    int not null,
+    primary key (RUTINA_ID, SESIONENTRENAMIENTO_ID),
+    constraint SESIONRUTINAS_ibfk_1
+        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID),
+    constraint SESIONRUTINAS_ibfk_2
         foreign key (RUTINA_ID) references rutina (ID)
 );
-
-use tawbd;
 
 -- Insertar datos en la tabla 'categoria'
 INSERT INTO categoria (NOMBRE, DESCRIPCION, TIPOS_BASE, ICONO)
@@ -209,12 +199,6 @@ VALUES ('Pectoral mayor', 'Músculo del pecho, responsable de empujar y rotar el
         'img/musculos/biceps.png'),
        ('Tríceps braquial', 'Músculo de la parte posterior del brazo, responsable de extender el codo',
         'img/musculos/triceps.png');
-
--- Insertar datos en la tabla 'rutina'
-INSERT INTO rutina (NOMBRE, DESCRIPCION, DIFICULTAD, FECHA_CREACION)
-VALUES ('Rutina para principiantes', 'Ejercicios básicos para tonificar todo el cuerpo', 1, '2024-04-01'),
-       ('Rutina para quemar grasa', 'Ejercicios enfocados en el gasto calórico', 2, '2024-04-05'),
-       ('Rutina para ganar músculo', 'Ejercicios para aumentar la masa muscular', 3, '2024-04-10');
 
 -- Insertar datos en la tabla 'sesionentrenamiento'
 INSERT INTO sesionentrenamiento (NOMBRE, DESCRIPCION)
@@ -239,6 +223,12 @@ INSERT INTO tawbd.usuario (NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
 VALUES ('Eulogo', 'Quemadisima', 'm', 33, '1', '6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B', 1),
        ('Tiko', 'Toko', 'm', 33, '2', 'D4735E3A265E16EEE03F59718B9B5D03019C07D8B6C51F90DA3A666EEC13AB35', 2),
        ('Paco', 'Fiestas', 'm', 18, 'admin', '8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918', 3);
+
+-- Insertar datos en la tabla 'rutina'
+INSERT INTO rutina (NOMBRE, DESCRIPCION, DIFICULTAD, FECHA_CREACION, ENTRENADOR)
+VALUES ('Rutina para principiantes', 'Ejercicios básicos para tonificar todo el cuerpo', 1, '2024-04-01',2),
+       ('Rutina para quemar grasa', 'Ejercicios enfocados en el gasto calórico', 2, '2024-04-05',2),
+       ('Rutina para ganar músculo', 'Ejercicios para aumentar la masa muscular', 3, '2024-04-10',2);
 
 -- Insertar datos en la tabla 'ejercicio' (no funciona)
 INSERT INTO tawbd.ejercicio (NOMBRE, DESCRIPCION, MUSCULO, EQUIPAMIENTO, TIPOFUERZA, MUSCULO_SECUNDARIO, VIDEO, LOGO,

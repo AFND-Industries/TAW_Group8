@@ -1,10 +1,7 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.*;
-import com.example.GymWebAppSpring.entity.Rutina;
-import com.example.GymWebAppSpring.entity.Rutinacliente;
-import com.example.GymWebAppSpring.entity.RutinaclienteId;
-import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +16,23 @@ import java.util.List;
 @Controller
 public class EntrenadorControllerCientes {
 
-    @Autowired
-    private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
+
     @Autowired
     private RutinaUsuarioRepository rutinaUsuarioRepository;
+    @Autowired
+    private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
     private SesionRutinaRepository sesioRutinaRepository;
     @Autowired
     private RutinaClienteReporsitory rutinaClienteReporsitory;
+    @Autowired
+    private RutinaRepository rutinaRepository;
+    private EjercicioSesionRepository ejercicioSesionRepository;
+    @Autowired
+    private SesionentrenamientoRepository sesionentrenamientoRepository;
+
 
     @GetMapping("/entrenador/clientes")
     public String entrenadorClientes(Model model, HttpSession session) {
@@ -59,7 +63,7 @@ public class EntrenadorControllerCientes {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
         List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(id);
-        List<Rutina> rutinasEntrenador = rutinaUsuarioRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session).getId());
+        List<Rutina> rutinasEntrenador = rutinaRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session));
 
         model.addAttribute("rutinasCliente", rutinasCliente);
         model.addAttribute("rutinasEntrenador", rutinasEntrenador);
@@ -107,5 +111,31 @@ public class EntrenadorControllerCientes {
         Rutinacliente rutinaCliente = rutinaClienteReporsitory.findById(rutinaclienteId).orElse(null);
         rutinaClienteReporsitory.delete(rutinaCliente);
         return "redirect:/entrenador/clientes/rutinas?id=" + idCliente;
+    }
+
+    @GetMapping("/entrenador/clientes/rutinas/verRutina")
+    public String doVerRutina(@RequestParam("id") Rutina rutina, Model model, HttpSession session){
+        if(!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
+        List<Sesionentrenamiento> sesiones = sesioRutinaRepository.findSesionsByRutina(rutina);
+
+        model.addAttribute("rutina", rutina);
+        model.addAttribute("sesiones", sesiones);
+
+        return "/entrenador/clientes/ver_rutina_cliente";
+    }
+
+    @GetMapping("/entrenador/clientes/rutinas/verSesion")
+    public String doVerSesion(@RequestParam("id") Sesionentrenamiento sesion, Model model, HttpSession session){
+        if(!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
+        List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
+
+        model.addAttribute("sesion", sesion);
+        model.addAttribute("ejercicios", ejercicios);
+
+        return "/entrenador/clientes/ver_sesion_cliente";
     }
 }

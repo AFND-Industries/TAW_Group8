@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface EjercicioSesionRepository extends JpaRepository<Ejercicio, Integer> {
+public interface EjercicioSesionRepository extends JpaRepository<Ejerciciosesion, Integer> {
 
-    @Query("SELECT e FROM Ejerciciosesion e WHERE e.sesionentrenamiento = :sesionEntre")
-    List<Ejerciciosesion> findEjercicioSesionBySesionEntrenamiento(@Param("sesionEntre") Sesionentrenamiento sesionentrenamiento);
+    @Query("SELECT e FROM Ejerciciosesion e WHERE e.sesionentrenamiento = :sesion")
+    public List<Ejerciciosesion> findEjerciciosBySesion(@Param("sesion") Sesionentrenamiento sesion);
 }
