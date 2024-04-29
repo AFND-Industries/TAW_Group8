@@ -1,3 +1,4 @@
+use tawbd;
 create  table categoria
 (
     ID          int auto_increment

@@ -41,12 +41,15 @@ public class EntrenadorControllerCientes {
     @Autowired
     private SesionentrenamientoRepository sesionentrenamientoRepository;
 
+    @Autowired
+    private InformacionSesionRepository informacionSesionRepository;
+
 
     @GetMapping("/entrenador/clientes")
     public String entrenadorClientes(Model model, HttpSession session) {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
-        List<Usuario> clientesAsignados = entrenadorAsignadoRepository.findClientsByEntrenadorID(4);
+        List<Usuario> clientesAsignados = entrenadorAsignadoRepository.findClientsByEntrenadorID(AuthUtils.getUser(session).getId());
         model.addAttribute("clientes", clientesAsignados);
         return "/entrenador/clientes/clientes_entrenador";
     }
@@ -140,9 +143,11 @@ public class EntrenadorControllerCientes {
             return "redirect:/";
 
         List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
+        Informacionsesion informacionSesion = informacionSesionRepository.findByUsuarioAndSesion(AuthUtils.getUser(session), sesion);
 
         model.addAttribute("sesion", sesion);
         model.addAttribute("ejercicios", ejercicios);
+        model.addAttribute("informacionSesion", informacionSesion);
 
         return "/entrenador/clientes/ver_sesion_cliente";
     }
