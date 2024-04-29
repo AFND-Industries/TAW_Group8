@@ -27,6 +27,10 @@ public class Controlador {
         return "redirect:/";
     }
 
+    @GetMapping("/entrenador")
+    public String doInicio() {
+        return "/entrenador/inicio";
+    }
 //    @GetMapping("/error")
 //    public String doError(){
 //        return "error";
