@@ -35,23 +35,32 @@
 <div class="container-fluid">
     <div class="row d-flex justify-content-center align-items-center ">
         <div class="col-6 flex-column mx-5 border border-primary border-3 rounded" style="height: 400px">
+            <%
+                if (rutinas.isEmpty()) {
+            %>
+            <h1> No hay rutinas asignadas!</h1>
+            <%
+            } else {
+            %>
+
             <div class="list-group my-2">
-<%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
-<%--                    The current link item--%>
-<%--                </a>--%>
+                <%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
+                <%--                    The current link item--%>
+                <%--                </a>--%>
                 <%
                     for (Rutina r : rutinas) {
 
 
                 %>
-                <a href="#" class="list-group-item list-group-item-action"> <%=r.getNombre()%></a>
-                        <%
-                        }
-                    %>
-<%--                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>--%>
-<%--                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--%>
-<%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>
-<%--                        item</a>--%>
+                <a href="#" class="list-group-item list-group-item-action"><%=r.getNombre()%>
+                </a>
+                <%
+                    }
+                %>
+                <%--                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>--%>
+                <%--                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--%>
+                <%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>
+                <%--                        item</a>--%>
             </div>
             <div class="d-flex justify-content-center">
                 <nav aria-label="..." class="mt-1 ">
@@ -70,6 +79,9 @@
                     </ul>
                 </nav>
             </div>
+            <%
+                }
+            %>
         </div>
     </div>
 </div>
