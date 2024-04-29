@@ -48,7 +48,7 @@
                     0%
                 </div></td>
                 <td>
-                    <a class="btn border border-black">
+                    <a class="btn border border-black" href="/entrenador/clientes/rutinas/verSesion?id=<%= sesion.getId()%>">
                         Ver desempeño
                     </a>
                 </td>

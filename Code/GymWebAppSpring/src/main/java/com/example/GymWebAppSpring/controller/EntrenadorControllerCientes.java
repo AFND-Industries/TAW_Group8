@@ -29,6 +29,10 @@ public class EntrenadorControllerCientes {
     private RutinaClienteReporsitory rutinaClienteReporsitory;
     @Autowired
     private RutinaRepository rutinaRepository;
+    private EjercicioSesionRepository ejercicioSesionRepository;
+    @Autowired
+    private SesionentrenamientoRepository sesionentrenamientoRepository;
+
 
     @GetMapping("/entrenador/clientes")
     public String entrenadorClientes(Model model, HttpSession session) {
@@ -120,5 +124,18 @@ public class EntrenadorControllerCientes {
         model.addAttribute("sesiones", sesiones);
 
         return "/entrenador/clientes/ver_rutina_cliente";
+    }
+
+    @GetMapping("/entrenador/clientes/rutinas/verSesion")
+    public String doVerSesion(@RequestParam("id") Sesionentrenamiento sesion, Model model, HttpSession session){
+        if(!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
+        List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
+
+        model.addAttribute("sesion", sesion);
+        model.addAttribute("ejercicios", ejercicios);
+
+        return "/entrenador/clientes/ver_sesion_cliente";
     }
 }
