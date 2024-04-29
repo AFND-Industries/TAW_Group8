@@ -2,6 +2,9 @@ package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.RutinaRepository;
 import com.example.GymWebAppSpring.entity.Rutina;
+import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.util.AuthUtils;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +21,20 @@ public class EntrenadorControllerCRUD {
     protected RutinaRepository rutinaRepository;
 
     @GetMapping("")
-    public String doRutinas(Model model) {
-        // aqui hay que h6acer un filtro para que solo coja las rutinas que ha creado el entrenador actual (getuser)
-        List<Rutina> rutinas = rutinaRepository.findAll();
+    public String doRutinas(HttpSession session, Model model) {
+        Usuario entrenador = AuthUtils.getUser(session);
 
-        model.addAttribute("rutinas", rutinas);
+        String strTo = "/entrenador/crud/rutinas";
+        if (!AuthUtils.isTrainer(session)) {
+            strTo = "redirect:/";
+        }
+        else {
+            System.out.println(entrenador.getId());
+            List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(1);
+            model.addAttribute("rutinas", rutinas);
+        }
 
-        return "/entrenador/crud/rutinas";
+        return strTo;
     }
 
     @GetMapping("/crear")

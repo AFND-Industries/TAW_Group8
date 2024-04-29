@@ -27,6 +27,8 @@ public class EntrenadorControllerCientes {
     private SesionRutinaRepository sesioRutinaRepository;
     @Autowired
     private RutinaClienteReporsitory rutinaClienteReporsitory;
+    @Autowired
+    private RutinaRepository rutinaRepository;
 
     @GetMapping("/entrenador/clientes")
     public String entrenadorClientes(Model model, HttpSession session) {
@@ -57,7 +59,7 @@ public class EntrenadorControllerCientes {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
         List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(id);
-        List<Rutina> rutinasEntrenador = rutinaUsuarioRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session).getId());
+        List<Rutina> rutinasEntrenador = rutinaRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session).getId());
 
         model.addAttribute("rutinasCliente", rutinasCliente);
         model.addAttribute("rutinasEntrenador", rutinasEntrenador);
