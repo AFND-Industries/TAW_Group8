@@ -25,6 +25,10 @@ public class Rutina {
     @Column(name = "FECHA_CREACION", nullable = false)
     private LocalDate fechaCreacion;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ENTRENADOR", nullable = false)
+    private Usuario entrenador;
+
     public Integer getId() {
         return id;
     }
@@ -63,6 +67,14 @@ public class Rutina {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public Usuario getEntrenador() {
+        return entrenador;
+    }
+
+    public void setEntrenador(Usuario entrenador) {
+        this.entrenador = entrenador;
     }
 
 }

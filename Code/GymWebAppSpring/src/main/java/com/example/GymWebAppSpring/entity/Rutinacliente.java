@@ -1,8 +1,6 @@
 package com.example.GymWebAppSpring.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 
@@ -14,13 +12,11 @@ public class Rutinacliente {
 
     @MapsId("usuarioId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "USUARIO_ID", nullable = false)
     private Usuario usuario;
 
     @MapsId("rutinaId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "RUTINA_ID", nullable = false)
     private Rutina rutina;
 
