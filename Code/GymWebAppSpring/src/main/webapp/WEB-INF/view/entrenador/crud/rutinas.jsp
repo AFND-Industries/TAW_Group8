@@ -118,12 +118,15 @@
             for (Rutina rutina : rutinas) {
         %>
         <div class="row">
-            <div class="col-8 d-flex align-items-center" style="height:75px">
+            <a class="col-8 d-flex align-items-center"  style="height:75px; text-decoration: none; cursor: pointer;"
+                 href="/entrenador/rutinas/ver">
                 <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                <span class="ms-3 h2"><%=rutina.getNombre()%></span>
-            </div>
+                <span class="ms-3 h2" style="color: black;"><%=rutina.getNombre()%></span>
+            </a>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="/entrenador/rutinas/editar" style="cursor: pointer; text-decoration: none;">
+                    <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                </a>
                 <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
                     <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                 </div>

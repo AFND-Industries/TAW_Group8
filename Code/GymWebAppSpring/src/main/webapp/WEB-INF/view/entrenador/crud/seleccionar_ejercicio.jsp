@@ -39,8 +39,9 @@
         <%
             for (Integer ejercicio : ejercicios) {
         %>
-        <div class="row" style="cursor: pointer;">
-            <a class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none;" href="/entrenador/rutinas/crear/ejercicio">
+        <div class="row">
+            <a class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
+               href="/entrenador/rutinas/crear/ejercicio">
                 <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
                 <div>
                     <span class="ms-3 h2" style="color: black;">Ejercicio <%=ejercicio%></span><br>

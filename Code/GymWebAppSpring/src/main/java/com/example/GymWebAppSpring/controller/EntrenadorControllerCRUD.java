@@ -19,7 +19,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("")
     public String doRutinas(Model model) {
-        // aqui hay que hacer un filtro para que solo coja las rutinas que ha creado el entrenador actual (getuser)
+        // aqui hay que h6acer un filtro para que solo coja las rutinas que ha creado el entrenador actual (getuser)
         List<Rutina> rutinas = rutinaRepository.findAll();
 
         model.addAttribute("rutinas", rutinas);
@@ -30,6 +30,16 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/crear")
     public String doCrearRutina() {
         return "/entrenador/crud/crear_rutina";
+    }
+
+    @GetMapping("/editar")
+    public String doEditarRutina() {
+        return "redirect:/entrenador/rutinas/crear";
+    }
+
+    @GetMapping("/ver")
+    public String doVerRutina() {
+        return "redirect:/entrenador/rutinas/crear";
     }
 
     @GetMapping("/crear/sesion")
