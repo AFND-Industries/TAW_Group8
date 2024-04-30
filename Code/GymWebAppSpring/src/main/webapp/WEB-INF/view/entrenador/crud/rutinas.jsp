@@ -119,7 +119,7 @@
         <div class="row">
             <a class="col-8 d-flex align-items-center"  style="height:75px; text-decoration: none; cursor: pointer;"
                  href="/entrenador/rutinas/ver?id=<%= rutina.getId() %>">
-                <img src="<%=rutina.getDificultad().getLogo()%>" alt="Dificultad" onerror="this.onerror=null;this.src='/svg/question-square.svg';" style="width:50px; height:50px">
+                <img src="<%=rutina.getDificultad().getLogo()%>" alt="Dificultad" style="width:50px; height:50px">
                 <span class="ms-3 h2" style="color: black;"><%=rutina.getNombre()%></span>
             </a>
             <div class="col-4 d-flex justify-content-end align-items-center">
