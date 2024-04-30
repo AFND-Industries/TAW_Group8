@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -66,16 +68,24 @@ public class EntrenadorControllerCRUD {
     public String doGuardar(@RequestParam("id") Integer id,
                             @RequestParam("nombre") String nombre,
                             @RequestParam("dificultad") Integer dificultad,
-                            @RequestParam("descripcion") String descripcion) {
+                            @RequestParam("descripcion") String descripcion,
+                            HttpSession session) {
 
-        Rutina rutina = rutinaRepository.findById(id).orElse(new Rutina());
+        Rutina rutina = rutinaRepository.findById(id).orElse(null);
+
+        if (rutina == null) {
+            rutina = new Rutina();
+
+            rutina.setEntrenador(AuthUtils.getUser(session));
+            rutina.setFechaCreacion(LocalDate.now());
+        }
 
         rutina.setNombre(nombre);
-        rutina.setDificultad(dificultadRepository.findById(dificultad).orElse(null));
-        rutina.setDescripcion(descripcion);
+        rutina.setDificultad(dificultadRepository.findById(dificultad).orElse(null)); // no va a ser null, pero habria que controlarlo
+        rutina.setDescripcion(descripcion); // problema description too long
 
         rutinaRepository.save(rutina);
-        // falta la fecha y demas es lo unico
+
         return "redirect:/entrenador/rutinas";
     }
 
