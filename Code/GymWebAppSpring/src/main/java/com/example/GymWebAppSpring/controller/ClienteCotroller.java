@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class ClienteCotroller {
     public String doVerRutina(@RequestParam("rutinaElegida") Rutina rutina,HttpSession sesion, Model modelo  ) {
         if (!AuthUtils.isClient(sesion))
             return "redirect:/";
-        Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = new HashMap<>();
+        Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = new LinkedHashMap<>();
 
 
         Usuario user = (Usuario) sesion.getAttribute("user");

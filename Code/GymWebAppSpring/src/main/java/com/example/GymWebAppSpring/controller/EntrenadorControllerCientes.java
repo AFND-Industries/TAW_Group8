@@ -124,7 +124,9 @@ public class EntrenadorControllerCientes {
     }
 
     @GetMapping("/entrenador/clientes/rutinas/verRutina")
-    public String doVerRutina(@RequestParam("id") Rutina rutina, Model model, HttpSession session){
+    public String doVerRutina(@RequestParam("idRutina") Rutina rutina,
+                              @RequestParam("idCliente") Usuario cliente,
+                              Model model, HttpSession session){
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
 
@@ -132,21 +134,25 @@ public class EntrenadorControllerCientes {
 
         model.addAttribute("rutina", rutina);
         model.addAttribute("sesiones", sesiones);
+        model.addAttribute("cliente", cliente);
 
         return "/entrenador/clientes/ver_rutina_cliente";
     }
 
     @GetMapping("/entrenador/clientes/rutinas/verSesion")
-    public String doVerSesion(@RequestParam("id") Sesionentrenamiento sesion, Model model, HttpSession session){
+    public String doVerSesion(@RequestParam("idSesion") Sesionentrenamiento sesion,
+                              @RequestParam("idCliente") Usuario cliente,
+                              Model model, HttpSession session){
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
 
         List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
-        Informacionsesion informacionSesion = informacionSesionRepository.findByUsuarioAndSesion(AuthUtils.getUser(session), sesion);
+        Informacionsesion informacionSesion = informacionSesionRepository.findByUsuarioAndSesion(cliente, sesion);
 
         model.addAttribute("sesion", sesion);
         model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("informacionSesion", informacionSesion);
+        model.addAttribute("cliente", cliente);
 
         return "/entrenador/clientes/ver_sesion_cliente";
     }
