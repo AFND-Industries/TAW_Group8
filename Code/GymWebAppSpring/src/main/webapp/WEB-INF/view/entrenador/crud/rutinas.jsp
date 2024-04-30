@@ -32,11 +32,11 @@
                     <h1 class="modal-title fs-5" id="delete-modal-label">Eliminar rutina</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="delete-modal-body">
                     ¿Estás seguro de que quieres eliminar la rutina?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+                    <button type="button" class="btn btn-danger" id="delete-modal-button">Eliminar</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
@@ -120,13 +120,13 @@
             <a class="col-8 d-flex align-items-center"  style="height:75px; text-decoration: none; cursor: pointer;"
                  href="/entrenador/rutinas/ver?id=<%= rutina.getId() %>">
                 <img src="<%=rutina.getDificultad().getLogo()%>" alt="Dificultad" style="width:50px; height:50px">
-                <span class="ms-3 h2" style="color: black;"><%=rutina.getNombre()%></span>
+                <span class="ms-3 h2 mb-0" style="color: black;"><%=rutina.getNombre()%></span>
             </a>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <a href="/entrenador/rutinas/editar?id=<%= rutina.getId() %>" style="cursor: pointer; text-decoration: none;">
                     <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                 </a>
-                <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
+                <div style="cursor: pointer;" onclick="showDeleteModal('<%=rutina.getNombre()%>', '<%=rutina.getId()%>')">
                     <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                 </div>
             </div>
@@ -136,5 +136,17 @@
             }
         %>
     </div>
+<script>
+    function showDeleteModal(nombre, id) {
+        const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
+        const modalBody = document.getElementById("delete-modal-body");
+        const modalButton = document.getElementById("delete-modal-button");
+
+        modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la rutina <b>` + nombre + `</b>?`;
+        modalButton.onclick = () => { window.location.href = `/entrenador/rutinas/borrar?id=` + id; };
+
+        deleteModal.show();
+    }
+</script>
 </body>
 </html>

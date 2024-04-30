@@ -25,7 +25,8 @@ public class EntrenadorControllerCRUD {
     // si psa algo por usar post
     // preguntar como hago lo de editar/<%=rutina.getId()%> de una manera mas elegante
     // como hago que lo de arriba sea un string referenciable prefix o path
-
+    // preguntar como hacer cosas como restricciones de que no deje crear si algun cmapo esta vacio o cosas asi
+    // si hacerlas con javascript o que
     @Autowired
     protected RutinaRepository rutinaRepository;
 
@@ -70,7 +71,6 @@ public class EntrenadorControllerCRUD {
                             @RequestParam("dificultad") Integer dificultad,
                             @RequestParam("descripcion") String descripcion,
                             HttpSession session) {
-
         Rutina rutina = rutinaRepository.findById(id).orElse(null);
 
         if (rutina == null) {
@@ -85,6 +85,15 @@ public class EntrenadorControllerCRUD {
         rutina.setDescripcion(descripcion); // problema description too long
 
         rutinaRepository.save(rutina);
+
+        return "redirect:/entrenador/rutinas";
+    }
+
+    @GetMapping("/borrar")
+    public String doBorrar(@RequestParam("id") Integer id) {
+        Rutina rutina = rutinaRepository.findById(id).orElse(null); // no deberia ser nunca null pero se puede probar
+
+        rutinaRepository.delete(rutina);
 
         return "redirect:/entrenador/rutinas";
     }
