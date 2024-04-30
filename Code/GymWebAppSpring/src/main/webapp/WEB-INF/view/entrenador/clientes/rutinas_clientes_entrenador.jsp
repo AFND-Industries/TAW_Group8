@@ -81,7 +81,7 @@
             <% int i = 0;
                 for (Rutina rutina : rutinas) { %>
             <tr>
-                <td><a class="btn" style="font-size: 20px; border: transparent" href="/entrenador/clientes/rutinas/verRutina?id=<%= rutina.getId() %>">
+                <td><a class="btn" style="font-size: 20px; border: transparent" href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>&idCliente=<%=usuario.getId()%>">
                     <%= rutina.getNombre() %>
                 </a></td>
                 <td><div class="my-2" style="font-size: 18px">

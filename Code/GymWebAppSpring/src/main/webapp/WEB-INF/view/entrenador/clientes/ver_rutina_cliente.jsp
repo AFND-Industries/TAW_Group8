@@ -1,6 +1,7 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 29/04/2024
@@ -11,6 +12,7 @@
 <%
     Rutina rutina = (Rutina) request.getAttribute("rutina");
     List<Sesionentrenamiento> sesiones = (List<Sesionentrenamiento>) request.getAttribute("sesiones");
+    Usuario cliente = (Usuario) request.getAttribute("cliente");
 %>
 <html>
 <head>
@@ -48,7 +50,7 @@
                     0%
                 </div></td>
                 <td>
-                    <a class="btn border border-black" href="/entrenador/clientes/rutinas/verSesion?id=<%= sesion.getId()%>">
+                    <a class="btn border border-black" href="/entrenador/clientes/rutinas/verSesion?idSesion=<%= sesion.getId()%>&idCliente=<%= cliente.getId() %>">
                         Ver desempeño
                     </a>
                 </td>
