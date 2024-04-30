@@ -2,7 +2,8 @@
 <%@ page import="java.time.DayOfWeek" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="com.example.GymWebAppSpring.entity.*" %>
-<%@ page import="java.util.Map" %><%--
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Locale" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
@@ -59,7 +60,11 @@
                 <%
                     for (Sesionrutina s : sesionesEjercicios.keySet()) {
                         boolean esHoy = diaSemanaActual.getValue() == s.getDia();
-
+                        DayOfWeek diaSemana = DayOfWeek.of(s.getDia());
+                        String nombreDia = diaSemana.getDisplayName(
+                                java.time.format.TextStyle.FULL,
+                                new Locale("es", "ES")
+                        );
                 %>
                 <tr class="<%=esHoy ? "table-primary" : ""%>">
 
@@ -68,17 +73,12 @@
                     <td> <%=sesionesEjercicios.get(s).size()!=0 ? (sesionesEjercicios.get(s).size()*100/sesionesEjercicios.get(s).size()) : "Nan"%>% completada! </td>
                     <td class="text-end">
 
-                            <%
-                            if(esHoy){
-                        %>
 
-                    <span class="badge text-bg-warning">
-                        Tu sesion de hoy!
+                    <span class="badge text-bg-<%=esHoy ? "warning" : "primary"%>">
+                        Tu sesion del <%=esHoy ? "dia de hoy": nombreDia%>
                     </span>
 
-                    <%
-                        }
-                    %>
+
                 </td>
                 </tr>
                 <%
