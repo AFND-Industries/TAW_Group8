@@ -189,9 +189,9 @@ VALUES ('Fuerza', 'Ejercicios para aumentar la masa muscular', 'Peso corporal, m
 
 -- Insertar datos en la tabla 'dificultad'
 INSERT INTO dificultad (NOMBRE, LOGO)
-VALUES ('Principiante', 'img/dificultades/principiante.png'),
-       ('Intermedio', 'img/dificultades/intermedio.png'),
-       ('Avanzado', 'img/dificultades/avanzado.png');
+VALUES ('Principiante', '/svg/dificultades/principiante.svg'),
+       ('Intermedio', '/svg/dificultades/intermedio.svg'),
+       ('Avanzado', '/svg/dificultades/avanzado.svg');
 
 -- Insertar datos en la tabla 'musculo'
 INSERT INTO musculo (NOMBRE, DESCRIPCION, IMAGEN)
