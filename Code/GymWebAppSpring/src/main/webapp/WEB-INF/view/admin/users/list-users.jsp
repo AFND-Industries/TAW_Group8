@@ -11,6 +11,10 @@
 <%
     List<Usuario> usuarios = (List<Usuario>) request.getAttribute("users");
     List<Tipousuario> tipos = (List<Tipousuario>) request.getAttribute("tipos");
+    String _dni = (String) request.getAttribute("dniFilter");
+    String _apellidos = (String) request.getAttribute("apellidosFilter");
+    Integer _edad = (Integer) request.getAttribute("edadFilter");
+    Tipousuario _tipo = (Tipousuario) request.getAttribute("tipoFilter");
 %>
 <html>
 <head>
@@ -26,15 +30,15 @@
 <div class="container">
     <h1 class="text-center mb-2">Listado de usuarios</h1>
     <form class="d-flex justify-content-between g-3" method="post" action="">
-        <input type="text" class="form-control" name="dni" placeholder="DNI" />
-        <input type="text" class="form-control ms-2" name="apellidos" placeholder="Apellidos" />
-        <input type="number" class="form-control ms-2" name="edad" placeholder="Edad" />
+        <input type="text" class="form-control" value="<%=_dni != null ? _dni : ""%>" name="dni" placeholder="DNI" />
+        <input type="text" class="form-control ms-2" value="<%=_apellidos != null ? _apellidos : ""%>" name="apellidos" placeholder="Apellidos" />
+        <input type="number" class="form-control ms-2" value="<%=_edad != null ? _edad : ""%>" name="edad" placeholder="Edad" />
         <select class="form-select ms-2" name="tipo">
-            <option disabled selected>Tipo de usuario</option>
+            <option disabled <%=_tipo == null ? "selected" : ""%>>Tipo de usuario</option>
             <%
                 for (Tipousuario tipo : tipos){
             %>
-                <option value="<%=tipo.getId()%>"><%=tipo.getNombre()%></option>
+                <option value="<%=tipo.getId()%>" <%=tipo != null && tipo.equals(_tipo) ? "selected" : ""%>><%=tipo.getNombre()%></option>
             <%
                 }
             %>
@@ -53,6 +57,15 @@
         </thead>
         <tbody>
         <%
+            if (usuarios.isEmpty()){
+        %>
+        <tr>
+            <th colspan="6" style="text-align: center">¡Ups! No se ha encontrado ningún usuario :(</th>
+        </tr>
+        <%
+            }
+        %>
+        <%
             for(Usuario usuario : usuarios) {
         %>
         <a href="/admin/view?id=<%=usuario.getId()%>">
@@ -63,6 +76,7 @@
                 <td><%= usuario.getDni() %></td>
                 <td><%= usuario.getTipo().getNombre() %></td>
                 <td>
+                    <a href="/admin/view?id=<%=usuario.getId()%>"><i class="bi bi-book me-3"></i></a>
                     <a href="/admin/edit?id=<%=usuario.getId()%>"><i class="bi bi-pencil-square me-3"></i></a>
                     <a href="/admin/delete?id=<%=usuario.getId()%>"><i class="bi bi-trash3 me-3"></i></a>
                     <%

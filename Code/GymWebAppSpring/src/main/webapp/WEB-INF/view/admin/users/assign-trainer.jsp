@@ -30,14 +30,18 @@
     <h2 class="mb-4">Asignar entrenadores a <%=usuario.getNombre()%></h2>
         <form method="post" action="/admin/assign">
             <input type="hidden" value="<%=usuario.getId()%>" name="user" />
-            <%
-                for (Usuario entrenador : entrenadores){
-            %>
-                <input type="checkbox" class="form-check-input mb-3" value="<%=entrenador.getId()%>" name="trainers" <%=selected.contains(entrenador) ? "checked" : ""%>  />
-                <label><%=entrenador.getNombre()%> <%=entrenador.getApellidos()%></label>
-            <%
-                }
-            %>
+            <div class="row">
+                <%
+                    for (Usuario entrenador : entrenadores){
+                %>
+                <div class="col-md-6 col-12 d-flex aling-items-start ">
+                    <input type="checkbox" class="form-check-input mb-3 me-2" value="<%=entrenador.getId()%>" name="trainers" <%=selected.contains(entrenador) ? "checked" : ""%>  />
+                    <label><%=entrenador.getNombre()%> <%=entrenador.getApellidos()%></label>
+                </div>
+                <%
+                    }
+                %>
+            </div>
             <button class="btn btn-primary w-100">
                 <i class="bi bi-floppy-2-fill"></i> Asignar entrenadores
             </button>

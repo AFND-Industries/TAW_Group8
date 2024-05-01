@@ -10,7 +10,6 @@ import com.example.GymWebAppSpring.entity.Usuario;
 import com.example.GymWebAppSpring.util.HashUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,18 +38,18 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
         return "admin/dashboard";
     }
 
     /* ------------------------- Register Functions */
     @GetMapping("/register")
     public String registerPage(Model model, HttpSession session){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
 
         model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
         return "admin/users/edit-user";
@@ -69,9 +68,9 @@ public class AdminController {
             Model model,
             HttpSession session
     ){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
         Usuario usuario = new Usuario();
         usuario.setDni(dni);
         usuario.setNombre(nombre);
@@ -89,10 +88,11 @@ public class AdminController {
     /* ------------------------- Edit Functions */
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") Usuario user, Model model, HttpSession session){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
         model.addAttribute("user",user);
+        model.addAttribute("editable",true);
         model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
         return "admin/users/edit-user";
     }
@@ -109,9 +109,9 @@ public class AdminController {
             @RequestParam("genero") char genero,
             HttpSession session
     ){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
         usuario.setDni(dni);
         usuario.setNombre(nombre);
         usuario.setEdad(edad);
@@ -128,9 +128,9 @@ public class AdminController {
     /* ------------------------- Read Functions */
     @GetMapping("/view")
     public String view(@RequestParam("id") Usuario usuario, Model model, HttpSession session){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
         model.addAttribute("user",usuario);
         model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
         model.addAttribute("editable",false);
@@ -141,9 +141,9 @@ public class AdminController {
     /* ------------------------- Delete Functions */
     @GetMapping("/delete")
     public String delete(@RequestParam("id") Usuario usuario, HttpSession session){
-        if (!isAdmin(session)){
-            return "redirect:/";
-        }
+        if (!isAdmin(session))
+            return "redirect:/login";
+
         usuarioRepository.delete(usuario);
         return "redirect:/admin/users";
     }
@@ -153,7 +153,7 @@ public class AdminController {
     @GetMapping("/users")
     public String listUsers(Model model, HttpSession session){
         if (!isAdmin(session))
-            return "redirect:/";
+            return "redirect:/login";
 
         model.addAttribute("users",usuarioRepository.findAll());
         model.addAttribute("tipos", tipoUsuarioRepository.findAll());
@@ -170,18 +170,26 @@ public class AdminController {
             HttpSession session
     ){
         if(!isAdmin(session))
-            return "redirect:/";
+            return "redirect:/login";
 
         List<Usuario> users = usuarioRepository.findAll();
 
-        if(dni != null)
+        if(dni != null && !dni.isBlank()){
             users.retainAll(usuarioRepository.findUsuarioByDNI(dni));
-        if(apellidos != null)
+            model.addAttribute("dniFilter", dni);
+        }
+        if(apellidos != null && !apellidos.isBlank()){
             users.retainAll(usuarioRepository.findUsuarioByApellidos(apellidos));
-        if(edad != null)
+            model.addAttribute("apellidosFilter", apellidos);
+        }
+        if(edad != null){
             users.retainAll(usuarioRepository.findUsuarioByEdad(edad));
-        if(tipo != null)
+            model.addAttribute("edadFilter", edad);
+        }
+        if(tipo != null){
             users.retainAll(usuarioRepository.findUsuarioByTipoUsuario(tipo));
+            model.addAttribute("tipoFilter", tipo);
+        }
 
         model.addAttribute("users",users);
         model.addAttribute("tipos", tipoUsuarioRepository.findAll());
@@ -193,9 +201,8 @@ public class AdminController {
     @GetMapping("/assign")
     public String asignarEntrenadorPage(@RequestParam("id") Usuario user, Model model, HttpSession session){
         if(!isAdmin(session))
-            return "redirect:/";
+            return "redirect:/login";
 
-        Tipousuario cliente = tipoUsuarioRepository.findByName("Cliente");
         Tipousuario entrenador = tipoUsuarioRepository.findByName("Entrenador");
 
         model.addAttribute("user",user);
@@ -211,7 +218,7 @@ public class AdminController {
             HttpSession session
     ){
         if(!isAdmin(session))
-            return "redirect:/";
+            return "redirect:/login";
 
         entrenadorAsignadoRepository.deleteAll(entrenadorAsignadoRepository.findByCliente(user));
         if(trainers == null)
