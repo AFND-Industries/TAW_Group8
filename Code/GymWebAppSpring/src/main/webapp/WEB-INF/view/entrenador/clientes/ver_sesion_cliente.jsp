@@ -10,6 +10,7 @@
     Sesionentrenamiento sesion = (Sesionentrenamiento) request.getAttribute("sesion");
     Informacionsesion info = (Informacionsesion) request.getAttribute("informacionSesion");
     Usuario cliente = (Usuario) request.getAttribute("cliente");
+    List<Integer> sesionesHechas = (List<Integer>) request.getAttribute("sesionesEjercicios");
 %>
 <html>
 <head>
@@ -38,7 +39,9 @@
             </tr>
             </thead>
             <tbody>
-            <% for (Ejerciciosesion ejercicio : ejercicios) { %>
+            <%
+                int j = 0;
+                for (Ejerciciosesion ejercicio : ejercicios) { %>
             <tr>
                 <td>
                     <div class="my-2" style="font-size: 18px">
@@ -56,17 +59,20 @@
                             }
 
                         %>
-                        <%= series %>
+                        <%= sesionesHechas.get(j) %> / <%= series %>
                     </div>
                 </td>
                 <td>
                     <a class="btn border border-black"
-                       href="/entrenador/clientes/rutinas/verSesion?id=<%= sesion.getId()%>">
+                       href="/entrenador/clientes/rutinas/verSesion/verDesempeno?idEjercicio=<%= ejercicio.getId()%>&idInfo=<%=info.getId()%>&idSesion=<%=sesion.getId()%>">
                         Ver desempeño
                     </a>
                 </td>
             </tr>
-            <% } %>
+            <%
+                    j++;
+                }
+            %>
             </tbody>
         </table>
     </div>
@@ -80,9 +86,11 @@
                     if (info != null) {
                 %>
                 <div class="card">
-                    <div class="card-title m-2">
-                        <h5><%= cliente.getNombre() %> <%= cliente.getApellidos()%>
-                        </h5>
+                    <div class="card-title m-2 d-flex align-items-center">
+                        <i class="bi bi-person-square" style="font-size: 40px"></i>
+                        <span class="mx-2 "
+                              style="font-size: 18px"><strong><%= cliente.getNombre() %> <%= cliente.getApellidos()%></strong>
+                        </span>
                     </div>
                     <div class="card-body">
                         <div class="row">

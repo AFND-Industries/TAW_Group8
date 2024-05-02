@@ -19,7 +19,8 @@
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons CSS Dependencies -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
@@ -67,7 +68,8 @@
 
 <div class="container">
     <div class="row mb-3">
-        <h1> Rutinas de <%= usuario.getNombre()%> <%= usuario.getApellidos() %> </h1>
+        <h1> Rutinas de <%= usuario.getNombre()%> <%= usuario.getApellidos() %>
+        </h1>
     </div>
     <div class="row mb-3">
         <table class="table table-striped">
@@ -81,28 +83,33 @@
             <% int i = 0;
                 for (Rutina rutina : rutinas) { %>
             <tr>
-                <td><a class="btn" style="font-size: 20px; border: transparent" href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>&idCliente=<%=usuario.getId()%>">
+                <td><a class="btn" style="font-size: 18px; border: transparent"
+                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>&idCliente=<%=usuario.getId()%>">
                     <%= rutina.getNombre() %>
                 </a></td>
-                <td><div class="my-2" style="font-size: 18px">
-                    0 / <%= sesiones[i] %>
-                </div></td>
+                <td>
+                    <div class="my-2" style="font-size: 18px">
+                        <%= sesiones[i] %>
+                    </div>
+                </td>
                 <td>
                     <div class="my-3" data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
                         <i class="bi bi-trash delete-icon"
                            data-rutina-nombre="<%= rutina.getNombre() %>"
-                            data-rutina-id="<%= rutina.getId() %>"
+                           data-rutina-id="<%= rutina.getId() %>"
                         >
                         </i>
                     </div>
                 </td>
             </tr>
-            <% i++; } %>
+            <% i++;
+            } %>
             </tbody>
         </table>
     </div>
     <div class="row d-flex justify-content-center">
-        <a href="/entrenador/clientes/rutinas/anyadirRutina?id=<%= usuario.getId() %>" class="btn btn-primary" style="width: 15%">Nueva Rutina</a>
+        <a href="/entrenador/clientes/rutinas/anyadirRutina?id=<%= usuario.getId() %>" class="btn btn-primary"
+           style="width: 15%">Nueva Rutina</a>
     </div>
 </div>
 
