@@ -53,6 +53,7 @@ public class ClienteCotroller {
 
         Usuario user = (Usuario) sesion.getAttribute("user");
         modelo.addAttribute("usuario", user);
+        modelo.addAttribute("rutina", rutina);
         List<Sesionrutina> sesiones = sesionRutinaRepository.findSesionRutinaByRutina(rutina);
         for(Sesionrutina s : sesiones){
             List<Ejerciciosesion> ejercicos = ejerciciosesionRepository.findEjerciciosBySesion(s.getSesionentrenamiento());
@@ -65,5 +66,17 @@ public class ClienteCotroller {
         return "client/verrutina";
 
 
+    }
+    @PostMapping("/sesioninfo")
+    public String doVerSesion(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento,HttpSession sesion, Model modelo  ) {
+        if (!AuthUtils.isClient(sesion))
+            return "redirect:/";
+        Usuario user = (Usuario) sesion.getAttribute("user");
+        modelo.addAttribute("usuario", user);
+        modelo.addAttribute("sesionEntrenamiento", sesionEntrenamiento);
+        List<Ejerciciosesion> ejercicios = ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento);
+        modelo.addAttribute("ejercicios", ejercicios);
+        modelo.addAttribute("ejercicioElegido",ejercicios.getFirst());
+        return "client/verSesion";
     }
 }

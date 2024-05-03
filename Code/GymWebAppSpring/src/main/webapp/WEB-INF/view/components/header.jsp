@@ -21,6 +21,9 @@
                     <li class="nav-item">
                         <a class="<%="nav-link "+(request.getRequestURI().endsWith("rutinas.jsp") ? "active" : "")%>" href="/entrenador/rutinas">Rutinas</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("client.jsp") ? "active" : "")%>" href="/client">Area personal</a>
+                    </li>
                 </ul>
             </div>
             <div class="btn-group dropstart ms-auto">

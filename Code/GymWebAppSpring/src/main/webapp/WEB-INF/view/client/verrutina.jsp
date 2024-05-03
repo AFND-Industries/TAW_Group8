@@ -3,18 +3,19 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="com.example.GymWebAppSpring.entity.*" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="java.util.Locale" %><%--
+<%@ page import="java.util.Locale" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
   Time: 13:21
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%
     DayOfWeek diaSemanaActual = LocalDate.now().getDayOfWeek();
     Usuario cliente = (Usuario) request.getAttribute("usuario");
+    Rutina rutina = (Rutina) request.getAttribute("rutina");
     Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = (Map<Sesionrutina, List<Ejerciciosesion>>) request.getAttribute("sesionesEjercicios");
 %>
 <html>
@@ -33,69 +34,51 @@
 <body>
 <jsp:include page="../components/header.jsp"/>
 <div class="text-center">
-    <h1 class="">Mi espacio personal</h1>
-    <h2 class="">Bienvenido de vuelta <%=cliente.getNombre() + " " + cliente.getApellidos()%>!</h2>
+    <h1 class="">Mi <%= rutina.getNombre() %></h1>
 </div>
 <p></p>
 <div class="container-fluid">
     <div class="row d-flex justify-content-center align-items-center ">
         <div class="col-6 flex-column mx-5 border border-primary border-3 rounded" style="height: 400px">
-            <%
-                if (sesionesEjercicios.isEmpty()) {
-            %>
+            <% if (sesionesEjercicios.isEmpty()) { %>
             <h1 class="text-center"> No hay sesiones!</h1>
-            <%
-            } else {
-            %>
+            <% } else { %>
+            <form method="post" action="sesioninfo">
             <table class="table ">
                 <thead>
                 <tr>
                     <th scope="col">Nombre</th>
                     <th scope="col">Progreso</th>
                     <th scope="col"></th>
-
                 </tr>
                 </thead>
                 <tbody>
+                <% for (Sesionrutina s : sesionesEjercicios.keySet()) { %>
                 <%
-                    for (Sesionrutina s : sesionesEjercicios.keySet()) {
-                        boolean esHoy = diaSemanaActual.getValue() == s.getDia();
-                        DayOfWeek diaSemana = DayOfWeek.of(s.getDia());
-                        String nombreDia = diaSemana.getDisplayName(
-                                java.time.format.TextStyle.FULL,
-                                new Locale("es", "ES")
-                        );
+                    boolean esHoy = diaSemanaActual.getValue() == s.getDia();
+                    DayOfWeek diaSemana = DayOfWeek.of(s.getDia());
+                    String nombreDia = diaSemana.getDisplayName(java.time.format.TextStyle.FULL, new Locale("es", "ES"));
                 %>
-                <tr class="<%=esHoy ? "table-primary" : ""%>">
-
-                    <td><a  role="button" class="<%=esHoy ? "btn btn-warning" : "btn btn-outline-primary"%>" href="/client">Sesion de <%=s.getSesionentrenamiento().getNombre()%></a>
+                <tr class="<%= esHoy ? "table-primary" : "" %>">
+                    <td>
+                        <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>" value="<%= s.getSesionentrenamiento().getId()%>" name="sesionEntrenamiento">Sesion de <%= s.getSesionentrenamiento().getNombre() %></button>
                     </td>
-                    <td> <%=sesionesEjercicios.get(s).size()!=0 ? (sesionesEjercicios.get(s).size()*100/sesionesEjercicios.get(s).size()) : "Nan"%>% completada! </td>
+                    <td>
+                        <%=!sesionesEjercicios.get(s).isEmpty() ? (sesionesEjercicios.get(s).size() * 100 / sesionesEjercicios.get(s).size()) : "Nan" %>% completada!
+                    </td>
                     <td class="text-end">
-
-
-                    <span class="badge text-bg-<%=esHoy ? "warning" : "primary"%>">
-                        Tu sesion del <%=esHoy ? "dia de hoy": nombreDia%>
-                    </span>
-
-
-                </td>
+                                    <span class="badge text-bg-<%= esHoy ? "warning" : "primary" %>">
+                                        Tu sesion del <%= esHoy ? "dia de hoy" : nombreDia %>
+                                    </span>
+                    </td>
                 </tr>
-                <%
-                    }
-                %>
-
+                <% } %>
                 </tbody>
             </table>
-
-
-            <%
-                }
-            %>
+            </form>
+            <% } %>
         </div>
     </div>
 </div>
-
-
 </body>
 </html>
