@@ -1,5 +1,5 @@
 use tawbd;
-create  table categoria
+create table categoria
 (
     ID          int auto_increment
         primary key,
@@ -9,7 +9,7 @@ create  table categoria
     ICONO       varchar(256) not null
 );
 
-create  table dificultad
+create table dificultad
 (
     ID     int auto_increment
         primary key,
@@ -17,7 +17,7 @@ create  table dificultad
     LOGO   varchar(256) not null
 );
 
-create  table musculo
+create table musculo
 (
     ID          int auto_increment
         primary key,
@@ -26,7 +26,7 @@ create  table musculo
     IMAGEN      varchar(256) not null
 );
 
-create  table sesionentrenamiento
+create table tipofuerza
 (
     ID          int auto_increment
         primary key,
@@ -34,15 +34,7 @@ create  table sesionentrenamiento
     DESCRIPCION varchar(256) not null
 );
 
-create  table tipofuerza
-(
-    ID          int auto_increment
-        primary key,
-    NOMBRE      varchar(32)  not null,
-    DESCRIPCION varchar(256) not null
-);
-
-create  table ejercicio
+create table ejercicio
 (
     ID                 int auto_increment
         primary key,
@@ -65,28 +57,14 @@ create  table ejercicio
         foreign key (CATEGORIA) references categoria (ID)
 );
 
-create  table ejerciciosesion
-(
-    ID                     int auto_increment
-        primary key,
-    ORDEN                  int          not null,
-    ESPECIFICACIONES       varchar(256) not null comment 'JSON syntax',
-    SESIONENTRENAMIENTO_ID int          not null,
-    EJERCICIO_ID           int          not null,
-    constraint EJERCICIOSESION_ibfk_1
-        foreign key (EJERCICIO_ID) references ejercicio (ID),
-    constraint EJERCICIOSESION_ibfk_2
-        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
-);
-
-create  table tipousuario
+create table tipousuario
 (
     ID     int auto_increment
         primary key,
     NOMBRE varchar(32) not null
 );
 
-create  table usuario
+create table usuario
 (
     ID        int auto_increment
         primary key,
@@ -101,7 +79,7 @@ create  table usuario
         foreign key (TIPO) references tipousuario (ID)
 );
 
-create  table entrenadorasignado
+create table entrenadorasignado
 (
     ENTRENADOR int not null,
     CLIENTE    int not null,
@@ -112,35 +90,7 @@ create  table entrenadorasignado
         foreign key (CLIENTE) references usuario (ID)
 );
 
-create  table informacionsesion
-(
-    ID                     int auto_increment
-        primary key,
-    VALORACION             int          null,
-    COMENTARIO             varchar(256) null,
-    FECHA_FIN              date         null,
-    SESIONENTRENAMIENTO_ID int          not null,
-    USUARIO_ID             int          not null,
-    constraint INFORMACIONSESION_USUARIO_2
-        foreign key (USUARIO_ID) references usuario (ID),
-    constraint INFORMACIONSESION_ibfk_1
-        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
-);
-
-create  table informacionejercicio
-(
-    ID                   int auto_increment
-        primary key,
-    EVALUACION           varchar(256) not null comment 'JSON syntax',
-    EJERCICIOSESION_ID   int          not null,
-    INFORMACIONSESION_ID int          not null,
-    constraint INFORMACIONEJERCICIO_ibfk_1
-        foreign key (EJERCICIOSESION_ID) references ejerciciosesion (ID),
-    constraint INFORMACIONEJERCICIO_ibfk_2
-        foreign key (INFORMACIONSESION_ID) references informacionsesion (ID)
-);
-
-create  table rutina
+create table rutina
 (
     ID             int auto_increment
         primary key,
@@ -155,7 +105,7 @@ create  table rutina
         foreign key (ENTRENADOR) references usuario (ID)
 );
 
-create  table rutinacliente
+create table rutinacliente
 (
     USUARIO_ID   int  not null,
     RUTINA_ID    int  not null,
@@ -167,16 +117,58 @@ create  table rutinacliente
         foreign key (USUARIO_ID) references usuario (ID)
 );
 
-create  table sesionrutinas
+create table sesionentrenamiento
 (
-    SESIONENTRENAMIENTO_ID int not null,
-    RUTINA_ID              int not null,
-    DIA                    int not null,
-    primary key (RUTINA_ID, SESIONENTRENAMIENTO_ID),
-    constraint SESIONRUTINAS_ibfk_1
-        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID),
-    constraint SESIONRUTINAS_ibfk_2
-        foreign key (RUTINA_ID) references rutina (ID)
+    ID          int auto_increment
+        primary key,
+    NOMBRE      varchar(32)  not null,
+    DESCRIPCION varchar(256) not null,
+    DIA         int          not null,
+    RUTINA      int          not null,
+    constraint rutina_id___fk
+        foreign key (RUTINA) references rutina (ID)
+);
+
+create table ejerciciosesion
+(
+    ID                     int auto_increment
+        primary key,
+    ORDEN                  int          not null,
+    ESPECIFICACIONES       varchar(256) not null comment 'JSON syntax',
+    SESIONENTRENAMIENTO_ID int          not null,
+    EJERCICIO_ID           int          not null,
+    constraint EJERCICIOSESION_ibfk_1
+        foreign key (EJERCICIO_ID) references ejercicio (ID),
+    constraint EJERCICIOSESION_ibfk_2
+        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
+);
+
+create table informacionsesion
+(
+    ID                     int auto_increment
+        primary key,
+    VALORACION             int          null,
+    COMENTARIO             varchar(256) null,
+    FECHA_FIN              date         null,
+    SESIONENTRENAMIENTO_ID int          not null,
+    USUARIO_ID             int          not null,
+    constraint INFORMACIONSESION_USUARIO_2
+        foreign key (USUARIO_ID) references usuario (ID),
+    constraint INFORMACIONSESION_ibfk_1
+        foreign key (SESIONENTRENAMIENTO_ID) references sesionentrenamiento (ID)
+);
+
+create table informacionejercicio
+(
+    ID                   int auto_increment
+        primary key,
+    EVALUACION           varchar(256) not null comment 'JSON syntax',
+    EJERCICIOSESION_ID   int          not null,
+    INFORMACIONSESION_ID int          not null,
+    constraint INFORMACIONEJERCICIO_ibfk_1
+        foreign key (EJERCICIOSESION_ID) references ejerciciosesion (ID),
+    constraint INFORMACIONEJERCICIO_ibfk_2
+        foreign key (INFORMACIONSESION_ID) references informacionsesion (ID)
 );
 
 -- Insertar datos en la tabla 'categoria'
@@ -200,11 +192,6 @@ VALUES ('Pectoral mayor', 'Músculo del pecho, responsable de empujar y rotar el
         'img/musculos/biceps.png'),
        ('Tríceps braquial', 'Músculo de la parte posterior del brazo, responsable de extender el codo',
         'img/musculos/triceps.png');
-
--- Insertar datos en la tabla 'sesionentrenamiento'
-INSERT INTO sesionentrenamiento (NOMBRE, DESCRIPCION)
-VALUES ('Piernas', 'Ejercicios enfocados en fortalecer los músculos de las piernas'),
-       ('Tren superior', 'Ejercicios para trabajar pecho, espalda, hombros y brazos');
 
 -- Insertar datos en la tabla 'tipofuerza'
 INSERT INTO tipofuerza (NOMBRE, DESCRIPCION)
@@ -332,6 +319,12 @@ VALUES ('Rutina para principiantes', 'Ejercicios básicos para tonificar todo el
        ('Rutina para quemar grasa', 'Ejercicios enfocados en el gasto calórico', 2, '2024-04-05',2),
        ('Rutina para ganar músculo', 'Ejercicios para aumentar la masa muscular', 3, '2024-04-10',2),
        ('Rutina de El Megalodon', 'Ejercicios básicos para torneo de badbintom', 1, '2024-04-29', 4);
+
+
+-- Insertar datos en la tabla 'sesionentrenamiento'
+INSERT INTO sesionentrenamiento (NOMBRE, DESCRIPCION, DIA, RUTINA)
+VALUES ('Piernas', 'Ejercicios enfocados en fortalecer los músculos de las piernas', 1, 1),
+       ('Tren superior', 'Ejercicios para trabajar pecho, espalda, hombros y brazos', 2, 1);
 
 -- Insertar datos en la tabla 'ejercicio' (no funciona)
 INSERT INTO tawbd.ejercicio (NOMBRE, DESCRIPCION, MUSCULO, EQUIPAMIENTO, TIPOFUERZA, MUSCULO_SECUNDARIO, VIDEO, LOGO,

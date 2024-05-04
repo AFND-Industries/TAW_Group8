@@ -16,6 +16,13 @@ public class Sesionentrenamiento {
     @Column(name = "DESCRIPCION", nullable = false, length = 256)
     private String descripcion;
 
+    @Column(name = "DIA", nullable = false)
+    private Integer dia;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "RUTINA", nullable = false)
+    private Rutina rutina;
+
     public Integer getId() {
         return id;
     }
@@ -40,4 +47,19 @@ public class Sesionentrenamiento {
         this.descripcion = descripcion;
     }
 
+    public Integer getDia() {
+        return dia;
+    }
+
+    public void setDia(Integer dia) {
+        this.dia = dia;
+    }
+
+    public Rutina getRutina() {
+        return rutina;
+    }
+
+    public void setRutina(Rutina rutina) {
+        this.rutina = rutina;
+    }
 }

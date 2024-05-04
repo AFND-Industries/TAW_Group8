@@ -30,8 +30,8 @@ public class EntrenadorControllerCientes {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private SesionRutinaRepository sesioRutinaRepository;
+    //@Autowired
+    //private SesionRutinaRepository sesioRutinaRepository;
 
     @Autowired
     private RutinaClienteReporsitory rutinaClienteReporsitory;
@@ -42,8 +42,8 @@ public class EntrenadorControllerCientes {
     @Autowired
     private EjercicioSesionRepository ejercicioSesionRepository;
 
-    @Autowired
-    private SesionRutinaRepository sesionRutinaRepository;
+    //@Autowired
+    //private SesionRutinaRepository sesionRutinaRepository;
 
     @Autowired
     private InformacionSesionRepository informacionSesionRepository;
@@ -67,7 +67,7 @@ public class EntrenadorControllerCientes {
         List<Rutina> rutinas = rutinaUsuarioRepository.findRutinaById(usuario.getId());
         int[] numSesiones = new int[rutinas.size()];
         for (Rutina rutina : rutinas) {
-            numSesiones[rutinas.indexOf(rutina)] = sesioRutinaRepository.findSesionsByRutina(rutina).size();
+            //numSesiones[rutinas.indexOf(rutina)] = sesioRutinaRepository.findSesionsByRutina(rutina).size();
         }
         model.addAttribute("numSesiones", numSesiones);
         model.addAttribute("rutinas", rutinas);
@@ -137,14 +137,14 @@ public class EntrenadorControllerCientes {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
-        List<Sesionentrenamiento> sesiones = sesioRutinaRepository.findSesionsByRutina(rutina);
+        //List<Sesionentrenamiento> sesiones = sesioRutinaRepository.findSesionsByRutina(rutina);
         List<Ejerciciosesion> ejercicios = new ArrayList<>();
         Informacionsesion informacionSesion = new Informacionsesion();
         Gson gson = new Gson();
         List<Integer> porcentaje = new ArrayList<>();
         int i = 0;
         int total = 0;
-        for (Sesionentrenamiento sesion : sesiones) {
+        /*for (Sesionentrenamiento sesion : sesiones) {
             ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
             for (Ejerciciosesion ejercicio : ejercicios) {
                 ;
@@ -158,10 +158,10 @@ public class EntrenadorControllerCientes {
             porcentaje.add((i * 100) / total);
             i = 0;
             total = 0;
-        }
+        }*/
 
         model.addAttribute("rutina", rutina);
-        model.addAttribute("sesiones", sesiones);
+        //model.addAttribute("sesiones", sesiones);
         model.addAttribute("cliente", cliente);
         model.addAttribute("porcentaje", porcentaje);
 

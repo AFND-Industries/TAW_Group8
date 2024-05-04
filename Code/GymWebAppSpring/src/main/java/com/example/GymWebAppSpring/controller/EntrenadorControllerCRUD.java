@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -27,6 +26,7 @@ public class EntrenadorControllerCRUD {
     // como hago que lo de arriba sea un string referenciable prefix o path
     // preguntar como hacer cosas como restricciones de que no deje crear si algun cmapo esta vacio o cosas asi
     // si hacerlas con javascript o que
+    // como hago lo de guardar que estoy hacindo una rutina y una sesion y blablabla
     @Autowired
     protected RutinaRepository rutinaRepository;
 
@@ -53,7 +53,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("readOnly", true);
         model.addAttribute("rutina", rutina);
 
-        return "/entrenador/crud/crear_rutina";
+        return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/crear")
@@ -63,7 +63,7 @@ public class EntrenadorControllerCRUD {
 
         model.addAttribute("rutina", rutina);
 
-        return "/entrenador/crud/crear_rutina";
+        return "/entrenador/crud/rutina";
     }
 
 
@@ -73,7 +73,7 @@ public class EntrenadorControllerCRUD {
 
         model.addAttribute("rutina", rutina);
 
-        return "/entrenador/crud/crear_rutina";
+        return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/guardar")

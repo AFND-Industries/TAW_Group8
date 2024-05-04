@@ -96,9 +96,11 @@
                 <div class="col-6">
                     <span class="h4 text-secondary">Sesiones de entrenamiento</span><br/>
                 </div>
-                <div class="col-6 d-flex justify-content-end">
-                    <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Añadir sesión de entrenamiento</a>
-                </div>
+                <%if (!readOnly) {%>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Añadir sesión de entrenamiento</a>
+                    </div>
+                <%}%>
             </div>
             <%
                 for (Integer sesion : sesiones) {
@@ -108,12 +110,14 @@
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
                     <span class="ms-3 h2">Sesion <%=sesion%></span>
                 </div>
-                <div class="col-4 d-flex justify-content-end align-items-center">
-                    <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
-                    <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
-                        <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                <%if (!readOnly) {%>
+                    <div class="col-4 d-flex justify-content-end align-items-center">
+                        <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
+                            <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                        </div>
                     </div>
-                </div>
+                <%}%>
             </div>
             <hr>
             <%
@@ -122,7 +126,9 @@
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-end">
-                    <input type="submit" class="btn btn-primary" value="<%=rutinaExists ? "Guardar" : "Crear"%>">
+                    <%if (!readOnly) {%>
+                        <input type="submit" class="btn btn-primary" value="<%=rutinaExists ? "Guardar" : "Crear"%>">
+                    <%}%>
                 </div>
             </div>
         </form>
