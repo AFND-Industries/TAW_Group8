@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -9,9 +10,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    Sesionentrenamiento sesion = (Sesionentrenamiento) request.getAttribute("sesion");
+    Object readOnlyObject = request.getAttribute("readOnly");
+    boolean sesionExists = sesion.getId() >= 0;
+    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && sesionExists;
+
+    String nombre = "";
+    String descripcion = "";
     List<Integer> ejercicios = new ArrayList<>();
-    for (int i = 0; i < 2; i++)
-        ejercicios.add(i+1);
+    if (sesionExists) {
+        nombre = sesion.getNombre();
+        descripcion = sesion.getDescripcion();
+        for (int i = 0; i < 2; i++) ejercicios.add(i+1);
+    }
 %>
 
 <html>
@@ -26,7 +37,7 @@
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
-<div class="modal fade" id="delete-modal">
+    <div class="modal fade" id="delete-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,65 +56,73 @@
     </div>
 
     <div class="container">
-        <div class="row mb-3">
-            <div class="col-8">
-                <h1>Añadir sesión de entrenamiento</h1>
-            </div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear">Volver</a>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-12">
-                <span class="h4 text-secondary">Nombre de la sesión</span><br/>
-            </div>
-            <div class="col-12">
-                <input type="text" class="form-control mt-2">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-12">
-                <span class="h4 text-secondary">Descripción de la sesión</span><br/>
-                <textarea class="form-control mt-2" style="resize:none;" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-6">
-                <span class="h4 text-secondary">Ejercicios</span><br/>
-            </div>
-            <div class="col-6 d-flex justify-content-end">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Añadir ejercicio</a>
-            </div>
-        </div>
-        <%
-            for (Integer ejercicio : ejercicios) {
-        %>
-        <div class="row">
-            <div class="col-8 d-flex align-items-center" style="height:75px">
-                <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                <div>
-                    <span class="ms-3 h2">Ejercicio <%=ejercicio%></span></br>
-                    <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+        <form action="/entrenador/rutinas/crear/sesion/guardar" method="get">
+            <div class="row mb-3">
+                <div class="col-8">
+                    <h1>Añadir sesión de entrenamiento</h1>
+                </div>
+                <div class="col-4 d-flex justify-content-end align-items-center">
+                    <a class="btn btn-primary" href="/entrenador/rutinas/crear">Volver</a>
                 </div>
             </div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
-                <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
-                    <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <span class="h4 text-secondary">Nombre de la sesión</span><br/>
+                </div>
+                <div class="col-12">
+                    <input type="text" class="form-control mt-2" value="<%=nombre%>" <%=readOnly ? "disabled" : ""%>>
                 </div>
             </div>
-        </div>
-        <hr>
-        <%
-            }
-        %>
-
-        <div class="row">
-            <div class="col-12 d-flex justify-content-end">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear">Añadir</a>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <span class="h4 text-secondary">Descripción de la sesión</span><br/>
+                    <textarea class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=descripcion%></textarea>
+                </div>
             </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <span class="h4 text-secondary">Ejercicios</span><br/>
+                </div>
+                <%if (!readOnly) {%>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Añadir ejercicio</a>
+                    </div>
+                <%}%>
+            </div>
+            <%
+                for (Integer ejercicio : ejercicios) {
+            %>
+                <div class="row">
+                    <div class="col-9 d-flex align-items-center" style="height:75px">
+                        <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+                        <div>
+                            <span class="ms-3 h2">Ejercicio <%=ejercicio%></span></br>
+                            <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+                        </div>
+                    </div>
+                    <%if (!readOnly) {%>
+                        <div class="col-3 d-flex justify-content-end align-items-center">
+                            <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
+                            <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
+                                <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                            </div>
+                        </div>
+                    <%}%>
+                </div>
+                <hr>
+            <%
+                }
+            %>
+
+            <%if (!readOnly) {%>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-end">
+                        <input type="submit" class="btn btn-primary" value="<%=sesionExists ? "Guardar" : "Crear"%>"/>
+                    </div>
+                </div>
+            <%}%>
         </div>
-    </div>
+    </form>
 </body>
 </html>
