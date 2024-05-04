@@ -7,16 +7,15 @@ import com.example.GymWebAppSpring.entity.Rutina;
 import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
 import com.example.GymWebAppSpring.entity.Usuario;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
+import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,6 +41,9 @@ public class EntrenadorControllerCRUD {
     @Autowired
     protected SesionentrenamientoRepository sesionentrenamientoRepository;
 
+    @Autowired
+    protected Gson gson;
+
     @GetMapping("")
     public String doRutinas(HttpSession session, Model model) {
         if(!AuthUtils.isTrainer(session))
@@ -58,49 +60,53 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/ver")
     public String doVerRutina(@RequestParam("id") Integer id, Model model) {
         Rutina r = rutinaRepository.findById(id).orElse(null);
-        RutinaArgument rutina = new RutinaArgument(r);
         List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);
+        RutinaArgument rutina = new RutinaArgument(r, sesiones);
 
         model.addAttribute("readOnly", true);
-
-        model.addAttribute("rutina", rutina);
-        model.addAttribute("sesiones", sesiones);
+        model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/crear")
-    public String doCrearRutina(@ModelAttribute("rutina") RutinaArgument rutina, Model model) {
+    public String doCrearRutina(@RequestParam(value = "cache", defaultValue = "") String cache, Model model) {
+        RutinaArgument rutina = null;
+        if (!cache.isEmpty())
+            rutina = gson.fromJson(cache, RutinaArgument.class);
+
         if (rutina == null) {
             rutina = new RutinaArgument();
             rutina.setId(-1);
         }
 
-        model.addAttribute("rutina", rutina);
+        model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/rutina";
     }
 
 
     @GetMapping("/editar")
-    public String doEditarRutina(@ModelAttribute("rutina") RutinaArgument rutina,
+    public String doEditarRutina(@RequestParam(value = "cache", defaultValue = "") String cache,
                                  @RequestParam(value = "id", required = false) Integer id, Model model) {
-        Rutina r = rutinaRepository.findById(rutina.isNull() ? id : rutina.getId()).orElse(null);
+        RutinaArgument rutina = null;
+        if (!cache.isEmpty())
+            rutina = gson.fromJson(cache, RutinaArgument.class);
+        else {
+            Rutina r = rutinaRepository.findById(id).orElse(null);
+            List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            rutina = new RutinaArgument(r, sesiones);
+        }
 
-        if (rutina.isNull())
-            rutina = new RutinaArgument(r);
-
-        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);;
-
-        model.addAttribute("rutina", rutina);
-        model.addAttribute("sesiones", sesiones);
+        model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/guardar")
-    public String doGuardarRutina(@ModelAttribute("rutina") RutinaArgument rutina,
+    public String doGuardarRutina(@RequestParam("cache") String cache,
                                   HttpSession session) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         Rutina r = rutinaRepository.findById(rutina.getId()).orElse(null);
 
         if (r == null) {
@@ -128,39 +134,41 @@ public class EntrenadorControllerCRUD {
         return "redirect:/entrenador/rutinas";
     }
 
+    /*
+        SESIONES DE ENTRENAMIENTO
+     */
     @GetMapping("/crear/sesion/ver")
     public String doVerSesion(@RequestParam("id") Integer id, Model model) {
-        Sesionentrenamiento sesion = sesionentrenamientoRepository.findById(id).orElse(null);
+        Sesionentrenamiento s = sesionentrenamientoRepository.findById(id).orElse(null);
+        SesionArgument sesion = new SesionArgument(s);
 
         model.addAttribute("readOnly", true);
-
         model.addAttribute("sesion", sesion);
 
         return "/entrenador/crud/crear_sesion";
     }
 
     @GetMapping("/crear/sesion")
-    public String doCrearSesion(Model model) {
-        Sesionentrenamiento sesion = new Sesionentrenamiento();
+    public String doCrearSesion(@RequestParam("cache") String cache, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+
+        SesionArgument sesion = new SesionArgument();
         sesion.setId(-1);
 
         model.addAttribute("sesion", sesion);
+        model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/crear_sesion";
     }
 
     @GetMapping("/crear/sesion/editar")
     public String doEditarSesion(@RequestParam("id") Integer id, Model model) {
-        Sesionentrenamiento sesion = sesionentrenamientoRepository.findById(id).orElse(null);
+        Sesionentrenamiento s = sesionentrenamientoRepository.findById(id).orElse(null);
+        SesionArgument sesion = new SesionArgument(s);
 
         model.addAttribute("sesion", sesion);
 
         return "/entrenador/crud/crear_sesion";
-    }
-
-    @GetMapping("/crear/sesion/guardar")
-    public String doGuardarSesion(Model model) {
-        return "redirect:/entrenador/rutinas";
     }
 
     @GetMapping("/crear/sesion/borrar")

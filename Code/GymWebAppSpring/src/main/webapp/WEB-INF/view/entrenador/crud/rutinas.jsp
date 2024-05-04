@@ -36,7 +36,7 @@
                     ¿Estás seguro de que quieres eliminar la rutina?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="delete-modal-button">Eliminar</button>
+                    <button id="delete-modal-button" type="button" class="btn btn-danger">Eliminar</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>

@@ -1,6 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
+<%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
+<%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -10,7 +12,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Sesionentrenamiento sesion = (Sesionentrenamiento) request.getAttribute("sesion");
+    String cache = (String) request.getAttribute("cache");
+
+    SesionArgument sesion = (SesionArgument) request.getAttribute("sesion");
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean sesionExists = sesion.getId() >= 0;
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && sesionExists;
@@ -35,6 +39,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
+<script>
+    const cache = <%=cache%>;
+</script>
 <body>
 <jsp:include page="../../components/header.jsp"/>
     <div class="modal fade" id="delete-modal">
@@ -44,11 +51,11 @@
                     <h1 class="modal-title fs-5" id="delete-modal-label">Eliminar ejercicio</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="delete-modal-body">
                     ¿Estás seguro de que quieres eliminar el ejercicio?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+                    <button id="delete-modal-button" type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
@@ -56,73 +63,95 @@
     </div>
 
     <div class="container">
-        <form action="/entrenador/rutinas/crear/sesion/guardar" method="get">
-            <div class="row mb-3">
-                <div class="col-8">
-                    <h1>Añadir sesión de entrenamiento</h1>
-                </div>
-                <div class="col-4 d-flex justify-content-end align-items-center">
-                    <a class="btn btn-primary" href="/entrenador/rutinas/crear">Volver</a>
-                </div>
+        <input id="sesionId" type="hidden" name="id" value="<%=sesion.getId()%>"/>
+        <div class="row mb-3">
+            <div class="col-8">
+                <h1>Añadir sesión de entrenamiento</h1>
             </div>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <button onClick="enviarJSON('/entrenador/rutinas/crear', save = false)" class="btn btn-primary">Volver</button>
+            </div>
+        </div>
 
-            <div class="row mb-3">
-                <div class="col-12">
-                    <span class="h4 text-secondary">Nombre de la sesión</span><br/>
-                </div>
-                <div class="col-12">
-                    <input type="text" class="form-control mt-2" value="<%=nombre%>" <%=readOnly ? "disabled" : ""%>>
-                </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <span class="h4 text-secondary">Nombre de la sesión</span><br/>
             </div>
-            <div class="row mb-3">
-                <div class="col-12">
-                    <span class="h4 text-secondary">Descripción de la sesión</span><br/>
-                    <textarea class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=descripcion%></textarea>
-                </div>
+            <div class="col-12">
+                <input id="nombre" type="text" class="form-control mt-2" value="<%=nombre%>" <%=readOnly ? "disabled" : ""%>>
             </div>
-            <div class="row mb-2">
-                <div class="col-6">
-                    <span class="h4 text-secondary">Ejercicios</span><br/>
-                </div>
-                <%if (!readOnly) {%>
-                    <div class="col-6 d-flex justify-content-end">
-                        <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Añadir ejercicio</a>
-                    </div>
-                <%}%>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <span class="h4 text-secondary">Descripción de la sesión</span><br/>
+                <textarea id="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=descripcion%></textarea>
             </div>
-            <%
-                for (Integer ejercicio : ejercicios) {
-            %>
-                <div class="row">
-                    <div class="col-9 d-flex align-items-center" style="height:75px">
-                        <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                        <div>
-                            <span class="ms-3 h2">Ejercicio <%=ejercicio%></span></br>
-                            <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
-                        </div>
-                    </div>
-                    <%if (!readOnly) {%>
-                        <div class="col-3 d-flex justify-content-end align-items-center">
-                            <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
-                                <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
-                            </div>
-                        </div>
-                    <%}%>
-                </div>
-                <hr>
-            <%
-                }
-            %>
-
+        </div>
+        <div class="row mb-2">
+            <div class="col-6">
+                <span class="h4 text-secondary">Ejercicios</span><br/>
+            </div>
             <%if (!readOnly) {%>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-end">
-                        <input type="submit" class="btn btn-primary" value="<%=sesionExists ? "Guardar" : "Crear"%>"/>
-                    </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Añadir ejercicio</a>
                 </div>
             <%}%>
         </div>
-    </form>
+        <%
+            for (Integer ejercicio : ejercicios) {
+        %>
+            <div class="row">
+                <div class="col-9 d-flex align-items-center" style="height:75px">
+                    <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+                    <div>
+                        <span class="ms-3 h2">Ejercicio <%=ejercicio%></span></br>
+                        <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+                    </div>
+                </div>
+                <%if (!readOnly) {%>
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                        <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
+                            <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                        </div>
+                    </div>
+                <%}%>
+            </div>
+            <hr>
+        <%
+            }
+        %>
+
+        <%if (!readOnly) {%>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                    <button onClick="enviarJSON('/entrenador/rutinas/crear')" type="submit" class="btn btn-primary"><%=sesionExists ? "Guardar" : "Crear"%></button>
+                </div>
+            </div>
+        <%}%>
+    </div>
+<script>
+    function enviarJSON(action, save=true, additionalParams="") {
+        if (save) {
+            const id = document.getElementById("sesionId").value;
+            const nombre = document.getElementById("nombre").value;
+            const descripcion = document.getElementById("descripcion").value;
+
+            var sesionJSON = {
+                "id": id,
+                "nombre": nombre,
+                "descripcion": descripcion
+            }
+
+            console.log("despues");
+            const newSesiones = cache.sesiones === undefined ? [sesionJSON] : [...cache.sesiones, sesionJSON];
+            cache.sesiones = newSesiones;
+        }
+
+        const cacheString = encodeURIComponent(JSON.stringify(cache));
+        window.location.href =
+            action + "?cache=" + cacheString + (additionalParams.length > 0 ? "&" : "") + additionalParams;
+    }
+</script>
 </body>
 </html>
