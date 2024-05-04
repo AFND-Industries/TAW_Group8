@@ -6,6 +6,7 @@ import com.example.GymWebAppSpring.dao.SesionentrenamientoRepository;
 import com.example.GymWebAppSpring.entity.Rutina;
 import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
 import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -55,8 +57,9 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/ver")
     public String doVerRutina(@RequestParam("id") Integer id, Model model) {
-        Rutina rutina = rutinaRepository.findById(id).orElse(null);
-        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(rutina);
+        Rutina r = rutinaRepository.findById(id).orElse(null);
+        RutinaArgument rutina = new RutinaArgument(r);
+        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);
 
         model.addAttribute("readOnly", true);
 
@@ -67,9 +70,11 @@ public class EntrenadorControllerCRUD {
     }
 
     @GetMapping("/crear")
-    public String doCrearRutina(Model model) {
-        Rutina rutina = new Rutina();
-        rutina.setId(-1);
+    public String doCrearRutina(@ModelAttribute("rutina") RutinaArgument rutina, Model model) {
+        if (rutina == null) {
+            rutina = new RutinaArgument();
+            rutina.setId(-1);
+        }
 
         model.addAttribute("rutina", rutina);
 
@@ -78,9 +83,14 @@ public class EntrenadorControllerCRUD {
 
 
     @GetMapping("/editar")
-    public String doEditarRutina(@RequestParam("id") Integer id, Model model) {
-        Rutina rutina = rutinaRepository.findById(id).orElse(null);
-        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(rutina);
+    public String doEditarRutina(@ModelAttribute("rutina") RutinaArgument rutina,
+                                 @RequestParam(value = "id", required = false) Integer id, Model model) {
+        Rutina r = rutinaRepository.findById(rutina.isNull() ? id : rutina.getId()).orElse(null);
+
+        if (rutina.isNull())
+            rutina = new RutinaArgument(r);
+
+        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);;
 
         model.addAttribute("rutina", rutina);
         model.addAttribute("sesiones", sesiones);
@@ -89,25 +99,22 @@ public class EntrenadorControllerCRUD {
     }
 
     @GetMapping("/guardar")
-    public String doGuardarRutina(@RequestParam("id") Integer id,
-                            @RequestParam("nombre") String nombre,
-                            @RequestParam("dificultad") Integer dificultad,
-                            @RequestParam("descripcion") String descripcion,
-                            HttpSession session) {
-        Rutina rutina = rutinaRepository.findById(id).orElse(null);
+    public String doGuardarRutina(@ModelAttribute("rutina") RutinaArgument rutina,
+                                  HttpSession session) {
+        Rutina r = rutinaRepository.findById(rutina.getId()).orElse(null);
 
-        if (rutina == null) {
-            rutina = new Rutina();
+        if (r == null) {
+            r = new Rutina();
 
-            rutina.setEntrenador(AuthUtils.getUser(session));
-            rutina.setFechaCreacion(LocalDate.now());
+            r.setEntrenador(AuthUtils.getUser(session));
+            r.setFechaCreacion(LocalDate.now());
         }
 
-        rutina.setNombre(nombre);
-        rutina.setDificultad(dificultadRepository.findById(dificultad).orElse(null)); // no va a ser null, pero habria que controlarlo
-        rutina.setDescripcion(descripcion); // problema description too long
+        r.setNombre(rutina.getNombre());
+        r.setDificultad(dificultadRepository.findById(rutina.getDificultad()).orElse(null)); // no va a ser null, pero habria que controlarlo
+        r.setDescripcion(rutina.getDescripcion()); // problema description too long
 
-        rutinaRepository.save(rutina);
+        rutinaRepository.save(r);
 
         return "redirect:/entrenador/rutinas";
     }

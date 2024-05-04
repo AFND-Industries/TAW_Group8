@@ -2,7 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
+<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -13,14 +14,14 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%
-    Rutina rutina = (Rutina) request.getAttribute("rutina");
+    RutinaArgument rutina = (RutinaArgument) request.getAttribute("rutina");
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean rutinaExists = rutina.getId() >= 0;
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && rutinaExists;
 
     String nombre = "";
     String descripcion = "";
-    Dificultad dificultad = null;
+    Integer dificultad = -1;
     List<Sesionentrenamiento> sesiones = new ArrayList<>();
     if (rutinaExists) {
         nombre = rutina.getNombre();
@@ -61,7 +62,7 @@
     </div>
 
     <div class="container">
-        <form action="/entrenador/rutinas/guardar" method="get">
+        <form id="rutinaForm" action="/entrenador/rutinas/guardar" method="get">
             <input type="hidden" name="id" value="<%=rutina.getId()%>"/>
              <div class="row mb-3">
                 <div class="col-4">
@@ -80,9 +81,9 @@
                 <div class="col-6">
                     <span class="h4 text-secondary">Dificultad</span><br/>
                     <select name="dificultad" class="form-select mt-2" id="dificultad" <%=readOnly ? "disabled" : ""%>>
-                        <option <%=rutinaExists && dificultad.getId() == 1 ? "selected" : ""%> value="1">Principiante</option>
-                        <option <%=rutinaExists && dificultad.getId() == 2 ? "selected" : ""%> value="2">Intermedio</option>
-                        <option <%=rutinaExists && dificultad.getId() == 3 ? "selected" : ""%> value="3">Avanzado</option>
+                        <option <%=rutinaExists && dificultad == 1 ? "selected" : ""%> value="1">Principiante</option>
+                        <option <%=rutinaExists && dificultad == 2 ? "selected" : ""%> value="2">Intermedio</option>
+                        <option <%=rutinaExists && dificultad == 3 ? "selected" : ""%> value="3">Avanzado</option>
                     </select>
                 </div>
             </div>
@@ -137,11 +138,6 @@
         </form>
     </div>
 <script>
-    function submitForm(action) {
-        document.getElementById('rutinaForm').action = action;
-        document.getElementById('rutinaForm').submit();
-    }
-
     function showDeleteModal(nombre, id) {
         const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
         const modalBody = document.getElementById("delete-modal-body");
