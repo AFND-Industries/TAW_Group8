@@ -16,7 +16,7 @@
     DayOfWeek diaSemanaActual = LocalDate.now().getDayOfWeek();
     Usuario cliente = (Usuario) request.getAttribute("usuario");
     Rutina rutina = (Rutina) request.getAttribute("rutina");
-    Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = (Map<Sesionrutina, List<Ejerciciosesion>>) request.getAttribute("sesionesEjercicios");
+    Map<Sesionentrenamiento, List<Ejerciciosesion>>sesionesEjercicios = (Map<Sesionentrenamiento, List<Ejerciciosesion>>) request.getAttribute("sesionesEjercicios");
 %>
 <html>
 <head>
@@ -53,7 +53,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% for (Sesionrutina s : sesionesEjercicios.keySet()) { %>
+                <% for (Sesionentrenamiento s : sesionesEjercicios.keySet()) { %>
                 <%
                     boolean esHoy = diaSemanaActual.getValue() == s.getDia();
                     DayOfWeek diaSemana = DayOfWeek.of(s.getDia());
@@ -61,7 +61,7 @@
                 %>
                 <tr class="<%= esHoy ? "table-primary" : "" %>">
                     <td>
-                        <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>" value="<%= s.getSesionentrenamiento().getId()%>" name="sesionEntrenamiento">Sesion de <%= s.getSesionentrenamiento().getNombre() %></button>
+                        <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>" value="<%= s.getId()%>" name="sesionEntrenamiento">Sesion de <%= s.getNombre() %></button>
                     </td>
                     <td>
                         <%=!sesionesEjercicios.get(s).isEmpty() ? (sesionesEjercicios.get(s).size() * 100 / sesionesEjercicios.get(s).size()) : "Nan" %>% completada!
