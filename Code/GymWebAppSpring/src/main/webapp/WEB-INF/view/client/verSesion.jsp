@@ -35,6 +35,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 <jsp:include page="../components/header.jsp"/>
@@ -48,8 +49,9 @@
             <% if (ejercicios.isEmpty()) { %>
             <h1 class="text-center"> No hay ejercicios!</h1>
             <% } else { %>
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <%
+                    int i = 0;
                     for (Ejerciciosesion ejercicio : ejercicios) {
                         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -60,14 +62,25 @@
                         int repeticiones = jsonNode.get("repeticiones").asInt();
                         int peso = jsonNode.get("peso").asInt();
                         int series = jsonNode.get("series").asInt();
+
                 %>
                 <li class="nav-item">
-                    <a class="nav-link <%=ejercicioElegido.equals(ejercicio) ? "active": ""%>" <%=ejercicioElegido.equals(ejercicio) ? "aria-current=\"page\"": ""%> href="#"><%=ejercicio.getEjercicio().getNombre() +" "+ series+"/"+ series%></a>
+                    <a class="nav-link <%=i==0 ? "active": ""%>"  id="tab<%=i%>-tab" data-bs-toggle="tab"  href="#tab<%=i%>" role="tab" aria-controls="tab<%=i%>" aria-selected="<%=i==0 ? "true" : "false"%>"><%=ejercicio.getEjercicio().getNombre() +" "+ series+"/"+ series%></a>
                 </li>
-                <% } %>
+                <%i++;
+                    } %>
             </ul>
             <div class=" border border-primary border-3 rounded h-100">
-
+                <div class="tab-content" id="myTabContent">
+                    <%
+                        for(int j = 0; j<i ; j++){
+                    %>
+                    <div class="tab-pane fade <%=j==0 ? "active show" : ""%>" id="tab<%=j%>" role="tabpanel" aria-labelledby="tab<%=j%>-tab">
+                        <h3>Contenido de Tab <%=j%></h3>
+                        <p>Este es el contenido de la pestaña <%=j%>.</p>
+                    </div>
+                    <% } %>
+                    </div>
             </div>
             <% } %>
         </div>
