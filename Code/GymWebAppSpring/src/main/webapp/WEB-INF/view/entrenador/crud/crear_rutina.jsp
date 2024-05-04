@@ -12,12 +12,14 @@
 
 <%
     Rutina rutina = (Rutina) request.getAttribute("rutina");
-    boolean editMode = rutina.getId() != -1;
+    Object readOnlyObject = request.getAttribute("readOnly");
+    boolean rutinaExists = rutina.getId() >= 0;
+    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && rutinaExists;
 
     String nombre = "";
     String descripcion = "";
     Dificultad dificultad = null;
-    if (editMode) {
+    if (rutinaExists) {
         nombre = rutina.getNombre();
         descripcion = rutina.getDescripcion();
         dificultad = rutina.getDificultad();
@@ -73,21 +75,21 @@
             <div class="row mb-3">
                 <div class="col-6">
                     <span class="h4 text-secondary">Nombre de la rutina</span><br/>
-                    <input name="nombre" value="<%=nombre%>" type="text" class="form-control mt-2">
+                    <input name="nombre" value="<%=nombre%>" type="text" class="form-control mt-2" <%=readOnly ? "disabled" : ""%>>
                 </div>
                 <div class="col-6">
                     <span class="h4 text-secondary">Dificultad</span><br/>
-                    <select name="dificultad" class="form-select mt-2" id="dificultad">
-                        <option <%=editMode && dificultad.getId() == 1 ? "selected" : ""%> value="1">Principiante</option>
-                        <option <%=editMode && dificultad.getId() == 2 ? "selected" : ""%> value="2">Intermedio</option>
-                        <option <%=editMode && dificultad.getId() == 3 ? "selected" : ""%> value="3">Avanzado</option>
+                    <select name="dificultad" class="form-select mt-2" id="dificultad" <%=readOnly ? "disabled" : ""%>>
+                        <option <%=rutinaExists && dificultad.getId() == 1 ? "selected" : ""%> value="1">Principiante</option>
+                        <option <%=rutinaExists && dificultad.getId() == 2 ? "selected" : ""%> value="2">Intermedio</option>
+                        <option <%=rutinaExists && dificultad.getId() == 3 ? "selected" : ""%> value="3">Avanzado</option>
                     </select>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-12">
                     <span class="h4 text-secondary">Descripción de la rutina</span><br/>
-                    <textarea name="descripcion" class="form-control mt-2" style="resize:none;" rows="3"><%=descripcion%></textarea>
+                    <textarea name="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=descripcion%></textarea>
                 </div>
             </div>
             <div class="row mb-2">
@@ -120,7 +122,7 @@
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-end">
-                    <input type="submit" class="btn btn-primary" value="<%=editMode ? "Guardar" : "Crear"%>">
+                    <input type="submit" class="btn btn-primary" value="<%=rutinaExists ? "Guardar" : "Crear"%>">
                 </div>
             </div>
         </form>

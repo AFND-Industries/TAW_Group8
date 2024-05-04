@@ -46,6 +46,16 @@ public class EntrenadorControllerCRUD {
         return "/entrenador/crud/rutinas";
     }
 
+    @GetMapping("/ver")
+    public String doVerRutina(@RequestParam("id") Integer id, Model model) {
+        Rutina rutina = rutinaRepository.findById(id).orElse(null);
+
+        model.addAttribute("readOnly", true);
+        model.addAttribute("rutina", rutina);
+
+        return "/entrenador/crud/crear_rutina";
+    }
+
     @GetMapping("/crear")
     public String doCrearRutina(Model model) {
         Rutina rutina = new Rutina();
@@ -55,6 +65,7 @@ public class EntrenadorControllerCRUD {
 
         return "/entrenador/crud/crear_rutina";
     }
+
 
     @GetMapping("/editar")
     public String doEditarRutina(@RequestParam("id") Integer id, Model model) {
@@ -96,11 +107,6 @@ public class EntrenadorControllerCRUD {
         rutinaRepository.delete(rutina);
 
         return "redirect:/entrenador/rutinas";
-    }
-
-    @GetMapping("/ver")
-    public String doVerRutina() {
-        return "redirect:/entrenador/rutinas/crear";
     }
 
     @GetMapping("/crear/sesion")
