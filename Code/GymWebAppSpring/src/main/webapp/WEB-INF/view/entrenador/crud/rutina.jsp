@@ -1,7 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -9,6 +10,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%
     Rutina rutina = (Rutina) request.getAttribute("rutina");
@@ -19,15 +21,13 @@
     String nombre = "";
     String descripcion = "";
     Dificultad dificultad = null;
+    List<Sesionentrenamiento> sesiones = new ArrayList<>();
     if (rutinaExists) {
         nombre = rutina.getNombre();
         descripcion = rutina.getDescripcion();
         dificultad = rutina.getDificultad();
+        sesiones = (List<Sesionentrenamiento>) request.getAttribute("sesiones");
     }
-
-    List<Integer> sesiones = new ArrayList<>();
-    for (int i = 0; i < 2; i++)
-        sesiones.add(i+1);
 %>
 
 <html>
@@ -103,35 +103,55 @@
                 <%}%>
             </div>
             <%
-                for (Integer sesion : sesiones) {
+                for (Sesionentrenamiento sesion : sesiones) {
             %>
-            <div class="row">
-                <div class="col-8 d-flex align-items-center" style="height:75px">
-                    <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                    <span class="ms-3 h2">Sesion <%=sesion%></span>
-                </div>
-                <%if (!readOnly) {%>
-                    <div class="col-4 d-flex justify-content-end align-items-center">
-                        <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
-                        <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
-                            <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                <div class="row">
+                    <a class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
+                         href="/entrenador/rutinas/crear/sesion/ver?id=<%= sesion.getId() %>">
+                        <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+                        <span class="ms-3 h2 mb-0" style="color: black;"><%=sesion.getNombre()%></span>
+                    </a>
+                    <%if (!readOnly) {%>
+                        <div class="col-3 d-flex justify-content-end align-items-center">
+                            <a href="/entrenador/rutinas/crear/sesion/editar?id=<%= sesion.getId() %>" style="cursor: pointer; text-decoration: none;">
+                                <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                            <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%=sesion.getId()%>')">
+                                <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                            </div>
                         </div>
-                    </div>
-                <%}%>
-            </div>
-            <hr>
+                    <%}%>
+                </div>
+                <hr>
             <%
                 }
             %>
 
-            <div class="row">
-                <div class="col-12 d-flex justify-content-end">
-                    <%if (!readOnly) {%>
+            <%if (!readOnly) {%>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-end">
                         <input type="submit" class="btn btn-primary" value="<%=rutinaExists ? "Guardar" : "Crear"%>">
-                    <%}%>
+                    </div>
                 </div>
-            </div>
+            <%}%>
         </form>
     </div>
+<script>
+    function submitForm(action) {
+        document.getElementById('rutinaForm').action = action;
+        document.getElementById('rutinaForm').submit();
+    }
+
+    function showDeleteModal(nombre, id) {
+        const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
+        const modalBody = document.getElementById("delete-modal-body");
+        const modalButton = document.getElementById("delete-modal-button");
+
+        modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la sesión <b>` + nombre + `</b>?`;
+        modalButton.onclick = () => { window.location.href = `/entrenador/rutinas/crear/sesion/borrar?id=` + id; };
+
+        deleteModal.show();
+    }
+</script>
 </body>
 </html>
