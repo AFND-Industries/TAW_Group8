@@ -2,7 +2,7 @@ package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.EjercicioSesionRepository;
 import com.example.GymWebAppSpring.dao.RutinaUsuarioRepository;
-import com.example.GymWebAppSpring.dao.SesionEntrenamientoRepository;
+import com.example.GymWebAppSpring.dao.SesionentrenamientoRepository;
 import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
@@ -26,7 +26,7 @@ public class ClienteCotroller {
     private RutinaUsuarioRepository rutinaUsuarioRepository;
 
     @Autowired
-    private SesionEntrenamientoRepository sesionEntrenamientoRepository;
+    private SesionentrenamientoRepository sesionentrenamientoRepository;
 
     @Autowired
     private EjercicioSesionRepository ejerciciosesionRepository;
@@ -52,7 +52,7 @@ public class ClienteCotroller {
         Usuario user = (Usuario) sesion.getAttribute("user");
         modelo.addAttribute("usuario", user);
         modelo.addAttribute("rutina", rutina);
-        List<Sesionentrenamiento> sesionesEntrenamiento = sesionEntrenamientoRepository.findSesionentrenamientoByRutina(rutina);
+        List<Sesionentrenamiento> sesionesEntrenamiento = sesionentrenamientoRepository.findSesionesByRutina(rutina);
         for(Sesionentrenamiento s : sesionesEntrenamiento){
             List<Ejerciciosesion> ejercicos = ejerciciosesionRepository.findEjerciciosBySesion(s);
             sesionesEjercicios.put(s, ejercicos);
