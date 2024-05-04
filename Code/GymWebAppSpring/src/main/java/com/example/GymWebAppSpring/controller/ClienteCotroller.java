@@ -2,6 +2,7 @@ package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.EjercicioSesionRepository;
 import com.example.GymWebAppSpring.dao.RutinaUsuarioRepository;
+import com.example.GymWebAppSpring.dao.SesionEntrenamientoRepository;
 import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
@@ -24,8 +25,8 @@ public class ClienteCotroller {
     @Autowired
     private RutinaUsuarioRepository rutinaUsuarioRepository;
 
-    //@Autowired
-    //private SesionRutinaRepository sesionRutinaRepository;
+    @Autowired
+    private SesionEntrenamientoRepository sesionEntrenamientoRepository;
 
     @Autowired
     private EjercicioSesionRepository ejerciciosesionRepository;
@@ -46,19 +47,18 @@ public class ClienteCotroller {
     public String doVerRutina(@RequestParam("rutinaElegida") Rutina rutina,HttpSession sesion, Model modelo  ) {
         if (!AuthUtils.isClient(sesion))
             return "redirect:/";
-        //Map<Sesionrutina, List<Ejerciciosesion>> sesionesEjercicios = new LinkedHashMap<>();
 
-
+        Map<Sesionentrenamiento, List<Ejerciciosesion>> sesionesEjercicios = new LinkedHashMap<>();
         Usuario user = (Usuario) sesion.getAttribute("user");
         modelo.addAttribute("usuario", user);
         modelo.addAttribute("rutina", rutina);
-        //List<Sesionrutina> sesiones = sesionRutinaRepository.findSesionRutinaByRutina(rutina);
-        //for(Sesionrutina s : sesiones){
-        //    List<Ejerciciosesion> ejercicos = ejerciciosesionRepository.findEjerciciosBySesion(s.getSesionentrenamiento());
-        //    sesionesEjercicios.put(s, ejercicos);
-        //}
+        List<Sesionentrenamiento> sesionesEntrenamiento = sesionEntrenamientoRepository.findSesionentrenamientoByRutina(rutina);
+        for(Sesionentrenamiento s : sesionesEntrenamiento){
+            List<Ejerciciosesion> ejercicos = ejerciciosesionRepository.findEjerciciosBySesion(s);
+            sesionesEjercicios.put(s, ejercicos);
+        }
 
-        //modelo.addAttribute("sesionesEjercicios", sesionesEjercicios);
+        modelo.addAttribute("sesionesEjercicios", sesionesEjercicios);
 
 
         return "client/verrutina";
