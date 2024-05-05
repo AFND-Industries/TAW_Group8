@@ -40,7 +40,7 @@
             <h1>Ejercicios</h1>
         </div>
         <div class="col-8 d-flex justify-content-end align-items-center">
-            <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/sesion')">Volver</button>
+            <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')">Volver</button>
         </div>
     </div>
     <%
