@@ -171,8 +171,10 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         Rutina rutina = rutinaRepository.findById(id).orElse(null); // no deberia ser nunca null pero se puede probar
+        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(rutina);
 
         rutinaRepository.delete(rutina);
+        sesionentrenamientoRepository.deleteAll(sesiones);
 
         return "redirect:/entrenador/rutinas";
     }
