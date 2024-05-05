@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -60,10 +61,16 @@ public class EntrenadorControllerCRUD {
     }
 
     @GetMapping("/ver")
-    public String doVerRutina(@RequestParam("id") Integer id, Model model) {
-        Rutina r = rutinaRepository.findById(id).orElse(null);
-        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);
-        RutinaArgument rutina = new RutinaArgument(r, sesiones);
+    public String doVerRutina(@RequestParam(value = "cache", defaultValue = "") String cache,
+                              @RequestParam(value = "id", required = false) Integer id, Model model) {
+        RutinaArgument rutina;
+        if (!cache.isEmpty())
+            rutina = gson.fromJson(cache, RutinaArgument.class);
+        else {
+            Rutina r = rutinaRepository.findById(id).orElse(null);
+            List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            rutina = new RutinaArgument(r, sesiones);
+        }
 
         model.addAttribute("readOnly", true);
         model.addAttribute("cache", gson.toJson(rutina));
@@ -108,6 +115,9 @@ public class EntrenadorControllerCRUD {
     public String doGuardarRutina(@RequestParam("cache") String cache,
                                   HttpSession session) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+
+        // RUTINA
+        // CREAR O MODIFICAR DATOS RUTINA
         Rutina r = rutinaRepository.findById(rutina.getId()).orElse(null);
 
         if (r == null) {
@@ -122,6 +132,38 @@ public class EntrenadorControllerCRUD {
         r.setDescripcion(rutina.getDescripcion()); // problema description too long
 
         rutinaRepository.save(r);
+
+        // SESION
+        List<SesionArgument> sesiones = rutina.getSesiones();
+
+        // ELIMINAR SESIONES
+        List<Integer> sesionesId = new ArrayList<>();
+        for (SesionArgument sesion : sesiones)
+            sesionesId.add(sesion.getId());
+
+        List<Sesionentrenamiento> sesionesRutina = sesionentrenamientoRepository.findSesionesByRutina(r);
+        for (Sesionentrenamiento sesion : sesionesRutina) {
+            if (!sesionesId.contains(sesion.getId()))
+                sesionentrenamientoRepository.delete(sesion);
+        }
+
+        // CREAR O EDITAR SESIONES
+        for (int i = 0; i < sesiones.size(); i++) {
+            SesionArgument sesion = sesiones.get(i);
+            Sesionentrenamiento s = sesionentrenamientoRepository.findById(sesion.getId()).orElse(null);
+
+            if (s == null) {
+                s = new Sesionentrenamiento();
+
+                s.setRutina(r);
+            }
+
+            s.setNombre(sesion.getNombre());
+            s.setDia(i + 1);
+            s.setDescripcion(sesion.getDescripcion());
+
+            sesionentrenamientoRepository.save(s);
+        }
 
         return "redirect:/entrenador/rutinas";
     }
@@ -175,7 +217,7 @@ public class EntrenadorControllerCRUD {
     public String doBorrarSesion(@RequestParam("cache") String cache,
                                  @RequestParam("pos") Integer pos) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
-        rutina.removeSesion(pos);
+        rutina.getSesiones().remove((int) pos);
 
         String jsonCache = gson.toJson(rutina);
         String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);

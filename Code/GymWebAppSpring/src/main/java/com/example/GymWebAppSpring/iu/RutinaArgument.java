@@ -70,14 +70,6 @@ public class RutinaArgument {
         this.sesiones = sesiones;
     }
 
-    public void addSesion(SesionArgument sesion) {
-        this.sesiones.add(sesion);
-    }
-
-    public void removeSesion(int pos) {
-        this.sesiones.remove(pos);
-    }
-
     public void setDificultad(Integer dificultad) {
         this.dificultad = dificultad;
     }

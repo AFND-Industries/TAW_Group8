@@ -22,18 +22,7 @@
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean rutinaExists = rutina.getId() >= 0;
-    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && rutinaExists;
-
-    String nombre = "";
-    String descripcion = "";
-    Integer dificultad = -1;
-    List<SesionArgument> sesiones = new ArrayList<>();
-    if (rutinaExists) {
-        nombre = rutina.getNombre();
-        descripcion = rutina.getDescripcion();
-        dificultad = rutina.getDificultad();
-        sesiones = rutina.getSesiones();
-    }
+    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
 %>
 
 <html>
@@ -84,21 +73,21 @@
         <div class="row mb-3">
             <div class="col-6">
                 <span class="h4 text-secondary">Nombre de la rutina</span><br/>
-                <input id="nombre" name="nombre" value="<%=nombre%>" type="text" class="form-control mt-2" <%=readOnly ? "disabled" : ""%>>
+                <input id="nombre" name="nombre" value="<%=rutina.getNombre()%>" type="text" class="form-control mt-2" <%=readOnly ? "disabled" : ""%>>
             </div>
             <div class="col-6">
                 <span class="h4 text-secondary">Dificultad</span><br/>
                 <select id="dificultad" name="dificultad" class="form-select mt-2" id="dificultad" <%=readOnly ? "disabled" : ""%>>
-                    <option <%=rutinaExists && dificultad == 1 ? "selected" : ""%> value="1">Principiante</option>
-                    <option <%=rutinaExists && dificultad == 2 ? "selected" : ""%> value="2">Intermedio</option>
-                    <option <%=rutinaExists && dificultad == 3 ? "selected" : ""%> value="3">Avanzado</option>
+                    <option <%=rutina.getDificultad() == 1 ? "selected" : ""%> value="1">Principiante</option>
+                    <option <%=rutina.getDificultad() == 2 ? "selected" : ""%> value="2">Intermedio</option>
+                    <option <%=rutina.getDificultad() == 3 ? "selected" : ""%> value="3">Avanzado</option>
                 </select>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-12">
                 <span class="h4 text-secondary">Descripción de la rutina</span><br/>
-                <textarea id="descripcion" name="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=descripcion%></textarea>
+                <textarea id="descripcion" name="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=rutina.getDescripcion()%></textarea>
             </div>
         </div>
         <div class="row mb-2">
@@ -112,20 +101,20 @@
             <%}%>
         </div>
         <%
-            for (int i = 0 ; i< sesiones.size(); i++) {
+            for (int i = 0 ; i< rutina.getSesiones().size(); i++) {
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/ver', 'pos=<%= i %>')">
+                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/' + <%=(readOnly ? "'ver'" : "'editar'")%>, 'pos=<%= i %>')">
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                    <span class="ms-3 h2 mb-0" style="color: black;"><%=sesiones.get(i).getNombre()%></span>
+                    <span class="ms-3 h2 mb-0" style="color: black;"><%=rutina.getSesiones().get(i).getNombre()%></span>
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
                         <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'pos=<%= i %>')" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
-                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesiones.get(i).getNombre()%>', '<%= i %>')">
+                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=rutina.getSesiones().get(i).getNombre()%>', '<%= i %>')">
                             <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                         </div>
                     </div>

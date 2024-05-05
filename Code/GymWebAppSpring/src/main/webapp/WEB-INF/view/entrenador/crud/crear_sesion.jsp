@@ -21,7 +21,7 @@
     boolean sesionExists = sesionPos >= 0;
 
     Object readOnlyObject = request.getAttribute("readOnly");
-    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && sesionExists;
+    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
 
     SesionArgument sesion;
     if (sesionExists)  sesion = rutina.getSesiones().get(sesionPos);
@@ -45,7 +45,6 @@
 </head>
 <script>
     const cache = <%=cache%>;
-    const sesionPos = <%=sesionPos%>;
 </script>
 <body>
 <jsp:include page="../../components/header.jsp"/>
@@ -74,7 +73,8 @@
                 <h1>Añadir sesión de entrenamiento</h1>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <button onClick="enviarJSON('/entrenador/rutinas/crear', save = false)" class="btn btn-primary">Volver</button>
+                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'crear'")%>, save = false)"
+                        class="btn btn-primary">Volver</button>
             </div>
         </div>
 
@@ -144,8 +144,7 @@
                 "nombre": document.getElementById("nombre").value,
                 "descripcion": document.getElementById("descripcion").value
             }
-            console.log(sesionPos);
-            cache.sesiones[sesionPos] = sesionJSON;
+            cache.sesiones[<%=sesionPos%>] = sesionJSON;
         }
 
         const cacheString = encodeURIComponent(JSON.stringify(cache));
