@@ -85,13 +85,8 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear")
     public String doCrearRutina(@RequestParam(value = "cache", defaultValue = "") String cache, Model model) {
-        RutinaArgument rutina;
-        if (!cache.isEmpty())
-            rutina = gson.fromJson(cache, RutinaArgument.class);
-        else {
-            rutina = new RutinaArgument();
-            rutina.setId(-1);
-        }
+        RutinaArgument rutina = new RutinaArgument();
+        rutina.setId(-1);
 
         model.addAttribute("cache", gson.toJson(rutina));
 
@@ -229,20 +224,33 @@ public class EntrenadorControllerCRUD {
         String jsonCache = gson.toJson(rutina);
         String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);
 
-        return "redirect:/entrenador/rutinas/crear?cache=" + encodedCache;
+        return "redirect:/entrenador/rutinas/editar?cache=" + encodedCache;
     }
 
     @GetMapping("/crear/ejercicio/seleccionar")
-    public String doSeleccionarEjercicio(Model model) {
-        List<Ejercicio> ejercicios = ejercicioRepository.findAll();
+    public String doSeleccionarEjercicio(@RequestParam("cache") String cache,
+                                         @RequestParam("pos") Integer pos, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
 
-        model.addAttribute("ejercicios", ejercicios);
+        model.addAttribute("sesionPos", pos);
+        model.addAttribute("cache", gson.toJson(rutina));
+        model.addAttribute("ejerciciosBase", ejerciciosBase);
 
         return "/entrenador/crud/seleccionar_ejercicio";
     }
 
     @GetMapping("/crear/ejercicio")
-    public String doCrearEjercicio() {
+    public String doCrearEjercicio(@RequestParam("cache") String cache,
+                                   @RequestParam("pos") Integer pos,
+                                   @RequestParam("ejbase") Integer ejbase, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+
+        model.addAttribute("sesionPos", pos);
+        model.addAttribute("cache", gson.toJson(rutina));
+        model.addAttribute("ejercicioBase", ejercicioBase);
+
         return "/entrenador/crud/crear_ejercicio_sesion";
     }
 }
