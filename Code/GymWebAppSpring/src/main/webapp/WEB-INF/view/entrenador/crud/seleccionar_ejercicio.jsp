@@ -44,14 +44,23 @@
     <div class="row">
         <a class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
            href="/entrenador/rutinas/crear/ejercicio">
-            <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+            <img src="<%=ejercicio.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
             <div>
                 <span class="ms-3 h2" style="color: black;"><%=ejercicio.getNombre()%></span><br>
                 <span class="ms-3 h5 text-secondary"><%=ejercicio.getDescripcion()%></span>
             </div>
         </a>
         <div class="col-4 d-flex justify-content-end align-items-center">
-            <a style="cursor: pointer;" onClick="changeWatch()">
+            <a style="cursor: pointer;" onClick="setEjercicioInfo(
+                '<%=ejercicio.getLogo()%>',
+                '<%=ejercicio.getNombre()%>',
+                '<%=ejercicio.getMusculo().getNombre()%>',
+                '<%=ejercicio.getDescripcion()%>',
+                '<%=ejercicio.getEquipamiento()%>',
+                '<%=ejercicio.getTipofuerza().getNombre()%>',
+                '<%=ejercicio.getMusculoSecundario() != null ? ejercicio.getMusculoSecundario().getNombre() : "No especificado"%>',
+                '<%=ejercicio.getCategoria()%>',
+                '<%=ejercicio.getVideo()%>')">
                 <img src="/svg/eye.svg" alt="Ver" style="width:50px; height:50px">
             </a>
         </div>
@@ -66,32 +75,32 @@
 
 <div id="watch" class="container" style="display: none">
     <div class="row mb-3">
-        <div class="col-4">
-            <h1>Press de banca</h1>
+        <div class="col-8">
+            <h1>Información del ejercicio</h1>
         </div>
-        <div class="col-8 d-flex justify-content-end align-items-center">
+        <div class="col-4 d-flex justify-content-end align-items-center">
             <button class="btn btn-primary" onClick="changeWatch()">Volver</button>
         </div>
     </div>
     <div class="row mb-5">
-        <div class="col-12">
-            <img src="/svg/question-square.svg" alt="Ver" style="width:200px; height:200px">
+        <div class="col-md-6">
+            <img id="logo" src="/svg/question-square.svg" alt="Logo" style="max-width: 100%; height: auto;">
         </div>
     </div>
     <div class="row mb-5">
         <div class="col-6">
             <span class="h2">Nombre</span><br/>
-            <span class="h3 text-secondary">Press</span>
+            <span class="h3 text-secondary" id="nombre">Press</span>
         </div>
         <div class="col-6">
             <span class="h2">Músculo</span><br/>
-            <span class="h3 text-secondary">Pectorales</span>
+            <span class="h3 text-secondary" id="musculo">Pectorales</span>
         </div>
     </div>
     <div class="row mb-5">
         <div class="col-12">
             <span class="h2">Descripción</span><br/>
-            <span class="h3 text-secondary">Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum
+            <span class="h3 text-secondary" id="descripcion">Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum
                 Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum
                 Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem</span>
         </div>
@@ -99,29 +108,21 @@
     <div class="row mb-5">
         <div class="col-6">
             <span class="h2">Equipamiento</span><br/>
-            <span class="h3 text-secondary">Equipamiento #1</span>
+            <span class="h3 text-secondary" id="equipamiento">Equipamiento #1</span>
         </div>
         <div class="col-6">
             <span class="h2">Tipo de fuerza</span><br/>
-            <span class="h3 text-secondary">Push</span>
+            <span class="h3 text-secondary" id="tipoFuerza">Push</span>
         </div>
     </div>
     <div class="row mb-5">
         <div class="col-6">
-            <span class="h2">Dificultad</span><br/>
-            <span class="h3 text-secondary">Normal</span>
+            <span class="h2">Musculo secundario</span><br/>
+            <span class="h3 text-secondary" id="musculoSecundario">Biceps</span>
         </div>
         <div class="col-6">
             <span class="h2">Categoría</span><br/>
-            <span class="h3 text-secondary">Categoría #1</span>
-        </div>
-    </div>
-    <div class="row mb-5">
-        <div class="col-6">
-            <span class="h2">Músculo secundario</span><br/>
-        </div>
-        <div class="col-6">
-            <span class="h3 text-secondary">Bíceps</span>
+            <span class="h3 text-secondary" id="categoria">Categoría #1</span>
         </div>
     </div>
     <div class="row mb-2">
@@ -131,19 +132,42 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <img src="/svg/question-square.svg" alt="Ver" style="width:200px; height:200px">
+            <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
+                <iframe
+                        id="video"
+                        src="https://www.youtube.com/embed/48L0oQApm_0?autoplay=1&mute=1"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                        allowfullscreen>
+                </iframe>
+            </div>
         </div>
     </div>
 </div>
 <script>
     function changeWatch() {
         watch = !watch;
+        if(!watch)
+            document.getElementById('video').src = "";
 
         const selectDiv = document.getElementById('select');
         const watchDiv = document.getElementById('watch');
 
         selectDiv.style.display = watch ? 'none' : 'block';
         watchDiv.style.display = watch ? 'block' : 'none';
+    }
+
+    function setEjercicioInfo(logo, nombre, musculo, descripcion, equipamiento, tipoFuerza, musculoSecundario, categoria, video) {
+        document.getElementById('logo').src = logo;
+        document.getElementById('nombre').innerHTML = nombre;
+        document.getElementById('musculo').innerHTML = musculo;
+        document.getElementById('descripcion').innerHTML = descripcion;
+        document.getElementById('equipamiento').innerHTML = equipamiento;
+        document.getElementById('tipoFuerza').innerHTML = tipoFuerza;
+        document.getElementById('musculoSecundario').innerHTML = musculoSecundario;
+        document.getElementById('categoria').innerHTML = categoria;
+        document.getElementById('video').src = video;
+
+        changeWatch();
     }
 </script>
 </body>
