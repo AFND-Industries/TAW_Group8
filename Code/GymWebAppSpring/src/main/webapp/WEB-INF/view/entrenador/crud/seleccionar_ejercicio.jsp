@@ -1,6 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -10,7 +12,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Ejercicio> ejercicios = (List<Ejercicio>) request.getAttribute("ejercicios");
+    String cache = (String) request.getAttribute("cache");
+    Integer sesionPos = (Integer) request.getAttribute("sesionPos");
+    List<Ejercicio> ejerciciosBase = (List<Ejercicio>) request.getAttribute("ejerciciosBase");
 %>
 
 <html>
@@ -24,6 +28,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <script>
+    const cache = <%=cache%>;
     let watch = false;
 </script>
 <body>
@@ -35,32 +40,32 @@
             <h1>Ejercicios</h1>
         </div>
         <div class="col-8 d-flex justify-content-end align-items-center">
-            <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Volver</a>
+            <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/sesion')">Volver</button>
         </div>
     </div>
     <%
-        for (Ejercicio ejercicio : ejercicios) {
+        for (Ejercicio ejercicioBase : ejerciciosBase) {
     %>
     <div class="row">
-        <a class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-           href="/entrenador/rutinas/crear/ejercicio">
-            <img src="<%=ejercicio.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
-            <div>
-                <span class="ms-3 h2" style="color: black;"><%=ejercicio.getNombre()%></span><br>
-                <span class="ms-3 h5 text-secondary"><%=ejercicio.getDescripcion()%></span>
+        <div class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
+           onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio', 'ejbase=<%=ejercicioBase.getId()%>')">
+            <img src="<%=ejercicioBase.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
+            <div class="ms-3">
+                <span class="h2" style="color: black;"><%=ejercicioBase.getNombre()%></span><br>
+                <span class="h5 text-secondary"><%=ejercicioBase.getDescripcion()%></span>
             </div>
-        </a>
+        </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
             <a style="cursor: pointer;" onClick="setEjercicioInfo(
-                '<%=ejercicio.getLogo()%>',
-                '<%=ejercicio.getNombre()%>',
-                '<%=ejercicio.getMusculo().getNombre()%>',
-                '<%=ejercicio.getDescripcion()%>',
-                '<%=ejercicio.getEquipamiento()%>',
-                '<%=ejercicio.getTipofuerza().getNombre()%>',
-                '<%=ejercicio.getMusculoSecundario() != null ? ejercicio.getMusculoSecundario().getNombre() : "No especificado"%>',
-                '<%=ejercicio.getCategoria().getNombre()%>',
-                '<%=ejercicio.getVideo()%>')">
+                '<%=ejercicioBase.getLogo()%>',
+                '<%=ejercicioBase.getNombre()%>',
+                '<%=ejercicioBase.getMusculo().getNombre()%>',
+                '<%=ejercicioBase.getDescripcion()%>',
+                '<%=ejercicioBase.getEquipamiento()%>',
+                '<%=ejercicioBase.getTipofuerza().getNombre()%>',
+                '<%=ejercicioBase.getMusculoSecundario() != null ? ejercicioBase.getMusculoSecundario().getNombre() : "No especificado"%>',
+                '<%=ejercicioBase.getCategoria().getNombre()%>',
+                '<%=ejercicioBase.getVideo()%>')">
                 <img src="/svg/eye.svg" alt="Ver" style="width:50px; height:50px">
             </a>
         </div>
@@ -135,7 +140,7 @@
             <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
                 <iframe
                         id="video"
-                        src="https://www.youtube.com/embed/48L0oQApm_0?autoplay=1&mute=1"
+                        src=""
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
                         allowfullscreen>
                 </iframe>
@@ -144,6 +149,15 @@
     </div>
 </div>
 <script>
+    console.log(cache);
+
+    function enviarJSON(action, additionalParams="") {
+        const cacheString = encodeURIComponent(JSON.stringify(cache));
+
+        window.location.href =
+            action + "?cache=" + cacheString + "&pos=<%=sesionPos%>" +  (additionalParams.length > 0 ? "&" : "") + additionalParams;
+    }
+
     function changeWatch() {
         watch = !watch;
         if(!watch)

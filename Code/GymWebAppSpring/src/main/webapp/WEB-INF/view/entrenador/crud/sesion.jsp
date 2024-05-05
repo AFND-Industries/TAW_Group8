@@ -98,7 +98,7 @@
             </div>
             <%if (!readOnly) {%>
                 <div class="col-6 d-flex justify-content-end">
-                    <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio/seleccionar">Añadir ejercicio</a>
+                    <a class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save = true, additionalParams='pos=<%=sesionPos%>')">Añadir ejercicio</a>
                 </div>
             <%}%>
         </div>
@@ -108,9 +108,9 @@
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px">
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                    <div>
-                        <span class="ms-3 h2">Ejercicio <%=ejercicio%></span></br>
-                        <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+                    <div class="ms-3">
+                        <span class="h2">Ejercicio <%=ejercicio%></span></br>
+                        <span class="h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
                     </div>
                 </div>
                 <%if (!readOnly) {%>

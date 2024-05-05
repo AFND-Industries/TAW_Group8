@@ -108,9 +108,9 @@
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
                      onClick="enviarJSON('/entrenador/rutinas/crear/sesion/' + <%=(readOnly ? "'ver'" : "'editar'")%>, 'pos=<%= i %>')">
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                    <div>
-                        <span class="ms-3 h2" style="color: black;"><%=sesion.getNombre()%></span><br>
-                        <span class="ms-3 h5 text-secondary"><%=sesion.getDescripcion()%></span>
+                    <div class="ms-3">
+                        <span class="h2" style="color: black;"><%=sesion.getNombre()%></span><br>
+                        <span class="h5 text-secondary"><%=sesion.getDescripcion()%></span>
                     </div>
                 </div>
                 <%if (!readOnly) {%>
