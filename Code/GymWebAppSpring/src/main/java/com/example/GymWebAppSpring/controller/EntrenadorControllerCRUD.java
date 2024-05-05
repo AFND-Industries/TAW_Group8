@@ -191,7 +191,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("sesionPos", pos);
         model.addAttribute("cache", gson.toJson(rutina));
 
-        return "/entrenador/crud/crear_sesion";
+        return "/entrenador/crud/sesion";
     }
 
     @GetMapping("/crear/sesion")
@@ -201,7 +201,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("sesionPos", -1);
         model.addAttribute("cache", gson.toJson(rutina));
 
-        return "/entrenador/crud/crear_sesion";
+        return "/entrenador/crud/sesion";
     }
 
     @GetMapping("/crear/sesion/editar")
@@ -212,7 +212,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("sesionPos", pos);
         model.addAttribute("cache", gson.toJson(rutina));
 
-        return "/entrenador/crud/crear_sesion";
+        return "/entrenador/crud/sesion";
     }
 
     @GetMapping("/crear/sesion/borrar")
@@ -226,18 +226,14 @@ public class EntrenadorControllerCRUD {
 
         return "redirect:/entrenador/rutinas/crear?cache=" + encodedCache;
     }
-    @GetMapping("/crear/ejercicio")
-    public String doCrearEjercicio() {
-        return "/entrenador/crud/crear_ejercicio_sesion";
-    }
 
     @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio() {
         return "/entrenador/crud/seleccionar_ejercicio";
     }
 
-    @GetMapping("/crear/ejercicio/ver")
-    public String doEjercicioBase() {
-        return "/entrenador/crud/ejercicio_base";
+    @GetMapping("/crear/ejercicio")
+    public String doCrearEjercicio() {
+        return "/entrenador/crud/crear_ejercicio_sesion";
     }
 }

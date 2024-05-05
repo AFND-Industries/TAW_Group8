@@ -98,7 +98,7 @@
             </div>
             <%if (!readOnly) {%>
                 <div class="col-6 d-flex justify-content-end">
-                    <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Añadir ejercicio</a>
+                    <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio/seleccionar">Añadir ejercicio</a>
                 </div>
             <%}%>
         </div>
@@ -148,7 +148,7 @@
         }
 
         const cacheString = encodeURIComponent(JSON.stringify(cache));
-        console.log(cache);
+
         window.location.href =
             action + "?cache=" + cacheString + (additionalParams.length > 0 ? "&" : "") + additionalParams;
     }
