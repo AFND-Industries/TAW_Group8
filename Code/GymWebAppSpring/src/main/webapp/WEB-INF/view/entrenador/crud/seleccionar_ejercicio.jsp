@@ -59,7 +59,7 @@
                 '<%=ejercicio.getEquipamiento()%>',
                 '<%=ejercicio.getTipofuerza().getNombre()%>',
                 '<%=ejercicio.getMusculoSecundario() != null ? ejercicio.getMusculoSecundario().getNombre() : "No especificado"%>',
-                '<%=ejercicio.getCategoria()%>',
+                '<%=ejercicio.getCategoria().getNombre()%>',
                 '<%=ejercicio.getVideo()%>')">
                 <img src="/svg/eye.svg" alt="Ver" style="width:50px; height:50px">
             </a>
@@ -127,7 +127,7 @@
     </div>
     <div class="row mb-2">
         <div class="col-12">
-            <span class="h2">Vídeo</span><br/>
+            <span class="h1">Vídeo</span><br/>
         </div>
     </div>
     <div class="row">
