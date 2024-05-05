@@ -3,7 +3,6 @@ package com.example.GymWebAppSpring.dao;
 import com.example.GymWebAppSpring.entity.Tipousuario;
 import com.example.GymWebAppSpring.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,7 +21,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("SELECT u FROM Usuario u WHERE u.apellidos like %:apellidos%")
     public List<Usuario> findUsuarioByApellidos(String apellidos);
 
-    @Modifying
     @Query("SELECT u FROM Usuario u WHERE u.edad >= :edad")
     public List<Usuario> findUsuarioByEdad(int edad);
 }

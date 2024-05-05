@@ -53,7 +53,7 @@
                     <%
                         } else if (user.getTipo().getNombre().equals("Cliente")){
                     %>
-                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="/client"><i class="bi bi-person-circle me-2" style="font-size: 16px"></i> Área personal</a></li>
                     <%
                         }
                     %>

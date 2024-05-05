@@ -337,3 +337,11 @@ VALUES ('Press de banca', 'Ejercicio para trabajar el pectoral mayor acostado en
         'img/ejercicio/dominadas.mp4', 'img/ejercicio/dominadas.jpg', 2),
        ('Remo con barra', 'Ejercicio para trabajar la espalda, bíceps y braquial anterior', 2, 'Barra', 1, NULL,
         'img/ejercicio/remo barra.mp4', 'img/ejercicio/remo barra.jpg', 2);
+
+INSERT INTO `ejerciciosesion` VALUES (1,1,'{\"peso\":15,\"series\":5,\"repeticiones\":12}',1,2),(2,1,'{\"peso\":15,\"series\":5,\"repeticiones\":12}',2,1),(3,2,'{\"peso\":15,\"series\":7,\"repeticiones\":12}',1,3);
+INSERT INTO `entrenadorasignado` VALUES (2,1);
+INSERT INTO `informacionejercicio` VALUES (1,'[{\"repeticiones\": 12,\"mpeso\": \"NO\"},{\"repeticiones\": 12,\"mpeso\": \"NO\"},{\"repeticiones\": 11,\"mpeso\": \"NO\"},{\"repeticiones\": 10,\"mpeso\": \"NO\"},{\"repeticiones\": 9,\"mpeso\": \"NO\"}]',1,1),(2,'[{\"repeticiones\": 12,\"mpeso\": \"NO\"},{\"repeticiones\": 12,\"mpeso\": \"NO\"},{\"repeticiones\": 11,\"mpeso\": \"NO\"},{\"repeticiones\": 10,\"mpeso\": \"NO\"},{\"repeticiones\": 9,\"mpeso\": \"NO\"}]',3,1),(5,'[{\"repeticiones\": 12,\"mpeso\": \"NO\"},{\"repeticiones\": 12,\"mpeso\": \"NO\"},{\"repeticiones\": 11,\"mpeso\": \"NO\"},{\"repeticiones\": 10,\"mpeso\": \"NO\"},{\"repeticiones\": 9,\"mpeso\": \"NO\"}]',2,2);
+INSERT INTO `informacionsesion` VALUES (1,5,'Me ha gustado mucho este ejercicio,lo repetiría mil veces más','2024-04-25',1,1),(2,1,'Esto es una mierda','2024-05-18',2,1);
+INSERT INTO `rutinacliente` VALUES (1,1,'2024-04-25'),(1,2,'2024-04-12'),(1,3,'2024-04-12');
+-- Por alguna razón esta línea da error
+-- INSERT INTO `sesionrutinas` VALUES (1,1,1),(2,1,2);
