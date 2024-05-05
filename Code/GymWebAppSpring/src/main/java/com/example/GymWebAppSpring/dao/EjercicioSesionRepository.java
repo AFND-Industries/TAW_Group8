@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface EjercicioSesionRepository extends JpaRepository<Ejerciciosesion, Integer> {
 
-    
-
     @Query("SELECT e FROM Ejerciciosesion e WHERE e.sesionentrenamiento = :sesion")
     public List<Ejerciciosesion> findEjerciciosBySesion(@Param("sesion") Sesionentrenamiento sesion);
 }
