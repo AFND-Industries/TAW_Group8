@@ -1,8 +1,10 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.DificultadRepository;
+import com.example.GymWebAppSpring.dao.EjercicioRepository;
 import com.example.GymWebAppSpring.dao.RutinaRepository;
 import com.example.GymWebAppSpring.dao.SesionentrenamientoRepository;
+import com.example.GymWebAppSpring.entity.Ejercicio;
 import com.example.GymWebAppSpring.entity.Rutina;
 import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
 import com.example.GymWebAppSpring.entity.Usuario;
@@ -43,6 +45,9 @@ public class EntrenadorControllerCRUD {
 
     @Autowired
     protected SesionentrenamientoRepository sesionentrenamientoRepository;
+
+    @Autowired
+    protected EjercicioRepository ejercicioRepository;
 
     @Autowired
     protected Gson gson;
@@ -228,7 +233,11 @@ public class EntrenadorControllerCRUD {
     }
 
     @GetMapping("/crear/ejercicio/seleccionar")
-    public String doSeleccionarEjercicio() {
+    public String doSeleccionarEjercicio(Model model) {
+        List<Ejercicio> ejercicios = ejercicioRepository.findAll();
+
+        model.addAttribute("ejercicios", ejercicios);
+
         return "/entrenador/crud/seleccionar_ejercicio";
     }
 

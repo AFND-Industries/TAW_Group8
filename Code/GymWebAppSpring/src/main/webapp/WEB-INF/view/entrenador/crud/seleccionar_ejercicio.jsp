@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -9,9 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Integer> ejercicios = new ArrayList<>();
-    for (int i = 0; i < 5; i++)
-        ejercicios.add(i+1);
+    List<Ejercicio> ejercicios = (List<Ejercicio>) request.getAttribute("ejercicios");
 %>
 
 <html>
@@ -36,19 +35,19 @@
             <h1>Ejercicios</h1>
         </div>
         <div class="col-8 d-flex justify-content-end align-items-center">
-            <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio">Volver</a>
+            <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Volver</a>
         </div>
     </div>
     <%
-        for (Integer ejercicio : ejercicios) {
+        for (Ejercicio ejercicio : ejercicios) {
     %>
     <div class="row">
         <a class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
            href="/entrenador/rutinas/crear/ejercicio">
             <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
             <div>
-                <span class="ms-3 h2" style="color: black;">Ejercicio <%=ejercicio%></span><br>
-                <span class="ms-3 h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+                <span class="ms-3 h2" style="color: black;"><%=ejercicio.getNombre()%></span><br>
+                <span class="ms-3 h5 text-secondary"><%=ejercicio.getDescripcion()%></span>
             </div>
         </a>
         <div class="col-4 d-flex justify-content-end align-items-center">

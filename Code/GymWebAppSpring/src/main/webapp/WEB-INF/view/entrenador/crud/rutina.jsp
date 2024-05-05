@@ -102,19 +102,23 @@
         </div>
         <%
             for (int i = 0 ; i< rutina.getSesiones().size(); i++) {
+                SesionArgument sesion = rutina.getSesiones().get(i);
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
                      onClick="enviarJSON('/entrenador/rutinas/crear/sesion/' + <%=(readOnly ? "'ver'" : "'editar'")%>, 'pos=<%= i %>')">
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                    <span class="ms-3 h2 mb-0" style="color: black;"><%=rutina.getSesiones().get(i).getNombre()%></span>
+                    <div>
+                        <span class="ms-3 h2" style="color: black;"><%=sesion.getNombre()%></span><br>
+                        <span class="ms-3 h5 text-secondary"><%=sesion.getDescripcion()%></span>
+                    </div>
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
                         <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'pos=<%= i %>')" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
-                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=rutina.getSesiones().get(i).getNombre()%>', '<%= i %>')">
+                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%= i %>')">
                             <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                         </div>
                     </div>

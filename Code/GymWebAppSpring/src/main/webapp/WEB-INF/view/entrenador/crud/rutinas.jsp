@@ -120,7 +120,10 @@
                 <a class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
                      href="/entrenador/rutinas/ver?id=<%= rutina.getId() %>">
                     <img src="<%=rutina.getDificultad().getLogo()%>" alt="Dificultad" style="width:50px; height:50px">
-                    <span class="ms-3 h2 mb-0" style="color: black;"><%=rutina.getNombre()%></span>
+                    <div>
+                        <span class="ms-3 h2 mb-0" style="color: black;"><%=rutina.getNombre()%></span><br>
+                        <span class="ms-3 h5 text-secondary"><%=rutina.getDescripcion()%></span>
+                    </div>
                 </a>
                 <div class="col-3 d-flex justify-content-end align-items-center">
                     <a href="/entrenador/rutinas/editar?id=<%= rutina.getId() %>" style="cursor: pointer; text-decoration: none;">
