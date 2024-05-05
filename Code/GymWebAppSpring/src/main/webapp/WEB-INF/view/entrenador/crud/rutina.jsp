@@ -112,20 +112,20 @@
             <%}%>
         </div>
         <%
-            for (SesionArgument sesion : sesiones) {
+            for (int i = 0 ; i< sesiones.size(); i++) {
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/ver', 'id=<%= sesion.getId() %>')">
+                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/ver', 'pos=<%= i %>')">
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
-                    <span class="ms-3 h2 mb-0" style="color: black;"><%=sesion.getNombre()%></span>
+                    <span class="ms-3 h2 mb-0" style="color: black;"><%=sesiones.get(i).getNombre()%></span>
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'id=<%= sesion.getId() %>')" style="cursor: pointer; text-decoration: none;">
+                        <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'pos=<%= i %>')" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
-                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%=sesion.getId()%>')">
+                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesiones.get(i).getNombre()%>', '<%= i %>')">
                             <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                         </div>
                     </div>
@@ -146,15 +146,10 @@
     </div>
 <script>
     function enviarJSON(action, additionalParams="") {
-        const id = document.getElementById("rutinaId").value;
-        const nombre = document.getElementById("nombre").value;
-        const dificultad = document.getElementById("dificultad").value;
-        const descripcion = document.getElementById("descripcion").value;
-
-        cache.id = id;
-        cache.nombre = nombre;
-        cache.dificultad = dificultad;
-        cache.descripcion = descripcion;
+        cache.id = document.getElementById("rutinaId").value;
+        cache.nombre = document.getElementById("nombre").value;
+        cache.dificultad = document.getElementById("dificultad").value;
+        cache.descripcion = document.getElementById("descripcion").value;
 
         var newCache = encodeURIComponent(JSON.stringify(cache));
 
@@ -162,13 +157,13 @@
             action + "?cache=" + newCache + (additionalParams.length > 0 ? "&" : "") + additionalParams;
     }
 
-    function showDeleteModal(nombre, id) {
+    function showDeleteModal(nombre, pos) {
         const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
         const modalBody = document.getElementById("delete-modal-body");
         const modalButton = document.getElementById("delete-modal-button");
 
         modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la sesión <b>` + nombre + `</b>?`;
-        modalButton.onclick = () => { window.location.href = `/entrenador/rutinas/crear/sesion/borrar?id=` + id; };
+        modalButton.onclick = () => { enviarJSON('/entrenador/rutinas/crear/sesion/borrar', 'pos=' + pos) };
 
         deleteModal.show();
     }

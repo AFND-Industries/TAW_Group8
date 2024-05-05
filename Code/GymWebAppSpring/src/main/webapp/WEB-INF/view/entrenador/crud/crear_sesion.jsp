@@ -1,7 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
+<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
+<%@ page import="com.google.gson.Gson" %>
 <%--
   Created by IntelliJ IDEA.
   User: elgam
@@ -12,20 +13,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    Gson gson = new Gson();
     String cache = (String) request.getAttribute("cache");
+    RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
 
-    SesionArgument sesion = (SesionArgument) request.getAttribute("sesion");
+    Integer sesionPos = (Integer) request.getAttribute("sesionPos");
+    boolean sesionExists = sesionPos >= 0;
+
     Object readOnlyObject = request.getAttribute("readOnly");
-    boolean sesionExists = sesion.getId() >= 0;
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject) && sesionExists;
 
-    String nombre = "";
-    String descripcion = "";
-    List<Integer> ejercicios = new ArrayList<>();
-    if (sesionExists) {
-        nombre = sesion.getNombre();
-        descripcion = sesion.getDescripcion();
-        for (int i = 0; i < 2; i++) ejercicios.add(i+1);
+    SesionArgument sesion;
+    if (sesionExists)  sesion = rutina.getSesiones().get(sesionPos);
+    else {
+        sesion = new SesionArgument();
+        sesion.setId(-1);
+
+        sesionPos = rutina.getSesiones().size();
     }
 %>
 
@@ -41,6 +45,7 @@
 </head>
 <script>
     const cache = <%=cache%>;
+    const sesionPos = <%=sesionPos%>;
 </script>
 <body>
 <jsp:include page="../../components/header.jsp"/>
@@ -78,13 +83,13 @@
                 <span class="h4 text-secondary">Nombre de la sesión</span><br/>
             </div>
             <div class="col-12">
-                <input id="nombre" type="text" class="form-control mt-2" value="<%=nombre%>" <%=readOnly ? "disabled" : ""%>>
+                <input id="nombre" type="text" class="form-control mt-2" value="<%=sesion.getNombre()%>" <%=readOnly ? "disabled" : ""%>>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-12">
                 <span class="h4 text-secondary">Descripción de la sesión</span><br/>
-                <textarea id="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=descripcion%></textarea>
+                <textarea id="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=sesion.getDescripcion()%></textarea>
             </div>
         </div>
         <div class="row mb-2">
@@ -98,7 +103,7 @@
             <%}%>
         </div>
         <%
-            for (Integer ejercicio : ejercicios) {
+            for (Integer ejercicio : new ArrayList<Integer>()) {
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px">
@@ -131,24 +136,20 @@
         <%}%>
     </div>
 <script>
+    console.log(cache);
     function enviarJSON(action, save=true, additionalParams="") {
         if (save) {
-            const id = document.getElementById("sesionId").value;
-            const nombre = document.getElementById("nombre").value;
-            const descripcion = document.getElementById("descripcion").value;
-
-            var sesionJSON = {
-                "id": id,
-                "nombre": nombre,
-                "descripcion": descripcion
+            const sesionJSON = {
+                "id": document.getElementById("sesionId").value,
+                "nombre": document.getElementById("nombre").value,
+                "descripcion": document.getElementById("descripcion").value
             }
-
-            console.log("despues");
-            const newSesiones = cache.sesiones === undefined ? [sesionJSON] : [...cache.sesiones, sesionJSON];
-            cache.sesiones = newSesiones;
+            console.log(sesionPos);
+            cache.sesiones[sesionPos] = sesionJSON;
         }
 
         const cacheString = encodeURIComponent(JSON.stringify(cache));
+        console.log(cache);
         window.location.href =
             action + "?cache=" + cacheString + (additionalParams.length > 0 ? "&" : "") + additionalParams;
     }

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -71,11 +73,10 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear")
     public String doCrearRutina(@RequestParam(value = "cache", defaultValue = "") String cache, Model model) {
-        RutinaArgument rutina = null;
+        RutinaArgument rutina;
         if (!cache.isEmpty())
             rutina = gson.fromJson(cache, RutinaArgument.class);
-
-        if (rutina == null) {
+        else {
             rutina = new RutinaArgument();
             rutina.setId(-1);
         }
@@ -89,7 +90,7 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/editar")
     public String doEditarRutina(@RequestParam(value = "cache", defaultValue = "") String cache,
                                  @RequestParam(value = "id", required = false) Integer id, Model model) {
-        RutinaArgument rutina = null;
+        RutinaArgument rutina;
         if (!cache.isEmpty())
             rutina = gson.fromJson(cache, RutinaArgument.class);
         else {
@@ -138,12 +139,13 @@ public class EntrenadorControllerCRUD {
         SESIONES DE ENTRENAMIENTO
      */
     @GetMapping("/crear/sesion/ver")
-    public String doVerSesion(@RequestParam("id") Integer id, Model model) {
-        Sesionentrenamiento s = sesionentrenamientoRepository.findById(id).orElse(null);
-        SesionArgument sesion = new SesionArgument(s);
+    public String doVerSesion(@RequestParam("cache") String cache,
+                              @RequestParam("pos") Integer pos, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
 
         model.addAttribute("readOnly", true);
-        model.addAttribute("sesion", sesion);
+        model.addAttribute("sesionPos", pos);
+        model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/crear_sesion";
     }
@@ -152,34 +154,34 @@ public class EntrenadorControllerCRUD {
     public String doCrearSesion(@RequestParam("cache") String cache, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
 
-        SesionArgument sesion = new SesionArgument();
-        sesion.setId(-1);
-
-        model.addAttribute("sesion", sesion);
+        model.addAttribute("sesionPos", -1);
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/crear_sesion";
     }
 
     @GetMapping("/crear/sesion/editar")
-    public String doEditarSesion(@RequestParam("id") Integer id, Model model) {
-        Sesionentrenamiento s = sesionentrenamientoRepository.findById(id).orElse(null);
-        SesionArgument sesion = new SesionArgument(s);
+    public String doEditarSesion(@RequestParam("cache") String cache,
+                                 @RequestParam("pos") Integer pos, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
 
-        model.addAttribute("sesion", sesion);
+        model.addAttribute("sesionPos", pos);
+        model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/crear_sesion";
     }
 
     @GetMapping("/crear/sesion/borrar")
-    public String doBorrarSesion(@RequestParam("id") Integer id, Model model) {
-        Sesionentrenamiento sesion = sesionentrenamientoRepository.findById(id).orElse(null);
+    public String doBorrarSesion(@RequestParam("cache") String cache,
+                                 @RequestParam("pos") Integer pos) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        rutina.removeSesion(pos);
 
-        sesionentrenamientoRepository.delete(sesion);
+        String jsonCache = gson.toJson(rutina);
+        String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);
 
-        return "redirect:/entrenador/rutinas";
+        return "redirect:/entrenador/rutinas/crear?cache=" + encodedCache;
     }
-
     @GetMapping("/crear/ejercicio")
     public String doCrearEjercicio() {
         return "/entrenador/crud/crear_ejercicio_sesion";
