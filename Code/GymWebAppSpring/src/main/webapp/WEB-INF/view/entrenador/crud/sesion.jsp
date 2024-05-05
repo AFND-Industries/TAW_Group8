@@ -73,7 +73,7 @@
                 <h1>Añadir sesión de entrenamiento</h1>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'crear'")%>, save = false)"
+                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'editar'")%>, save = false)"
                         class="btn btn-primary">Volver</button>
             </div>
         </div>
@@ -130,7 +130,7 @@
         <%if (!readOnly) {%>
             <div class="row">
                 <div class="col-12 d-flex justify-content-end">
-                    <button onClick="enviarJSON('/entrenador/rutinas/crear')" type="submit" class="btn btn-primary"><%=sesionExists ? "Guardar" : "Crear"%></button>
+                    <button onClick="enviarJSON('/entrenador/rutinas/editar')" type="submit" class="btn btn-primary"><%=sesionExists ? "Guardar" : "Crear"%></button>
                 </div>
             </div>
         <%}%>

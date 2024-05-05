@@ -85,13 +85,8 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear")
     public String doCrearRutina(@RequestParam(value = "cache", defaultValue = "") String cache, Model model) {
-        RutinaArgument rutina;
-        if (!cache.isEmpty())
-            rutina = gson.fromJson(cache, RutinaArgument.class);
-        else {
-            rutina = new RutinaArgument();
-            rutina.setId(-1);
-        }
+        RutinaArgument rutina = new RutinaArgument();
+        rutina.setId(-1);
 
         model.addAttribute("cache", gson.toJson(rutina));
 
@@ -229,7 +224,7 @@ public class EntrenadorControllerCRUD {
         String jsonCache = gson.toJson(rutina);
         String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);
 
-        return "redirect:/entrenador/rutinas/crear?cache=" + encodedCache;
+        return "redirect:/entrenador/rutinas/editar?cache=" + encodedCache;
     }
 
     @GetMapping("/crear/ejercicio/seleccionar")
