@@ -1,6 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
+<%@ page import="com.google.gson.Gson" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -10,9 +11,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    Gson gson = new Gson();
     String cache = (String) request.getAttribute("cache");
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
     Ejercicio ejercicioBase = (Ejercicio) request.getAttribute("ejercicioBase");
+
+    List<String> tiposBase = gson.fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
+
 %>
 
 <html>
@@ -25,6 +30,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+        const cache = <%=cache%>;
         console.log(<%=ejercicioBase.getCategoria().getTiposBase()%>);
     </script>
 </head>
@@ -37,7 +43,7 @@
                 <h1>Añadir ejercicio</h1>
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Volver</a>
+                <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar')">Volver</button>
             </div>
         </div>
 
@@ -45,42 +51,17 @@
             <div class="col-6">
                 <span class="h3 text-dark">Ejercicio X (Categoría X)</span><br/>
             </div>
-            <div class="col-6 d-flex justify-content-end">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear/ejercicio/seleccionar">Seleccionar ejercicio</a>
-            </div>
         </div>
-        <div class="row mb-3 d-flex align-items-center">
-            <div class="col-4">
-                <span class="h4 text-secondary">Repeticiones</span><br/>
+        <%for (String tipoBase : tiposBase) {%>
+            <div class="row mb-3 d-flex align-items-center">
+                <div class="col-4">
+                    <span class="h4 text-secondary"><%=tipoBase%></span><br/>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control mt-2">
+                </div>
             </div>
-            <div class="col-3">
-                <input type="text" class="form-control mt-2">
-            </div>
-        </div>
-        <div class="row mb-3 d-flex align-items-center">
-            <div class="col-4">
-                <span class="h4 text-secondary">Series</span><br/>
-            </div>
-            <div class="col-3">
-                <input type="text" class="form-control mt-2">
-            </div>
-        </div>
-        <div class="row mb-3 d-flex align-items-center">
-            <div class="col-4">
-                <span class="h4 text-secondary">Duración (en segundos)</span><br/>
-            </div>
-            <div class="col-3">
-                <input type="text" class="form-control mt-2">
-            </div>
-        </div>
-        <div class="row mb-3 d-flex align-items-center">
-            <div class="col-4">
-                <span class="h4 text-secondary">Descanso entre series (en segundos)</span><br/>
-            </div>
-            <div class="col-3">
-                <input type="text" class="form-control mt-2">
-            </div>
-        </div>
+        <%}%>
 
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
@@ -88,5 +69,15 @@
             </div>
         </div>
     </div>
+<script>
+    console.log(cache);
+
+    function enviarJSON(action, additionalParams="") {
+        const cacheString = encodeURIComponent(JSON.stringify(cache));
+
+        window.location.href =
+            action + "?cache=" + cacheString + "&pos=<%=sesionPos%>" +  (additionalParams.length > 0 ? "&" : "") + additionalParams;
+    }
+</script>
 </body>
 </html>
