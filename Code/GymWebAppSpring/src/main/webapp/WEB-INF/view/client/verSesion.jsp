@@ -43,20 +43,22 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        function incrementarContador(max) {
-            var contadorInput = document.getElementById("contador");
+        function incrementarContador(index, max) {
+            var contadorInput = document.getElementById("contador" + index);
             var valorActual = parseInt(contadorInput.value);
             if (valorActual < max) {
                 contadorInput.value = valorActual + 1;
             }
+
         }
 
-        function decrementarContador() {
-            var contadorInput = document.getElementById("contador");
+        function decrementarContador(index) {
+            var contadorInput = document.getElementById("contador" + index);
             var valorActual = parseInt(contadorInput.value);
             if (valorActual > 0) {
                 contadorInput.value = valorActual - 1;
             }
+
         }
     </script>
 
@@ -102,8 +104,13 @@
             </ul>
             <div class=" border border-primary border-3 rounded h-100">
                 <div class="tab-content" id="myTabContent">
+                    <script>
+                        let serieActualArray = [];
+                        let series = Array();
+                        let resultados = [];
+                    </script>
                     <%
-
+                        int[] seriesArray = new int[i];
                         for (int j = 0; j < i; j++) {
                             Ejerciciosesion ejercicioSesion = ejercicios.get(j);
                             Ejercicio ejercicio = ejercicioSesion.getEjercicio();
@@ -116,8 +123,14 @@
                             int repeticiones = jsonNode.get("repeticiones").asInt();
                             int peso = jsonNode.get("peso").asInt();
                             int series = jsonNode.get("series").asInt();
-                            int serieActual = 0;
+                            seriesArray[j] = series;
                     %>
+                    <script>
+                        resultados.push([]);
+                        serieActualArray.push(0);
+                        series.push(<%=series%>);
+
+                    </script>
                     <div class="tab-pane fade <%=j==0 ? "active show" : ""%>" id="tab<%=j%>" role="tabpanel"
                          aria-labelledby="tab<%=j%>-tab">
                         <div class="container-fluid ">
@@ -134,6 +147,8 @@
 
                                 <p><%=ejercicio.getDescripcion()%>
                                 </p>
+                                <p><%="El ejercicio consta de levantar un peso de " + peso + " kilogramos durante " + series + " series de repeticiones. En cada serie, se realizan " + repeticiones + " repeticiones."%>
+                                </p>
                             </div>
                             <div class="row text-center my-2 mx-5 border border-primary border-3 rounded">
                                 <form>
@@ -146,18 +161,18 @@
                                                       <span class='input-group-btn'>
                                                         <button
                                                                 class='btn btn-secondary btn-spn-down'
-                                                                type='button' onclick="decrementarContador()">
+                                                                type='button' onclick="decrementarContador(<%=j%>)">
                                                             <i class="bi bi-dash"></i>
                                                         </button>
                                                       </span>
                                                         <input value='0' min='0' max='<%=repeticiones%>'
                                                                class='btn-spn-input form-control text-center'
-                                                               id="contador">
+                                                               id="contador<%=j%>">
                                                         <span class='input-group-btn'>
                                                         <button
                                                                 class='btn btn-secondary btn-spn-up'
                                                                 type='button'
-                                                                onclick="incrementarContador(<%=repeticiones%>)">
+                                                                onclick="incrementarContador(<%=j%>,<%=repeticiones%>)">
                                                             <i class="bi bi-plus"></i>
                                                         </button>
                                                       </span>
@@ -167,21 +182,44 @@
 
                                             </div>
                                             <div class="col">
-                                                <p id="serieText">Serie 0/<%=series%>
+                                                <p id="serieText<%=j%>">Serie 0/<%=seriesArray[j]%>
                                                 </p>
-                                                <button class='btn btn-primary' type='button'
-                                                        onclick="incrementarSerie()">Siguiente Serie
+                                                <button class='btn btn-primary' type='button' id="boton-serie<%=j%>"
+                                                        onclick="incrementarSerie(<%=j%>)">Siguiente Serie
                                                 </button>
                                             </div>
                                             <script>
-                                                var serieActual = <%=serieActual%>; // Inicializamos la variable de JavaScript con el valor inicial
+                                                function incrementarSerie(index) {
+                                                    var menosPeso = document.getElementById("flexSwitchCheckDefault");
+                                                    var repeticiones = document.getElementById("contador" + index).value;
+                                                    // Obteniendo el valor de serieActual del array serieActualArray utilizando JavaScript
+                                                    var seriesTotal = series.at(index);
+                                                    var serieActual = serieActualArray.at(index);
 
-                                                function incrementarSerie() {
-                                                    if (serieActual < <%=series%>) {
+
+                                                    if (serieActual < seriesTotal) {
                                                         serieActual++;
-                                                        document.getElementById('serieText').innerHTML = 'Serie ' + serieActual + '/<%=series%>';
+                                                        serieActualArray[index] = serieActual;
+                                                        document.getElementById('serieText' + index).innerHTML = 'Serie ' + serieActual + '/' + seriesTotal;
+                                                        var datos = {
+                                                            repeticiones: repeticiones,
+                                                            mpeso: menosPeso.checked ? "SI" : "NO"
+                                                        };
 
+                                                        // Convertir el objeto JSON a una cadena
+                                                        var datosString = JSON.stringify(datos);
+                                                        resultados[index].push(datosString);
+                                                        console.log(datosString);
+                                                        document.getElementById("flexSwitchCheckDefault").checked = false;
+                                                        document.getElementById("contador" + index).value = "0";
                                                     }
+                                                    if (serieActual === seriesTotal) {
+                                                        document.getElementById("boton-serie" + index).disabled = true;
+                                                        alert("Ya has completado todas las series!");
+                                                        console.log(resultados.at(index));
+                                                    }
+
+
                                                 }
                                             </script>
                                         </div>
@@ -204,41 +242,43 @@
                         <div class="row text-center my-2">
                             <div class="col">
                                 <button class="btn btn-primary"
-                                        onclick="<%=j == i-1 ? "":"cambiarPestana("+(j + 1)+")"%>"
+                                        onclick="<%=j == i-1 ? "terminarEntrenamiento()":"cambiarPestana("+(j + 1)+")"%>" <%=j == i - 1 ? "data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\"" : ""%>
                                 ><%=j == i - 1 ? "Terminar Entrenamiento" : "Siguiente Ejercicio"%>
                                 </button>
+                                <!-- Button trigger modal -->
+
                             </div>
 
                         </div>
-                        <script>
-                            function cambiarPestana(index) {
-                                var tabContent = document.querySelectorAll('.tab-pane');
-                                var tabLinks = document.querySelectorAll('#myTab .nav-link');
-
-
-                                // Ocultar todos los contenidos de las pestañas
-                                tabContent.forEach(function (tab) {
-                                    tab.classList.remove('active', 'show');
-
-                                });
-
-                                tabLinks.forEach(function (tab) {
-                                    tab.classList.remove('active');
-                                    tab.setAttribute('aria-selected', 'false');
-                                });
-                                // Marcar como activo el enlace de la siguiente pestaña
-
-                                tabLinks[index].classList.add('active');
-                                tabLinks[index].setAttribute('aria-selected', 'true');
-
-                                // Mostrar el contenido de la pestaña correspondiente al enlace
-                                tabContent[index].classList.add('active', 'show');
-                            }
-                        </script>
 
 
                     </div>
                     <% } %>
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="valorarEntrenamiento" method="post"> <!-- URL para procesar el formulario -->
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input id="datosEntrenamientoInput" type="hidden" name="datosEntrenamiento" value="">
+                                        <p>Estas seguro que deseas acabar este entrenamieto? Se guardaran los datos de todas las repteciones pendientes!!!</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button> <!-- Cambiado a type="submit" -->
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <% } %>
             </div>
@@ -246,4 +286,47 @@
     </div>
 </div>
 </body>
+<script>
+    function terminarEntrenamiento() {
+        // Mostrar el modal de confirmación
+        // Supongamos que tienes una variable JavaScript llamada miVariable
+        var miVariable = JSON.stringify(resultados);
+
+        // Obtén el campo de entrada oculto por su ID
+        var datosEntrenamientoInput = document.getElementById("datosEntrenamientoInput");
+
+        // Establece el valor del campo de entrada oculto usando la variable JavaScript
+        datosEntrenamientoInput.value = miVariable;
+    }
+
+    function confirmarAccion() {
+        // Aquí puedes realizar la acción que desees al confirmar
+        alert("Acción confirmada");
+    }
+
+    function cambiarPestana(index) {
+
+        var tabContent = document.querySelectorAll('.tab-pane');
+        var tabLinks = document.querySelectorAll('#myTab .nav-link');
+
+
+        // Ocultar todos los contenidos de las pestañas
+        tabContent.forEach(function (tab) {
+            tab.classList.remove('active', 'show');
+
+        });
+
+        tabLinks.forEach(function (tab) {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+        });
+        // Marcar como activo el enlace de la siguiente pestaña
+
+        tabLinks[index].classList.add('active');
+        tabLinks[index].setAttribute('aria-selected', 'true');
+
+        // Mostrar el contenido de la pestaña correspondiente al enlace
+        tabContent[index].classList.add('active', 'show');
+    }
+</script>
 </html>
