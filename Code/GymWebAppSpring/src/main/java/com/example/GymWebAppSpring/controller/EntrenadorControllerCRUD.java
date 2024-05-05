@@ -197,6 +197,10 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/crear/sesion")
     public String doCrearSesion(@RequestParam("cache") String cache, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        SesionArgument sesion = new SesionArgument();
+        sesion.setId(-1);
+
+        rutina.getSesiones().add(sesion);
 
         model.addAttribute("sesionPos", -1);
         model.addAttribute("cache", gson.toJson(rutina));

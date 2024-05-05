@@ -19,18 +19,14 @@
 
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
     boolean sesionExists = sesionPos >= 0;
+    if (!sesionExists)
+        sesionPos = rutina.getSesiones().size() - 1;
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
 
-    SesionArgument sesion;
-    if (sesionExists)  sesion = rutina.getSesiones().get(sesionPos);
-    else {
-        sesion = new SesionArgument();
-        sesion.setId(-1);
+    SesionArgument sesion = rutina.getSesiones().get(sesionPos);
 
-        sesionPos = rutina.getSesiones().size();
-    }
 %>
 
 <html>
@@ -73,7 +69,7 @@
                 <h1>Añadir sesión de entrenamiento</h1>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'editar'")%>, save = false)"
+                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'editar'")%>, remove = true)"
                         class="btn btn-primary">Volver</button>
             </div>
         </div>
@@ -98,7 +94,7 @@
             </div>
             <%if (!readOnly) {%>
                 <div class="col-6 d-flex justify-content-end">
-                    <a class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save = true, additionalParams='pos=<%=sesionPos%>')">Añadir ejercicio</a>
+                    <a class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', remove = false, additionalParams='pos=<%=sesionPos%>')">Añadir ejercicio</a>
                 </div>
             <%}%>
         </div>
@@ -137,8 +133,9 @@
     </div>
 <script>
     console.log(cache);
-    function enviarJSON(action, save=true, additionalParams="") {
-        if (save) {
+    function enviarJSON(action, remove=false, additionalParams="") {
+        if (remove) cache.sesiones.splice(<%=sesionPos%>, 1);
+        else {
             const sesionJSON = {
                 "id": document.getElementById("sesionId").value,
                 "nombre": document.getElementById("nombre").value,
