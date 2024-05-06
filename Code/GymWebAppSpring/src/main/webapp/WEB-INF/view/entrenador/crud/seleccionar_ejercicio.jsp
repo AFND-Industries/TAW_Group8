@@ -16,6 +16,7 @@
 <%
     String cache = (String) request.getAttribute("cache");
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
+    Integer ejercicioPos = (Integer) request.getAttribute("ejercicioPos");
     List<Ejercicio> ejerciciosBase = (List<Ejercicio>) request.getAttribute("ejerciciosBase");
 
     String oldSesion = (String) request.getAttribute("oldSesion");
@@ -54,7 +55,7 @@
     %>
     <div class="row">
         <div class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-           onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio', 'ejbase=<%=ejercicioBase.getId()%>')">
+           onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio', 'ejbase=<%=ejercicioBase.getId()%>&ejercicioPos=<%=ejercicioPos%>')">
             <img src="<%=ejercicioBase.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
             <div class="ms-3">
                 <span class="h2" style="color: black;"><%=ejercicioBase.getNombre()%></span><br>

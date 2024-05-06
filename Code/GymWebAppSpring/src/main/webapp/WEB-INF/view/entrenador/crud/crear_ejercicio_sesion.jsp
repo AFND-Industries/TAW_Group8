@@ -14,6 +14,7 @@
     Gson gson = new Gson();
     String cache = (String) request.getAttribute("cache");
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
+    Integer ejercicioPos = (Integer) request.getAttribute("ejercicioPos");
     Ejercicio ejercicioBase = (Ejercicio) request.getAttribute("ejercicioBase");
 
     List<String> tiposBase = gson.fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
@@ -44,7 +45,7 @@
                 <h1>Añadir ejercicio</h1>
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
-                <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar')">Volver</button>
+                <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save=false)">Volver</button>
             </div>
         </div>
 
@@ -56,7 +57,7 @@
         <%for (String tipoBase : tiposBase) {%>
             <div class="row mb-3 d-flex align-items-center">
                 <div class="col-4">
-                    <span class="h4 text-secondary"><%=tipoBase%></span><br/>
+                    <span id="<%=tipoBase%>" class="h4 text-secondary"><%=tipoBase%></span><br/>
                 </div>
                 <div class="col-3">
                     <input type="text" class="form-control mt-2">
@@ -66,14 +67,26 @@
 
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
-                <a class="btn btn-primary" href="/entrenador/rutinas/crear/sesion">Añadir</a>
+                <button class="btn btn-primary"
+                onClick="enviarJson('/entrenador/rutinas/crear/sesion')">Añadir</button>
             </div>
         </div>
     </div>
 <script>
     console.log(cache);
 
-    function enviarJSON(action, additionalParams="") {
+    function enviarJSON(action, save=true, additionalParams="") {
+        if (save) {
+            cache.sesiones[<%=sesionPos%>],ejercicios[<%=ejercicioPos%>] = {
+                "ejercicio": <%=ejercicioBase.getId()%>,
+                "especificaciones": {
+                    <%for(String tipoBase : tiposBase) {%>
+                    "<%=tipoBase%>": document.getElementById("<%=tipoBase%>").value,
+                    <%}%>
+                }
+            };
+        }
+
         const cacheString = encodeURIComponent(JSON.stringify(cache));
 
         window.location.href =

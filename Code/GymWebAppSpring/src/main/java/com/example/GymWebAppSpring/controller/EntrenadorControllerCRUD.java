@@ -239,6 +239,9 @@ public class EntrenadorControllerCRUD {
         return "redirect:/entrenador/rutinas/editar?cache=" + encodedCache;
     }
 
+    /*
+        EJERCICIOS
+     */
     @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio(@RequestParam("cache") String cache,
                                          @RequestParam("oldSesion") String oldSesion,
@@ -246,6 +249,14 @@ public class EntrenadorControllerCRUD {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
 
+        SesionArgument sesion = new SesionArgument();
+        sesion.setId(-1);
+
+        rutina.getSesiones().add(sesion);
+
+        model.addAttribute("sesionPos", rutina.getSesiones().size() - 1);
+
+        model.addAttribute("ejercicioPos", ejercicioPos);
         model.addAttribute("sesionPos", pos);
         model.addAttribute("oldSesion", gson.toJson(oldSesion));
         model.addAttribute("cache", gson.toJson(rutina));
@@ -256,12 +267,14 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio")
     public String doCrearEjercicio(@RequestParam("cache") String cache,
+                                   @RequestParam("ejercicioPos") Integer ejercicioPos,
                                    @RequestParam("oldSesion") String oldSesion,
                                    @RequestParam("pos") Integer pos,
                                    @RequestParam("ejbase") Integer ejbase, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
 
+        model.addAttribute("ejercicioPos", ejercicioPos);
         model.addAttribute("sesionPos", pos);
         model.addAttribute("oldSesion", gson.toJson(oldSesion));
         model.addAttribute("cache", gson.toJson(rutina));

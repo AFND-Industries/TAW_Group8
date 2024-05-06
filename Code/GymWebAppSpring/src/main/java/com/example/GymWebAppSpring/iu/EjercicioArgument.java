@@ -1,60 +1,30 @@
 package com.example.GymWebAppSpring.iu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EjercicioArgument {
-    private Integer id;
-    private String nombre;
-    private String descripcion;
-    private String equipamiento;
-    private String video;
-    private String logo;
+    private String ejercicio;
+    private List<String> especificaciones;
 
-    public Integer getId() {
-        return id;
+    public EjercicioArgument() {
+        this.ejercicio = "";
+        this.especificaciones = new ArrayList<>();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getEjercicio() {
+        return ejercicio;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setEjercicio(String ejercicio) {
+        this.ejercicio = ejercicio;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public List<String> getEspecificaciones() {
+        return especificaciones;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getEquipamiento() {
-        return equipamiento;
-    }
-
-    public void setEquipamiento(String equipamiento) {
-        this.equipamiento = equipamiento;
-    }
-
-    public String getVideo() {
-        return video;
-    }
-
-    public void setVideo(String video) {
-        this.video = video;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
+    public void setEspecificaciones(List<String> especificaciones) {
+        this.especificaciones = especificaciones;
     }
 }
-
-
