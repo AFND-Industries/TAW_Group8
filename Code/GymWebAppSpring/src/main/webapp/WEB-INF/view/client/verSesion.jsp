@@ -17,7 +17,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%
-//    Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
+    //    Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
 //        @Override
 //        public JsonElement serialize(LocalDate localDate, Type type, JsonSerializationContext jsonSerializationContext) {
 //            return jsonSerializationContext.serialize(localDate.toString());
@@ -28,9 +28,7 @@
     List<Ejerciciosesion> ejercicios = (List<Ejerciciosesion>) request.getAttribute("ejercicios");
     Sesionentrenamiento sesionEntrenamiento = (Sesionentrenamiento) request.getAttribute("sesionEntrenamiento");
     String[] ejerciciosID = new String[ejercicios.size()];
-    for (int i = 0; i < ejercicios.size(); i++) {
-        ejerciciosID[i] = gson.toJson(ejercicios.get(i));
-    }
+    session.setAttribute("listaEjercicos", ejercicios);
 
 %>
 <%!
@@ -144,7 +142,7 @@
                             seriesArray[j] = series;
                     %>
                     <script>
-                        resultados.push([]);
+                        resultados.push(new Array(<%=series%>));
                         serieActualArray.push(0);
                         series.push(<%=series%>);
 
@@ -185,7 +183,7 @@
                                                       </span>
                                                         <input value='0' min='0' max='<%=repeticiones%>'
                                                                class='btn-spn-input form-control text-center'
-                                                               id="contador<%=j%>">
+                                                               id="contador<%=j%>" readonly>
                                                         <span class='input-group-btn'>
                                                         <button
                                                                 class='btn btn-secondary btn-spn-up'
@@ -317,6 +315,17 @@
     function terminarEntrenamiento() {
         // Mostrar el modal de confirmación
         // Supongamos que tienes una variable JavaScript llamada miVariable
+        var vacio = {
+            repeticiones: 0,
+            mpeso:  "NO"
+        };
+        for (let i = 0; i < resultados.length; i++) {
+            for (let j = 0; j < resultados[i].length; j++) {
+                if (resultados[i][j] === undefined) {
+                    resultados[i][j] = JSON.stringify(vacio);
+                }
+            }
+        }
         var miVariable = JSON.stringify(resultados);
         console.log(resultados)
         console.log(miVariable)

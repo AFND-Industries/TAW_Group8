@@ -2,10 +2,13 @@ package com.example.GymWebAppSpring.iu;
 
 import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
 
+import java.util.List;
+
 public class SesionArgument {
     private int id;
     private String nombre;
     private String descripcion;
+    private List<EjercicioArgument> ejercicios;
 
     public SesionArgument() {
         this.id = -100;
