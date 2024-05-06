@@ -183,7 +183,7 @@
                                                       </span>
                                                         <input value='0' min='0' max='<%=repeticiones%>'
                                                                class='btn-spn-input form-control text-center'
-                                                               id="contador<%=j%>">
+                                                               id="contador<%=j%>" readonly>
                                                         <span class='input-group-btn'>
                                                         <button
                                                                 class='btn btn-secondary btn-spn-up'
