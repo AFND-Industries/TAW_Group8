@@ -3,6 +3,8 @@
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
+<%@ page import="java.net.URLEncoder" %>
 <%--
   Created by IntelliJ IDEA.
   User: elgam
@@ -22,7 +24,7 @@
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
-    boolean sesionExists = oldSesion != null;
+    boolean sesionExists = oldSesion.equals("{}");
 
     SesionArgument sesion = rutina.getSesiones().get(sesionPos);
 %>
@@ -40,6 +42,7 @@
 <script>
     const cache = <%=cache%>;
     const oldSesion = <%=oldSesion%>;
+    console.log(<%=oldSesion%>);
 </script>
 <body>
 <jsp:include page="../../components/header.jsp"/>
@@ -68,7 +71,7 @@
                 <h1>Añadir sesión de entrenamiento</h1>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'editar'")%>, save = false)"
+                <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'editar'")%>, save = <%=readOnly ? "true" : "false"%>)"
                         class="btn btn-primary">Volver</button>
             </div>
         </div>
@@ -93,7 +96,8 @@
             </div>
             <%if (!readOnly) {%>
                 <div class="col-6 d-flex justify-content-end">
-                    <a class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save = true, additionalParams='pos=<%=sesionPos%>')">Añadir ejercicio</a>
+                    <a class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save = true,
+                            additionalParams='pos=<%=sesionPos%>&oldSesion=<%=URLEncoder.encode(oldSesion, StandardCharsets.UTF_8)%>')">Añadir ejercicio</a>
                 </div>
             <%}%>
         </div>
@@ -132,16 +136,16 @@
     </div>
 <script>
     console.log(cache);
+
     function enviarJSON(action, save=true, additionalParams="") {
         if (save) {
-            const sesionJSON = {
+            cache.sesiones[<%=sesionPos%>] = {
                 "id": document.getElementById("sesionId").value,
                 "nombre": document.getElementById("nombre").value,
                 "descripcion": document.getElementById("descripcion").value
             }
-            cache.sesiones[<%=sesionPos%>] = sesionJSON;
         } else {
-            if (oldSesion !== null)  cache.sesiones[<%=sesionPos%>] = oldSesion;
+            if (Object.keys(oldSesion).length > 0) cache.sesiones[<%=sesionPos%>] = oldSesion;
             else cache.sesiones.splice(<%=sesionPos%>, 1);
         }
 

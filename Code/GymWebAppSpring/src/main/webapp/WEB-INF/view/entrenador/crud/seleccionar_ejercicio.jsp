@@ -2,7 +2,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %><%--
+<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.nio.charset.StandardCharsets" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -15,6 +17,8 @@
     String cache = (String) request.getAttribute("cache");
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
     List<Ejercicio> ejerciciosBase = (List<Ejercicio>) request.getAttribute("ejerciciosBase");
+
+    String oldSesion = (String) request.getAttribute("oldSesion");
 %>
 
 <html>
@@ -29,6 +33,8 @@
 </head>
 <script>
     const cache = <%=cache%>;
+    const oldSesion = <%=oldSesion%>;
+
     let watch = false;
 </script>
 <body>
@@ -155,7 +161,8 @@
         const cacheString = encodeURIComponent(JSON.stringify(cache));
 
         window.location.href =
-            action + "?cache=" + cacheString + "&pos=<%=sesionPos%>" +  (additionalParams.length > 0 ? "&" : "") + additionalParams;
+            action + "?cache=" + cacheString + "&oldSesion=" + encodeURIComponent(oldSesion) + "&pos=<%=sesionPos%>"
+            + (additionalParams.length > 0 ? "&" : "") + additionalParams;
     }
 
     function changeWatch() {

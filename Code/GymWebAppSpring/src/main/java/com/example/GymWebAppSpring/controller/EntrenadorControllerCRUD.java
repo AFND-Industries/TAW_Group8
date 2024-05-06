@@ -193,6 +193,7 @@ public class EntrenadorControllerCRUD {
 
         model.addAttribute("readOnly", true);
         model.addAttribute("sesionPos", pos);
+        model.addAttribute("oldSesion", "{}");
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/sesion";
@@ -207,7 +208,7 @@ public class EntrenadorControllerCRUD {
         rutina.getSesiones().add(sesion);
 
         model.addAttribute("sesionPos", rutina.getSesiones().size() - 1);
-        model.addAttribute("oldSesion", null);
+        model.addAttribute("oldSesion", "{}");
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/sesion";
@@ -240,11 +241,13 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio(@RequestParam("cache") String cache,
+                                         @RequestParam("oldSesion") String oldSesion,
                                          @RequestParam("pos") Integer pos, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
 
         model.addAttribute("sesionPos", pos);
+        model.addAttribute("oldSesion", gson.toJson(oldSesion));
         model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejerciciosBase", ejerciciosBase);
 
@@ -253,12 +256,14 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio")
     public String doCrearEjercicio(@RequestParam("cache") String cache,
+                                   @RequestParam("oldSesion") String oldSesion,
                                    @RequestParam("pos") Integer pos,
                                    @RequestParam("ejbase") Integer ejbase, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
 
         model.addAttribute("sesionPos", pos);
+        model.addAttribute("oldSesion", gson.toJson(oldSesion));
         model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejercicioBase", ejercicioBase);
 
