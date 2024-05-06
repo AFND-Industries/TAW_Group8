@@ -24,6 +24,7 @@ public class SesionArgument {
         this.id = s.getId();
         this.nombre = s.getNombre();
         this.descripcion = s.getDescripcion();
+        this.ejercicios = new ArrayList<>();
         for (Ejerciciosesion e : ee)
             ejercicios.add(new EjercicioArgument(e));
     }

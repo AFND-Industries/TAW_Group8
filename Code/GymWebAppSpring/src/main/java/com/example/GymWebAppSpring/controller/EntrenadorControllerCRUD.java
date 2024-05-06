@@ -175,6 +175,39 @@ public class EntrenadorControllerCRUD {
             s.setDescripcion(sesion.getDescripcion());
 
             sesionentrenamientoRepository.save(s);
+
+            // EJERCICIOS
+            List<EjercicioArgument> ejercicios = sesion.getEjercicios();
+
+            // ELIMINAR EJERCICIOS
+            List<Integer> ejerciciosId = new ArrayList<>();
+            for (EjercicioArgument ejercicio : ejercicios)
+                ejerciciosId.add(ejercicio.getId());
+
+            List<Ejerciciosesion> ejerciciossesion = ejercicioSesionRepository.findEjerciciosBySesion(s);
+            for (Ejerciciosesion ejerciciosesion : ejerciciossesion) {
+                if (!ejerciciosId.contains(ejerciciosesion.getId()))
+                    ejercicioSesionRepository.delete(ejerciciosesion);
+            }
+
+            // CREAR O EDITAR SESIONES
+            for (int j = 0; j < ejercicios.size(); j++) {
+                EjercicioArgument ejercicio = ejercicios.get(j);
+                Ejerciciosesion es = ejercicioSesionRepository.findById(ejercicio.getId()).orElse(null);
+
+                if (es == null) {
+                    es = new Ejerciciosesion();
+
+                    es.setSesionentrenamiento(s);
+                }
+
+                es.setEjercicio(ejercicioRepository.findById(ejercicio.getEjercicio()).orElse(null));
+                es.setEspecificaciones(gson.toJson(ejercicio.getEspecificaciones()));
+                es.setOrden(j + 1);
+                es.setSesionentrenamiento(s);
+
+                ejercicioSesionRepository.save(es);
+            }
         }
 
         return "redirect:/entrenador/rutinas";
@@ -184,7 +217,10 @@ public class EntrenadorControllerCRUD {
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         Rutina rutina = rutinaRepository.findById(id).orElse(null); // no deberia ser nunca null pero se puede probar
         List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(rutina);
-
+        for (Sesionentrenamiento sesion : sesiones) {
+            List<Ejerciciosesion> ejerciciossesion = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
+            ejercicioSesionRepository.deleteAll(ejerciciossesion);
+        }
         sesionentrenamientoRepository.deleteAll(sesiones);
         rutinaRepository.delete(rutina);
 
@@ -198,7 +234,14 @@ public class EntrenadorControllerCRUD {
     public String doVerSesion(@RequestParam("cache") String cache,
                               @RequestParam("pos") Integer pos, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        SesionArgument sesion = rutina.getSesiones().get(pos);
 
+        List<Integer> ids = new ArrayList<>();
+        for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
+            ids.add(ejerciciosesion.getEjercicio());
+        List<Ejercicio> ejercicios = ejercicioRepository.findAll();
+
+        model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("readOnly", true);
         model.addAttribute("sesionPos", pos);
         model.addAttribute("oldSesion", "{}");
@@ -234,11 +277,9 @@ public class EntrenadorControllerCRUD {
             ids.add(ejerciciosesion.getEjercicio());
         List<Ejercicio> ejercicios = ejercicioRepository.findAll();
 
-        SesionArgument oSesion = gson.fromJson(oldSesion, SesionArgument.class);
-
         model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", gson.toJson(oSesion));
+        model.addAttribute("oldSesion", oldSesion);
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/sesion";
