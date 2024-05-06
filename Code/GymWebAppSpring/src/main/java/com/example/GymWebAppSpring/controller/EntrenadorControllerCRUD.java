@@ -256,7 +256,7 @@ public class EntrenadorControllerCRUD {
 
         model.addAttribute("sesionPos", rutina.getSesiones().size() - 1);
 
-        model.addAttribute("ejercicioPos", ejercicioPos);
+        model.addAttribute("ejercicioPos", 1);
         model.addAttribute("sesionPos", pos);
         model.addAttribute("oldSesion", gson.toJson(oldSesion));
         model.addAttribute("cache", gson.toJson(rutina));
