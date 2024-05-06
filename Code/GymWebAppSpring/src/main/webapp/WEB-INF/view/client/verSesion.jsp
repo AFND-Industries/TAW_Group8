@@ -5,6 +5,9 @@
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="org.springframework.lang.NonNull" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.lang.reflect.Type" %>
+<%@ page import="com.google.gson.*" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%--
   Created by IntelliJ IDEA.
@@ -14,8 +17,21 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%
+//    Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
+//        @Override
+//        public JsonElement serialize(LocalDate localDate, Type type, JsonSerializationContext jsonSerializationContext) {
+//            return jsonSerializationContext.serialize(localDate.toString());
+//        }
+//
+//    }).create();
+    Gson gson = new Gson();
     List<Ejerciciosesion> ejercicios = (List<Ejerciciosesion>) request.getAttribute("ejercicios");
     Sesionentrenamiento sesionEntrenamiento = (Sesionentrenamiento) request.getAttribute("sesionEntrenamiento");
+    String[] ejerciciosID = new String[ejercicios.size()];
+    for (int i = 0; i < ejercicios.size(); i++) {
+        ejerciciosID[i] = gson.toJson(ejercicios.get(i));
+    }
+
 %>
 <%!
     public static String getVideoId(@NonNull String videoUrl) {
@@ -80,6 +96,7 @@
                 <%
                     int i = 0;
                     for (Ejerciciosesion ejercicio : ejercicios) {
+
                         ObjectMapper objectMapper = new ObjectMapper();
 
                         // Convertir el JSON en un árbol de nodos
@@ -112,6 +129,7 @@
                     <%
                         int[] seriesArray = new int[i];
                         for (int j = 0; j < i; j++) {
+
                             Ejerciciosesion ejercicioSesion = ejercicios.get(j);
                             Ejercicio ejercicio = ejercicioSesion.getEjercicio();
                             ObjectMapper objectMapper = new ObjectMapper();
@@ -257,21 +275,30 @@
 
 
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="valorarEntrenamiento" method="post"> <!-- URL para procesar el formulario -->
+                                <form action="valorarEntrenamiento" method="post">
+                                    <!-- URL para procesar el formulario -->
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <input id="datosEntrenamientoInput" type="hidden" name="datosEntrenamiento" value="">
-                                        <p>Estas seguro que deseas acabar este entrenamieto? Se guardaran los datos de todas las repteciones pendientes!!!</p>
+                                        <input id="datosEntrenamientoInput" type="hidden" name="datosEntrenamiento"
+                                               value="">
+                                        <input id="datosEjercicios" type="hidden" name="ejerciciosID"
+                                               value="<%=ejerciciosID%>">
+                                        <p>Estas seguro que deseas acabar este entrenamieto? Se guardaran los datos de
+                                            todas las repteciones pendientes!!!</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button> <!-- Cambiado a type="submit" -->
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <!-- Cambiado a type="submit" -->
                                     </div>
                                 </form>
 
@@ -291,7 +318,8 @@
         // Mostrar el modal de confirmación
         // Supongamos que tienes una variable JavaScript llamada miVariable
         var miVariable = JSON.stringify(resultados);
-
+        console.log(resultados)
+        console.log(miVariable)
         // Obtén el campo de entrada oculto por su ID
         var datosEntrenamientoInput = document.getElementById("datosEntrenamientoInput");
 
