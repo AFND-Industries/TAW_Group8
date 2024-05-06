@@ -1,13 +1,8 @@
 package com.example.GymWebAppSpring.controller;
 
-import com.example.GymWebAppSpring.dao.DificultadRepository;
-import com.example.GymWebAppSpring.dao.EjercicioRepository;
-import com.example.GymWebAppSpring.dao.RutinaRepository;
-import com.example.GymWebAppSpring.dao.SesionentrenamientoRepository;
-import com.example.GymWebAppSpring.entity.Ejercicio;
-import com.example.GymWebAppSpring.entity.Rutina;
-import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
-import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.dao.*;
+import com.example.GymWebAppSpring.entity.*;
+import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
@@ -51,6 +46,9 @@ public class EntrenadorControllerCRUD {
     protected SesionentrenamientoRepository sesionentrenamientoRepository;
 
     @Autowired
+    protected EjercicioSesionRepository ejercicioSesionRepository;
+
+    @Autowired
     protected EjercicioRepository ejercicioRepository;
 
     @Autowired
@@ -77,7 +75,12 @@ public class EntrenadorControllerCRUD {
             rutina = gson.fromJson(cache, RutinaArgument.class);
         else {
             Rutina r = rutinaRepository.findById(id).orElse(null);
-            List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            List<SesionArgument> sesiones = new ArrayList<>();
+            for (Sesionentrenamiento s : ss) {
+                List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s);
+                sesiones.add(new SesionArgument(s, ee));
+            }
             rutina = new RutinaArgument(r, sesiones);
         }
 
@@ -106,7 +109,12 @@ public class EntrenadorControllerCRUD {
             rutina = gson.fromJson(cache, RutinaArgument.class);
         else {
             Rutina r = rutinaRepository.findById(id).orElse(null);
-            List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            List<SesionArgument> sesiones = new ArrayList<>();
+            for (Sesionentrenamiento s : ss) {
+                List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s);
+                sesiones.add(new SesionArgument(s, ee));
+            }
             rutina = new RutinaArgument(r, sesiones);
         }
 
@@ -219,9 +227,18 @@ public class EntrenadorControllerCRUD {
                                  @RequestParam("oldSesion") String oldSesion,
                                  @RequestParam("pos") Integer pos, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        SesionArgument sesion = rutina.getSesiones().get(pos);
 
+        List<Integer> ids = new ArrayList<>();
+        for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
+            ids.add(ejerciciosesion.getEjercicio());
+        List<Ejercicio> ejercicios = ejercicioRepository.findAll();
+
+        SesionArgument oSesion = gson.fromJson(oldSesion, SesionArgument.class);
+
+        model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", oldSesion);
+        model.addAttribute("oldSesion", gson.toJson(oSesion));
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/sesion";
@@ -249,14 +266,12 @@ public class EntrenadorControllerCRUD {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
 
-        SesionArgument sesion = new SesionArgument();
-        sesion.setId(-1);
+        EjercicioArgument ejercicio = new EjercicioArgument();
+        ejercicio.setId(-1);
 
-        rutina.getSesiones().add(sesion);
+        rutina.getSesiones().get(pos).getEjercicios().add(ejercicio);
 
-        model.addAttribute("sesionPos", rutina.getSesiones().size() - 1);
-
-        model.addAttribute("ejercicioPos", 1);
+        model.addAttribute("ejercicioPos", -1);
         model.addAttribute("sesionPos", pos);
         model.addAttribute("oldSesion", gson.toJson(oldSesion));
         model.addAttribute("cache", gson.toJson(rutina));

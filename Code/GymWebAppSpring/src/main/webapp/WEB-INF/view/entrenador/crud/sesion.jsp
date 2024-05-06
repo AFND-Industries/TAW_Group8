@@ -5,6 +5,8 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.net.URLEncoder" %>
+<%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%--
   Created by IntelliJ IDEA.
   User: elgam
@@ -27,6 +29,24 @@
     boolean sesionExists = oldSesion.equals("{}");
 
     SesionArgument sesion = rutina.getSesiones().get(sesionPos);
+    List<Ejercicio> ejercicios = new ArrayList<>();
+    if (!sesion.getEjercicios().isEmpty())
+        ejercicios = (List<Ejercicio>) request.getAttribute("ejercicios");
+%>
+
+<%!
+    public Ejercicio getEjercicioByEjercicioSesion(EjercicioArgument ejercicioArgument, List<Ejercicio> ejercicios) {
+        Ejercicio ej = null;
+
+        int i = 0;
+        while (i < ejercicios.size() && ej == null) {
+            if (ejercicios.get(i).getId().equals(ejercicioArgument.getEjercicio()))
+                ej = ejercicios.get(i);
+            i++;
+        }
+
+        return ej;
+    }
 %>
 
 <html>
@@ -102,14 +122,25 @@
             <%}%>
         </div>
         <%
-            for (Integer ejercicio : new ArrayList<Integer>()) {
+            for (EjercicioArgument ejercicioSesion : sesion.getEjercicios()) {
+                Ejercicio ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
         %>
             <div class="row">
-                <div class="col-9 d-flex align-items-center" style="height:75px">
+                <div class="col-9 d-flex align-items-center">
                     <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
                     <div class="ms-3">
-                        <span class="h2">Ejercicio <%=ejercicio%></span></br>
-                        <span class="h5 text-secondary">Repeticiones: X. Series: X. Descanso: X....</span>
+                        <span class="h2"><%=ejercicio.getNombre()%></span></br>
+                        <span class="h5 text-secondary">
+                            <%
+                                String data = "";
+                                List<String> tiposBase = gson.fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
+                                for (int i = 0; i < tiposBase.size(); i++) {
+                                    String especificacion = ejercicioSesion.getEspecificaciones().get(i);%>
+                                    <%="<span style='color: black'><b>" + tiposBase.get(i) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
+                                }
+                            %>
+                            <%=data%>
+                        </span>
                     </div>
                 </div>
                 <%if (!readOnly) {%>
@@ -142,7 +173,8 @@
             cache.sesiones[<%=sesionPos%>] = {
                 "id": document.getElementById("sesionId").value,
                 "nombre": document.getElementById("nombre").value,
-                "descripcion": document.getElementById("descripcion").value
+                "descripcion": document.getElementById("descripcion").value,
+                "ejercicios": <%=gson.toJson(sesion.getEjercicios())%>
             }
         } else {
             if (Object.keys(oldSesion).length > 0) cache.sesiones[<%=sesionPos%>] = oldSesion;

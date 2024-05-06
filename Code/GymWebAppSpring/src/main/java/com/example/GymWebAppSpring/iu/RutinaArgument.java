@@ -21,16 +21,11 @@ public class RutinaArgument {
         this.sesiones = new ArrayList<>();
     }
 
-    public RutinaArgument(Rutina rutina, List<Sesionentrenamiento> ss) {
+    public RutinaArgument(Rutina rutina, List<SesionArgument> sesiones) {
         this.id = rutina.getId();
         this.nombre = rutina.getNombre();
         this.descripcion = rutina.getDescripcion();
         this.dificultad = rutina.getDificultad().getId();
-
-        List<SesionArgument> sesiones = new ArrayList<>();
-        for (Sesionentrenamiento s : ss)
-            sesiones.add(new SesionArgument(s));
-
         this.sesiones = sesiones;
     }
 
@@ -62,6 +57,10 @@ public class RutinaArgument {
         return dificultad;
     }
 
+    public void setDificultad(Integer dificultad) {
+        this.dificultad = dificultad;
+    }
+
     public List<SesionArgument> getSesiones() {
         return sesiones;
     }
@@ -70,7 +69,4 @@ public class RutinaArgument {
         this.sesiones = sesiones;
     }
 
-    public void setDificultad(Integer dificultad) {
-        this.dificultad = dificultad;
-    }
 }

@@ -1,11 +1,14 @@
 package com.example.GymWebAppSpring.iu;
 
+import com.example.GymWebAppSpring.entity.Ejercicio;
+import com.example.GymWebAppSpring.entity.Ejerciciosesion;
 import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SesionArgument {
-    private int id;
+    private Integer id;
     private String nombre;
     private String descripcion;
     private List<EjercicioArgument> ejercicios;
@@ -14,12 +17,15 @@ public class SesionArgument {
         this.id = -100;
         this.nombre = "";
         this.descripcion = "";
+        this.ejercicios = new ArrayList<>();
     }
 
-    public SesionArgument(Sesionentrenamiento s) {
+    public SesionArgument(Sesionentrenamiento s, List<Ejerciciosesion> ee) {
         this.id = s.getId();
         this.nombre = s.getNombre();
         this.descripcion = s.getDescripcion();
+        for (Ejerciciosesion e : ee)
+            ejercicios.add(new EjercicioArgument(e));
     }
 
     public Integer getId() {
@@ -44,5 +50,13 @@ public class SesionArgument {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<EjercicioArgument> getEjercicios() {
+        return ejercicios;
+    }
+
+    public void setEjercicios(List<EjercicioArgument> ejercicios) {
+        this.ejercicios = ejercicios;
     }
 }

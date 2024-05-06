@@ -14,12 +14,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    Gson gson = new Gson();
     String cache = (String) request.getAttribute("cache");
+    RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
     Integer ejercicioPos = (Integer) request.getAttribute("ejercicioPos");
     List<Ejercicio> ejerciciosBase = (List<Ejercicio>) request.getAttribute("ejerciciosBase");
 
     String oldSesion = (String) request.getAttribute("oldSesion");
+    boolean ejercicioExists = ejercicioPos >= 0;
 %>
 
 <html>
@@ -47,7 +51,7 @@
             <h1>Ejercicios</h1>
         </div>
         <div class="col-8 d-flex justify-content-end align-items-center">
-            <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')">Volver</button>
+            <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', save=false)">Volver</button>
         </div>
     </div>
     <%
@@ -55,7 +59,7 @@
     %>
     <div class="row">
         <div class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-           onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio', 'ejbase=<%=ejercicioBase.getId()%>&ejercicioPos=<%=ejercicioPos%>')">
+           onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio', save=true, 'ejbase=<%=ejercicioBase.getId()%>&ejercicioPos=<%=ejercicioPos%>')">
             <img src="<%=ejercicioBase.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
             <div class="ms-3">
                 <span class="h2" style="color: black;"><%=ejercicioBase.getNombre()%></span><br>
@@ -158,9 +162,15 @@
 <script>
     console.log(cache);
 
-    function enviarJSON(action, additionalParams="") {
-        const cacheString = encodeURIComponent(JSON.stringify(cache));
+    function enviarJSON(action, save = true, additionalParams="") {
+        if (!save) {
+            if (!<%=ejercicioExists%>) {
+                cache.sesiones[<%=sesionPos%>].ejercicios.splice(<%=ejercicioPos == -1 ? rutina.getSesiones().get(sesionPos).getEjercicios().size() - 1 : ejercicioPos%>, 1);
+            }
+        }
 
+        const cacheString = encodeURIComponent(JSON.stringify(cache));
+        console.log(cache, <%=ejercicioExists%>);
         window.location.href =
             action + "?cache=" + cacheString + "&oldSesion=" + encodeURIComponent(oldSesion) + "&pos=<%=sesionPos%>"
             + (additionalParams.length > 0 ? "&" : "") + additionalParams;

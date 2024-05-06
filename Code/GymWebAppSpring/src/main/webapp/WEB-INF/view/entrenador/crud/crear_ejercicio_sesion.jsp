@@ -1,7 +1,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
-<%@ page import="com.google.gson.Gson" %><%--
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
+<%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -13,13 +15,19 @@
 <%
     Gson gson = new Gson();
     String cache = (String) request.getAttribute("cache");
+    RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+
     Integer sesionPos = (Integer) request.getAttribute("sesionPos");
     Integer ejercicioPos = (Integer) request.getAttribute("ejercicioPos");
     Ejercicio ejercicioBase = (Ejercicio) request.getAttribute("ejercicioBase");
-
+    String oldSesion = (String) request.getAttribute("oldSesion");
     List<String> tiposBase = gson.fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
 
-    String oldSesion = (String) request.getAttribute("oldSesion");
+    boolean ejercicioExists = ejercicioPos >= 0;
+    if (!ejercicioExists)
+        ejercicioPos = rutina.getSesiones().get(sesionPos).getEjercicios().size() - 1;
+
+    EjercicioArgument ejercicio = rutina.getSesiones().get(sesionPos).getEjercicios().get(ejercicioPos);
 %>
 
 <html>
@@ -54,13 +62,13 @@
                 <span class="h3 text-dark">Ejercicio X (Categoría X)</span><br/>
             </div>
         </div>
-        <%for (String tipoBase : tiposBase) {%>
+        <%for (int i = 0; i < tiposBase.size(); i++) {%>
             <div class="row mb-3 d-flex align-items-center">
                 <div class="col-4">
-                    <span id="<%=tipoBase%>" class="h4 text-secondary"><%=tipoBase%></span><br/>
+                    <span class="h4 text-secondary" value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(i)%>"><%=tiposBase.get(i)%></span><br/>
                 </div>
                 <div class="col-3">
-                    <input type="text" class="form-control mt-2">
+                    <input id="especificacion<%=i%>" type="text" class="form-control mt-2">
                 </div>
             </div>
         <%}%>
@@ -68,7 +76,7 @@
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-primary"
-                onClick="enviarJson('/entrenador/rutinas/crear/sesion')">Añadir</button>
+                onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')">Añadir</button>
             </div>
         </div>
     </div>
@@ -77,18 +85,24 @@
 
     function enviarJSON(action, save=true, additionalParams="") {
         if (save) {
-            cache.sesiones[<%=sesionPos%>],ejercicios[<%=ejercicioPos%>] = {
+            cache.sesiones[<%=sesionPos%>].ejercicios[<%=ejercicioPos%>] = {
+                "id": <%=ejercicio.getId()%>,
                 "ejercicio": <%=ejercicioBase.getId()%>,
-                "especificaciones": {
-                    <%for(String tipoBase : tiposBase) {%>
-                    "<%=tipoBase%>": document.getElementById("<%=tipoBase%>").value,
+                "especificaciones": [
+                    <%for(int i = 0; i < tiposBase.size(); i++) {%>
+                        document.getElementById("especificacion<%=i%>").value,
                     <%}%>
-                }
-            };
+                ]
+            }
+        } else {
+            if (!<%=ejercicioExists%>) {
+                cache.sesiones[<%=sesionPos%>].ejercicios.splice(<%=ejercicioPos == -1 ? rutina.getSesiones().get(sesionPos).getEjercicios().size() - 1 : ejercicioPos%>, 1);
+            }
         }
 
         const cacheString = encodeURIComponent(JSON.stringify(cache));
 
+        console.log(cache);
         window.location.href =
             action + "?cache=" + cacheString + "&oldSesion=" + encodeURIComponent(oldSesion) + "&pos=<%=sesionPos%>"
             + (additionalParams.length > 0 ? "&" : "") + additionalParams;
