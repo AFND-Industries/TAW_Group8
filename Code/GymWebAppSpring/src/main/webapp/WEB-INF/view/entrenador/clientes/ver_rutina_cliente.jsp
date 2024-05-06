@@ -10,9 +10,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Rutina rutina = (Rutina) request.getAttribute("rutina");
+    Rutina rutina = (Rutina) session.getAttribute("rutina");
     List<Sesionentrenamiento> sesiones = (List<Sesionentrenamiento>) request.getAttribute("sesiones");
-    Usuario cliente = (Usuario) request.getAttribute("cliente");
+    Usuario cliente = (Usuario) session.getAttribute("cliente");
     List<Integer> porcentaje = (List<Integer>) request.getAttribute("porcentaje");
 %>
 <html>
@@ -29,6 +29,14 @@
 <%
     if (!sesiones.isEmpty()) {
 %>
+<div class="row m-3">
+    <div class="col-md-6">
+        <a class="btn btn-outline-secondary" href="/entrenador/clientes/rutinas?id=<%=cliente.getId()%>">
+            <i class="bi bi-chevron-left me-2"></i>
+            <span class="d-sm-inline d-none">Volver</span>
+        </a>
+    </div>
+</div>
 <div class="container">
     <div class="row mb-3">
         <h1> Sesiones de <%= rutina.getNombre()%>
@@ -60,7 +68,7 @@
                 </td>
                 <td>
                     <a class="btn border border-black"
-                       href="/entrenador/clientes/rutinas/verSesion?idSesion=<%= sesion.getId()%>&idCliente=<%= cliente.getId() %>">
+                       href="/entrenador/clientes/rutinas/verSesion?idSesion=<%= sesion.getId()%>">
                         Ver desempeño
                     </a>
                 </td>

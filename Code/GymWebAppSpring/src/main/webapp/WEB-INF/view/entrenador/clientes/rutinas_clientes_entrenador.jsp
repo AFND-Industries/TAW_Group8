@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
-    Usuario usuario = (Usuario) request.getAttribute("usuario");
+    Usuario usuario = (Usuario) session.getAttribute("cliente");
     int[] sesiones = (int[]) request.getAttribute("numSesiones");
 %>
 <html>
@@ -26,6 +26,14 @@
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
+<div class="row m-3">
+    <div class="col-md-6">
+        <a class="btn btn-outline-secondary" href="/entrenador/clientes">
+            <i class="bi bi-chevron-left me-2"></i>
+            <span class="d-sm-inline d-none">Volver</span>
+        </a>
+    </div>
+</div>
 <div class="modal fade" id="delete-modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -48,7 +56,7 @@
 <script>
     function mostrarDetalleRutina(nombreRutina, idRutina) {
         document.getElementById('rutina-nombre').textContent = 'Nombre: ' + nombreRutina;
-        document.getElementById('delete-option').setAttribute('href', '/entrenador/clientes/rutinas/eliminarRutina?idRutina=' + idRutina + '&idCliente=<%= usuario.getId()%>');
+        document.getElementById('delete-option').setAttribute('href', '/entrenador/clientes/rutinas/eliminarRutina?idRutina=' + idRutina);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -84,7 +92,7 @@
                 for (Rutina rutina : rutinas) { %>
             <tr>
                 <td><a class="btn" style="font-size: 18px; border: transparent"
-                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>&idCliente=<%=usuario.getId()%>">
+                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>">
                     <%= rutina.getNombre() %>
                 </a></td>
                 <td>
