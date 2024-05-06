@@ -18,6 +18,7 @@
 
     List<String> tiposBase = gson.fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
 
+    String oldSesion = (String) request.getAttribute("oldSesion");
 %>
 
 <html>
@@ -31,7 +32,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
         const cache = <%=cache%>;
-        console.log(<%=ejercicioBase.getCategoria().getTiposBase()%>);
+        const oldSesion = <%=oldSesion%>;
     </script>
 </head>
 <body>
@@ -76,7 +77,8 @@
         const cacheString = encodeURIComponent(JSON.stringify(cache));
 
         window.location.href =
-            action + "?cache=" + cacheString + "&pos=<%=sesionPos%>" +  (additionalParams.length > 0 ? "&" : "") + additionalParams;
+            action + "?cache=" + cacheString + "&oldSesion=" + encodeURIComponent(oldSesion) + "&pos=<%=sesionPos%>"
+            + (additionalParams.length > 0 ? "&" : "") + additionalParams;
     }
 </script>
 </body>
