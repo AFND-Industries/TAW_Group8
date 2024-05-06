@@ -37,6 +37,10 @@ public class EntrenadorControllerCRUD {
     // como hago lo de guardar que estoy hacindo una rutina y una sesion y blablabla
     // preguntar si en las query es mejor pasar el objeto o el id
     // en que caso una entidad tendira por atributo una lista?
+
+    // cambiar la bd tiposbase muchos mas caracteres, la descripcion igual
+    // pensar si los tipos base en categoria o donde
+    // meter los días
     @Autowired
     protected RutinaRepository rutinaRepository;
 
@@ -202,7 +206,8 @@ public class EntrenadorControllerCRUD {
 
         rutina.getSesiones().add(sesion);
 
-        model.addAttribute("sesionPos", -1);
+        model.addAttribute("sesionPos", rutina.getSesiones().size() - 1);
+        model.addAttribute("oldSesion", null);
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/sesion";
@@ -210,10 +215,12 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/sesion/editar")
     public String doEditarSesion(@RequestParam("cache") String cache,
+                                 @RequestParam("oldSesion") String oldSesion,
                                  @RequestParam("pos") Integer pos, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
 
         model.addAttribute("sesionPos", pos);
+        model.addAttribute("oldSesion", oldSesion);
         model.addAttribute("cache", gson.toJson(rutina));
 
         return "/entrenador/crud/sesion";

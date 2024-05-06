@@ -5,7 +5,9 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
-<%@ page import="com.google.gson.Gson" %><%--
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.nio.charset.StandardCharsets" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -106,8 +108,12 @@
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/' + <%=(readOnly ? "'ver'" : "'editar'")%>, 'pos=<%= i %>')">
-                    <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/' + <%=(readOnly ? "'ver'" : "'editar'")%>, 'pos=<%= i %>' + <%=readOnly ? "" : "&oldSesion=" + URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>)">
+                    <div class="d-flex flex-column justify-content-center align-items-center" src="/svg/question-square.svg"
+                         alt="Borrar" style="width:50px; height:50px">
+                        <span class="h4 mb-0">Día</span>
+                        <span class="h2 mb-0 text-danger"><%=i+1%></span>
+                    </div>
                     <div class="ms-3">
                         <span class="h2" style="color: black;"><%=sesion.getNombre()%></span><br>
                         <span class="h5 text-secondary"><%=sesion.getDescripcion()%></span>
@@ -115,7 +121,7 @@
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'pos=<%= i %>')" style="cursor: pointer; text-decoration: none;">
+                        <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'pos=<%= i %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>')" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
                         <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%= i %>')">
