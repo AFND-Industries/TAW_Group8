@@ -1,16 +1,14 @@
 <%@ page import="com.google.gson.*" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejerciciosesion" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Informacionsesion" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
+<%@ page import="com.example.GymWebAppSpring.entity.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<Ejerciciosesion> ejercicios = (List<Ejerciciosesion>) request.getAttribute("ejercicios");
     Sesionentrenamiento sesion = (Sesionentrenamiento) request.getAttribute("sesion");
     Informacionsesion info = (Informacionsesion) request.getAttribute("informacionSesion");
-    Usuario cliente = (Usuario) request.getAttribute("cliente");
-    List<Integer> sesionesHechas = (List<Integer>) request.getAttribute("sesionesEjercicios");
+    Usuario cliente = (Usuario) session.getAttribute("cliente");
+    List<Integer> sesionesTotales = (List<Integer>) session.getAttribute("sesionesEjercicios");
+    Rutina rutina = (Rutina) session.getAttribute("rutina");
 %>
 <html>
 <head>
@@ -23,6 +21,14 @@
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
+<div class="row m-3">
+    <div class="col-md-6">
+        <a class="btn btn-outline-secondary" href="/entrenador/clientes/rutinas/verRutina?idRutina=<%=rutina.getId()%>">
+            <i class="bi bi-chevron-left me-2"></i>
+            <span class="d-sm-inline d-none">Volver</span>
+        </a>
+    </div>
+</div>
 <div class="container">
     <div class="row mb-3 d-flex text-center">
         <h1>Sesion de <%= sesion.getNombre() %>
@@ -59,7 +65,7 @@
                             }
 
                         %>
-                        <%= sesionesHechas.get(j) %> / <%= series %>
+                        <%= sesionesTotales.get(j) %> / <%= series %>
                     </div>
                 </td>
                 <td>

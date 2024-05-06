@@ -11,7 +11,7 @@
 <%
     List<Rutina> rutinasCliente = (List<Rutina>) request.getAttribute("rutinasCliente");
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinasEntrenador");
-    int idCliente = (int) request.getAttribute("id");
+    Usuario cliente = (Usuario) session.getAttribute("cliente");
 %>
 <html>
 <head>
@@ -22,6 +22,14 @@
 </head>
 <body>
 <%@include file="../../components/header.jsp" %>
+<div class="row m-3">
+    <div class="col-md-6">
+        <a class="btn btn-outline-secondary" href="/entrenador/clientes/rutinas?id=<%=cliente.getId()%>">
+            <i class="bi bi-chevron-left me-2"></i>
+            <span class="d-sm-inline d-none">Volver</span>
+        </a>
+    </div>
+</div>
 <div class="modal fade" id="filter-modal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -92,7 +100,6 @@
         </div>
     </div>
     <form method="post" action="/entrenador/clientes/rutinas/guardar">
-        <input type="hidden" name="idCliente" value="<%= idCliente %>">
         <%
             for (Rutina rutina : rutinas) {
         %>

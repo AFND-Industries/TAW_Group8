@@ -13,6 +13,8 @@
     JsonArray jsonArray = gson.fromJson(info.getEvaluacion(), JsonArray.class);
 
     List<JsonElement> elementos = jsonArray.asList();
+
+    Rutina rutina = (Rutina) session.getAttribute("rutina");
 %>
 <html>
 <head>
@@ -25,6 +27,15 @@
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
+<div class="row m-3">
+    <div class="col-md-6">
+        <a class="btn btn-outline-secondary"
+           href="/entrenador/clientes/rutinas/verSesion?idSesion=<%= sesion.getId()%>">
+            <i class="bi bi-chevron-left me-2"></i>
+            <span class="d-sm-inline d-none">Volver</span>
+        </a>
+    </div>
+</div>
 <div class="container">
     <div class="row mb-3 d-flex text-center">
         <h1>Sesion de <%= sesion.getNombre() %>
@@ -39,6 +50,15 @@
         <div class="col mb-3">
             <h6>Descripcion</h6>
             <%=ejercicio.getDescripcion()%>
+        </div>
+        <div class="mb-3">
+            <h6>Video:</h6>
+            <br>
+            <iframe width="560" height="315" src="<%=ejercicio.getVideo()%>?rel=0"
+                    title=" YouTube video player
+            " frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
         <table class="table table-striped">
             <thead>
