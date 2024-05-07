@@ -10,9 +10,9 @@
     Usuario user = (Usuario) session.getAttribute("user");
 %>
 <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+    <nav class="navbar navbar-expand-lg d-flex align-items-center  border-bottom border-2 border-dark  border-opacity-50 " style="background-color: #e8c547">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/entrenador"><i class="bi bi-person-arms-up me-1"></i>TAW PROJECT</a>
+            <a class="navbar-brand" href="/"><i class="bi bi-person-arms-up me-1"></i>TAW PROJECT</a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">

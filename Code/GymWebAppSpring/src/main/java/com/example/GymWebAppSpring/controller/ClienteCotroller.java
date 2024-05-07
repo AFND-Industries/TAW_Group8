@@ -136,7 +136,7 @@ public class ClienteCotroller {
                 informacionEjercicioRepository.save(resultadosEjercicios);
             }
         } catch (Exception e) {
-            System.err.println("Error al procesar el JSON: " + e.getMessage());
+            System.err.println("Error al insertar: " + e.getMessage());
         }
 
 
