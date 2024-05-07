@@ -155,8 +155,13 @@ public class EntrenadorControllerCRUD {
 
         List<Sesionentrenamiento> sesionesRutina = sesionentrenamientoRepository.findSesionesByRutina(r);
         for (Sesionentrenamiento sesion : sesionesRutina) {
-            if (!sesionesId.contains(sesion.getId()))
+            if (!sesionesId.contains(sesion.getId())) {
+                // SI LA SESION TENIA EJERCICIOS
+                List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
+                ejercicioSesionRepository.deleteAll(ejercicios);
+
                 sesionentrenamientoRepository.delete(sesion);
+            }
         }
 
         // CREAR O EDITAR SESIONES
@@ -190,7 +195,7 @@ public class EntrenadorControllerCRUD {
                     ejercicioSesionRepository.delete(ejerciciosesion);
             }
 
-            // CREAR O EDITAR SESIONES
+            // CREAR O EDITAR EJERCICIOS
             for (int j = 0; j < ejercicios.size(); j++) {
                 EjercicioArgument ejercicio = ejercicios.get(j);
                 Ejerciciosesion es = ejercicioSesionRepository.findById(ejercicio.getId()).orElse(null);
@@ -327,6 +332,24 @@ public class EntrenadorControllerCRUD {
                                    @RequestParam("oldSesion") String oldSesion,
                                    @RequestParam("pos") Integer pos,
                                    @RequestParam("ejbase") Integer ejbase, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+
+        model.addAttribute("ejercicioPos", ejercicioPos);
+        model.addAttribute("sesionPos", pos);
+        model.addAttribute("oldSesion", gson.toJson(oldSesion));
+        model.addAttribute("cache", gson.toJson(rutina));
+        model.addAttribute("ejercicioBase", ejercicioBase);
+
+        return "/entrenador/crud/crear_ejercicio_sesion";
+    }
+
+    @GetMapping("/crear/ejercicio/editar")
+    public String doEditarEjercicio(@RequestParam("cache") String cache,
+                                    @RequestParam("ejercicioPos") Integer ejercicioPos,
+                                    @RequestParam("oldSesion") String oldSesion,
+                                    @RequestParam("pos") Integer pos,
+                                    @RequestParam("ejbase") Integer ejbase, Model model) {
         RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
         Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
 
