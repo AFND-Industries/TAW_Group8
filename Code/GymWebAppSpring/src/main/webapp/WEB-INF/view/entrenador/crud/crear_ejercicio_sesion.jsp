@@ -58,7 +58,8 @@
                 <h1>Añadir ejercicio</h1>
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
-                <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save=false)">Volver</button>
+                <button class="btn btn-primary"
+                        onClick="enviarJSON('<%=ejercicioExists ? "/entrenador/rutinas/crear/sesion/editar" : "/entrenador/rutinas/crear/ejercicio/seleccionar"%>', save=false)">Volver</button>
             </div>
         </div>
 
@@ -82,7 +83,7 @@
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-primary"
-                onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')">Añadir</button>
+                onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
             </div>
         </div>
     </div>
