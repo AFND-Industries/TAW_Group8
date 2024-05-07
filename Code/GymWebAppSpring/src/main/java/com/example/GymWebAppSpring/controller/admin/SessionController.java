@@ -2,6 +2,7 @@ package com.example.GymWebAppSpring.controller.admin;
 
 import com.example.GymWebAppSpring.dao.UsuarioRepository;
 import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.util.AuthUtils;
 import com.example.GymWebAppSpring.util.HashUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,10 @@ public class SessionController {
         Usuario usuario = usuarioRepository.findUsuarioByDniAndClave(dni,passDigest);
         if (usuario != null){
             session.setAttribute("user",usuario);
-            return "redirect:/";
+            if (AuthUtils.isTrainer(session))
+                return "redirect:/entrenador";
+            else
+                return "redirect:/";
         }
 
         model.addAttribute("error", "El usuario o la contraseña no son válidos");
