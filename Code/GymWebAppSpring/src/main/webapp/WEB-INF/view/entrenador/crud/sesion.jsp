@@ -156,7 +156,7 @@
         </div>
         <%if (!readOnly) {%>
         <div class="col-3 d-flex justify-content-end align-items-center">
-            <div onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/editar', save = true, 'pos=<%= i %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')"
+            <div onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/editar', save = true, 'pos=<%= sesionPos %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')"
                  style="cursor: pointer; text-decoration: none;">
                 <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
             </div>

@@ -3,7 +3,9 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
-<%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %><%--
+<%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -27,7 +29,9 @@
     if (!ejercicioExists)
         ejercicioPos = rutina.getSesiones().get(sesionPos).getEjercicios().size() - 1;
 
-    EjercicioArgument ejercicio = rutina.getSesiones().get(sesionPos).getEjercicios().get(ejercicioPos);
+    SesionArgument sesion = rutina.getSesiones().get(sesionPos);
+    List<EjercicioArgument> ejercicios = sesion.getEjercicios();
+    EjercicioArgument ejercicio = ejercicios.get(ejercicioPos);
 %>
 
 <html>
@@ -42,6 +46,7 @@
     <script>
         const cache = <%=cache%>;
         const oldSesion = <%=oldSesion%>;
+        console.log(<%=sesion.getEjercicios().size()%>);
     </script>
 </head>
 <body>
@@ -65,10 +70,11 @@
         <%for (int i = 0; i < tiposBase.size(); i++) {%>
             <div class="row mb-3 d-flex align-items-center">
                 <div class="col-4">
-                    <span class="h4 text-secondary" value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(i)%>"><%=tiposBase.get(i)%></span><br/>
+                    <span class="h4 text-secondary"><%=tiposBase.get(i)%></span><br/>
                 </div>
                 <div class="col-3">
-                    <input id="especificacion<%=i%>" type="text" class="form-control mt-2">
+                    <input value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(i)%>"
+                           id="especificacion<%=i%>" type="text" class="form-control mt-2">
                 </div>
             </div>
         <%}%>
