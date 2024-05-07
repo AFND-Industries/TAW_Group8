@@ -36,6 +36,10 @@ public class EntrenadorControllerCRUD {
     // cambiar la bd tiposbase muchos mas caracteres, la descripcion igual
     // pensar si los tipos base en categoria o donde
     // meter los días
+    // hacer un ver con otra jsp para hacerlo mas bonito y sin disabled, sin depender de la de crear y editar y hacerlo todo solo con ids
+    // meter el campo DIA en sesion y que se ordene por eso
+    // meter el boton del ojito en editar/ver en el ejercicio
+    // hacer FILTROS DE BUSQUEDA
     @Autowired
     protected RutinaRepository rutinaRepository;
 
@@ -324,6 +328,25 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("ejerciciosBase", ejerciciosBase);
 
         return "/entrenador/crud/seleccionar_ejercicio";
+    }
+
+    @GetMapping("/crear/ejercicio/ver")
+    public String doVerEjercicio(@RequestParam("cache") String cache,
+                                    @RequestParam("ejercicioPos") Integer ejercicioPos,
+                                    @RequestParam("oldSesion") String oldSesion,
+                                    @RequestParam("pos") Integer pos,
+                                    @RequestParam("ejbase") Integer ejbase, Model model) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+
+        model.addAttribute("readOnly", true);
+        model.addAttribute("ejercicioPos", ejercicioPos);
+        model.addAttribute("sesionPos", pos);
+        model.addAttribute("oldSesion", gson.toJson(oldSesion));
+        model.addAttribute("cache", gson.toJson(rutina));
+        model.addAttribute("ejercicioBase", ejercicioBase);
+
+        return "entrenador/crud/ejercicio_sesion";
     }
 
     @GetMapping("/crear/ejercicio")

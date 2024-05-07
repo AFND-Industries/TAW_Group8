@@ -137,33 +137,34 @@
             Ejercicio ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
     %>
     <div class="row">
-        <div class="col-9 d-flex align-items-center">
-            <img src="/svg/question-square.svg" alt="Borrar" style="width:50px; height:50px">
+        <div class="col-9 d-flex align-items-center" style="cursor: pointer"
+             onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/<%=readOnly ? "ver" : "editar"%>', save = true, 'pos=<%= sesionPos %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')">
+            <img src="<%=ejercicio.getCategoria().getIcono()%>" alt="Borrar" style="width:50px; height:50px">
             <div class="ms-3">
-                <span class="h2"><%=ejercicio.getNombre()%></span></br>
+                <span class="h2"><%=ejercicio.getNombre()%> <span class="text-danger">(<%=ejercicio.getCategoria().getNombre()%>)</span></span></br>
                 <span class="h5 text-secondary">
-                            <%
-                                String data = "";
-                                List<String> tiposBase = gson.fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
-                                for (int j = 0; j < tiposBase.size(); j++) {
-                                    String especificacion = ejercicioSesion.getEspecificaciones().get(j);%>
-                        <%="<span style='color: black'><b>" + tiposBase.get(j) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
-                    }
-                %>
-                            <%=data%>
-                        </span>
+                    <%
+                        String data = "";
+                        List<String> tiposBase = gson.fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
+                        for (int j = 0; j < tiposBase.size(); j++) {
+                            String especificacion = ejercicioSesion.getEspecificaciones().get(j);%>
+                            <%="<span style='color: black'><b>" + tiposBase.get(j) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
+                         }
+                    %>
+                    <%=data%>
+                </span>
             </div>
         </div>
         <%if (!readOnly) {%>
-        <div class="col-3 d-flex justify-content-end align-items-center">
-            <div onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/editar', save = true, 'pos=<%= sesionPos %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')"
-                 style="cursor: pointer; text-decoration: none;">
-                <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="col-3 d-flex justify-content-end align-items-center">
+                <div onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/editar', save = true, 'pos=<%= sesionPos %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')"
+                     style="cursor: pointer; text-decoration: none;">
+                    <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+                <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=i%>)" style="cursor: pointer;">
+                    <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
+                </div>
             </div>
-            <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=i%>)" style="cursor: pointer;">
-                <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
-            </div>
-        </div>
         <%}%>
     </div>
     <hr>
@@ -172,13 +173,13 @@
     %>
 
     <%if (!readOnly) {%>
-    <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-            <button onClick="enviarJSON('/entrenador/rutinas/editar')" type="submit"
-                    class="btn btn-primary"><%=sesionExists ? "Guardar" : "Crear"%>
-            </button>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+                <button onClick="enviarJSON('/entrenador/rutinas/editar')" type="submit"
+                        class="btn btn-primary"><%=sesionExists ? "Guardar" : "Crear"%>
+                </button>
+            </div>
         </div>
-    </div>
     <%}%>
 </div>
 <script>

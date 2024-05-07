@@ -15,6 +15,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    // AÑADIR UN OJITO PARA PODER VER EL EJERCICIO BASE SOBRE EL QUE ESTAMOS TRABAJANDO
     Gson gson = new Gson();
     String cache = (String) request.getAttribute("cache");
     RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
@@ -25,6 +26,8 @@
     String oldSesion = (String) request.getAttribute("oldSesion");
     List<String> tiposBase = gson.fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
 
+    Object readOnlyObject = request.getAttribute("readOnly");
+    boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
     boolean ejercicioExists = ejercicioPos >= 0;
     if (!ejercicioExists)
         ejercicioPos = rutina.getSesiones().get(sesionPos).getEjercicios().size() - 1;
@@ -59,13 +62,14 @@
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
                 <button class="btn btn-primary"
-                        onClick="enviarJSON('<%=ejercicioExists ? "/entrenador/rutinas/crear/sesion/editar" : "/entrenador/rutinas/crear/ejercicio/seleccionar"%>', save=false)">Volver</button>
+                        onClick="enviarJSON('<%=ejercicioExists ? "/entrenador/rutinas/crear/sesion/" + (readOnly ? "ver" : "editar") : "/entrenador/rutinas/crear/ejercicio/seleccionar"%>', save=false)">Volver</button>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-6">
-                <span class="h3 text-dark">Ejercicio X (Categoría X)</span><br/>
+        <div class="row mb-4 d-flex justify-content-center">
+            <div class="col-6 d-flex flex-column justify-content-center">
+                <span class="h1 text-dark text-center"><%=ejercicioBase.getNombre()%> (<%=ejercicioBase.getCategoria().getNombre()%>)</span>
+                <img src="<%=ejercicioBase.getLogo()%>" alt="Logo" style="max-width: 100%; height: auto;">
             </div>
         </div>
         <%for (int i = 0; i < tiposBase.size(); i++) {%>
@@ -74,18 +78,20 @@
                     <span class="h4 text-secondary"><%=tiposBase.get(i)%></span><br/>
                 </div>
                 <div class="col-3">
-                    <input value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(i)%>"
+                    <input <%=readOnly ? "disabled" : ""%> value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(i)%>"
                            id="especificacion<%=i%>" type="text" class="form-control mt-2">
                 </div>
             </div>
         <%}%>
 
-        <div class="row">
-            <div class="col-12 d-flex justify-content-end">
-                <button class="btn btn-primary"
-                onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
+        <%if (!readOnly) {%>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                    <button class="btn btn-primary"
+                    onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
+                </div>
             </div>
-        </div>
+        <%}%>
     </div>
 <script>
     console.log(cache);
