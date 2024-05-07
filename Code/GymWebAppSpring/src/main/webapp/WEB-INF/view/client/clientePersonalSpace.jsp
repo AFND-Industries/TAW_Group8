@@ -1,6 +1,7 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
@@ -12,6 +13,7 @@
 <%
     Usuario cliente = (Usuario) request.getAttribute("usuario");
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
+//    List<Rutinacliente>
 %>
 <html>
 <head>
@@ -48,18 +50,25 @@
                 <%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
                 <%--                    The current link item--%>
                 <%--                </a>--%>
-                    <form method="post" action="client/verrutina">
-                <%
-                    for (Rutina r : rutinas) {
+                <form method="post" action="client/verrutina">
+                    <%
+                        for (Rutina r : rutinas) {
 
 
-                %>
-                        <button type="submit" class="list-group-item list-group-item-action" value="<%=r.getId()%>" name="rutinaElegida"><%=r.getNombre()%></button>
+                    %>
+                    <button type="submit"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                            value="<%=r.getId()%>" name="rutinaElegida">
 
-                <%
-                    }
-                %>
-                    </form>
+                        <span><%=r.getNombre()%></span>
+                        <span><%=r.getId()%></span>
+
+                    </button>
+
+                    <%
+                        }
+                    %>
+                </form>
                 <%--                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>--%>
                 <%--                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--%>
                 <%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>

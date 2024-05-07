@@ -28,19 +28,21 @@ import java.util.Map;
 @RequestMapping("/client")
 public class ClienteCotroller {
 
+
     @Autowired
     protected InformacionEjercicioRepository informacionEjercicioRepository;
-    @Autowired
-    private RutinaUsuarioRepository rutinaUsuarioRepository;
 
     @Autowired
-    private SesionentrenamientoRepository sesionentrenamientoRepository;
+    protected RutinaUsuarioRepository rutinaUsuarioRepository;
 
     @Autowired
-    private EjercicioSesionRepository ejerciciosesionRepository;
+    protected SesionentrenamientoRepository sesionentrenamientoRepository;
 
     @Autowired
-    private InformacionSesionRepository informacionSesionRepository;
+    protected EjercicioSesionRepository ejerciciosesionRepository;
+
+    @Autowired
+    protected InformacionSesionRepository informacionSesionRepository;
 
     @GetMapping("")
     public String doClient(HttpSession sesion, Model modelo) {
@@ -119,7 +121,7 @@ public class ClienteCotroller {
             int i = 0;
             for (String[] fila : resultados) {
 
-                for (int j = 0; j < fila.length;j++) {
+                for (int j = 0; j < fila.length; j++) {
                     fila[j] = fila[j].replaceAll("\\\\", "");
                 }
 
