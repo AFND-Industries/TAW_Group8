@@ -338,4 +338,19 @@ public class EntrenadorControllerCRUD {
 
         return "/entrenador/crud/crear_ejercicio_sesion";
     }
+
+    @GetMapping("/crear/ejercicio/borrar")
+    public String doBorrarEjercicio(@RequestParam("cache") String cache,
+                                    @RequestParam("oldSesion") String oldSesion,
+                                    @RequestParam("pos") Integer pos,
+                                    @RequestParam("ejPos") Integer ejPos) {
+        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        rutina.getSesiones().get(pos).getEjercicios().remove((int) ejPos);
+
+        String jsonCache = gson.toJson(rutina);
+        String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);
+        String encodedOldSesion = URLEncoder.encode(oldSesion, StandardCharsets.UTF_8);
+
+        return "redirect:/entrenador/rutinas/crear/sesion/editar?cache=" + encodedCache + "&oldSesion=" + encodedOldSesion + "&pos=" + pos;
+    }
 }

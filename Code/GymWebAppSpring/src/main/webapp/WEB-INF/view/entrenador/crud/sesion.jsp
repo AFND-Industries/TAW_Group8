@@ -122,7 +122,9 @@
             <%}%>
         </div>
         <%
-            for (EjercicioArgument ejercicioSesion : sesion.getEjercicios()) {
+            List<EjercicioArgument> ejerciciosArguments = sesion.getEjercicios();
+            for (int i = 0; i < ejerciciosArguments.size(); i++) {
+                EjercicioArgument ejercicioSesion = ejerciciosArguments.get(i);
                 Ejercicio ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
         %>
             <div class="row">
@@ -134,9 +136,9 @@
                             <%
                                 String data = "";
                                 List<String> tiposBase = gson.fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
-                                for (int i = 0; i < tiposBase.size(); i++) {
-                                    String especificacion = ejercicioSesion.getEspecificaciones().get(i);%>
-                                    <%="<span style='color: black'><b>" + tiposBase.get(i) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
+                                for (int j = 0; j < tiposBase.size(); j++) {
+                                    String especificacion = ejercicioSesion.getEspecificaciones().get(j);%>
+                                    <%="<span style='color: black'><b>" + tiposBase.get(j) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
                                 }
                             %>
                             <%=data%>
@@ -146,7 +148,7 @@
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
                         <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px">&nbsp;&nbsp;&nbsp;&nbsp;
-                        <div data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
+                        <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=i%>)" style="cursor: pointer;">
                             <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                         </div>
                     </div>
@@ -182,9 +184,19 @@
         }
 
         const cacheString = encodeURIComponent(JSON.stringify(cache));
-
         window.location.href =
             action + "?cache=" + cacheString + (additionalParams.length > 0 ? "&" : "") + additionalParams;
+    }
+
+    function showDeleteModal(nombre, ejPos) {
+        const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
+        const modalBody = document.getElementById("delete-modal-body");
+        const modalButton = document.getElementById("delete-modal-button");
+
+        modalBody.innerHTML = `¿Estás seguro de que quieres eliminar el ejercicio <b>` + nombre + `</b>?`;
+        modalButton.onclick = () => { enviarJSON('/entrenador/rutinas/crear/ejercicio/borrar', save=true, 'ejPos=' + ejPos + '&pos=<%=sesionPos%>&oldSesion=<%=URLEncoder.encode(oldSesion, StandardCharsets.UTF_8)%>') };
+
+        deleteModal.show();
     }
 </script>
 </body>
