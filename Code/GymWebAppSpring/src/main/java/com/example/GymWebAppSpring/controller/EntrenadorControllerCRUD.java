@@ -341,7 +341,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejercicioBase", ejercicioBase);
 
-        return "/entrenador/crud/crear_ejercicio_sesion";
+        return "entrenador/crud/ejercicio_sesion";
     }
 
     @GetMapping("/crear/ejercicio/editar")
@@ -359,7 +359,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejercicioBase", ejercicioBase);
 
-        return "/entrenador/crud/crear_ejercicio_sesion";
+        return "entrenador/crud/ejercicio_sesion";
     }
 
     @GetMapping("/crear/ejercicio/borrar")
