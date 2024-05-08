@@ -17,16 +17,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Gson gson = new Gson();
-    String cache = (String) request.getAttribute("cache");
-    RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
 
-    Integer sesionPos = (Integer) request.getAttribute("sesionPos");
-    String oldSesion = (String) request.getAttribute("oldSesion");
+    Integer sesionPos = (Integer) session.getAttribute("sesionPos");
+    SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
-    boolean sesionExists = !oldSesion.equals("{}");
+    boolean sesionExists = oldSesion.getId() != -100;
 
     SesionArgument sesion = rutina.getSesiones().get(sesionPos);
     List<Ejercicio> ejercicios = new ArrayList<>();
@@ -62,11 +60,6 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
 </head>
-<script>
-    const cache = <%=cache%>;
-    const oldSesion = <%=oldSesion%>;
-    console.log(<%=oldSesion%>);
-</script>
 <body>
 <jsp:include page="../../components/header.jsp"/>
 <div class="modal fade" id="delete-modal">
@@ -89,15 +82,13 @@
 </div>
 
 <div class="container">
-    <input id="sesionId" type="hidden" name="id" value="<%=sesion.getId()%>"/>
     <div class="row mb-3">
         <div class="col-8">
             <h1>Añadir sesión de entrenamiento</h1>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
-            <button onClick="enviarJSON('/entrenador/rutinas/' + <%=(readOnly ? "'ver'" : "'editar'")%>, save = <%=readOnly ? "true" : "false"%>)"
-                    class="btn btn-primary">Volver
-            </button>
+            <button onClick="<%=readOnly ? "goVolverVerRutina()" : "goVolverEditarRutina()"%>"
+                    class="btn btn-primary">Volver</button>
         </div>
     </div>
 
@@ -123,14 +114,12 @@
         </div>
         <%if (!readOnly) {%>
         <div class="col-6 d-flex justify-content-end">
-            <a class="btn btn-primary"
-               onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/seleccionar', save = true,
-                       additionalParams='pos=<%=sesionPos%>&oldSesion=<%=URLEncoder.encode(oldSesion, StandardCharsets.UTF_8)%>')">Añadir
-                ejercicio</a>
+            <a class="btn btn-primary" onClick="goSeleccionarEjercicio()">Añadir ejercicio</a>
         </div>
         <%}%>
     </div>
     <%
+        Gson gson = new Gson();
         List<EjercicioArgument> ejerciciosArguments = sesion.getEjercicios();
         for (int i = 0; i < ejerciciosArguments.size(); i++) {
             EjercicioArgument ejercicioSesion = ejerciciosArguments.get(i);
@@ -138,7 +127,7 @@
     %>
     <div class="row">
         <div class="col-9 d-flex align-items-center" style="cursor: pointer"
-             onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/<%=readOnly ? "ver" : "editar"%>', save = true, 'pos=<%= sesionPos %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')">
+             onClick="<%=readOnly ? ("goVerEjercicio(" + ejercicioSesion.getId() + ")") : ("goEditarEjercicio(" + i + ")")%>">
             <img src="<%=ejercicio.getCategoria().getIcono()%>" alt="Borrar" style="width:50px; height:50px">
             <div class="ms-3">
                 <span class="h2"><%=ejercicio.getNombre()%> <span class="text-danger">(<%=ejercicio.getCategoria().getNombre()%>)</span></span></br>
@@ -157,8 +146,7 @@
         </div>
         <%if (!readOnly) {%>
             <div class="col-3 d-flex justify-content-end align-items-center">
-                <div onClick="enviarJSON('/entrenador/rutinas/crear/ejercicio/editar', save = true, 'pos=<%= sesionPos %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>&ejercicioPos=<%=i%>&ejbase=<%=ejercicio.getId()%>')"
-                     style="cursor: pointer; text-decoration: none;">
+                <div onClick="goEditarEjercicio(<%=i%>)" style="cursor: pointer; text-decoration: none;">
                     <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
                 <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=i%>)" style="cursor: pointer;">
@@ -175,7 +163,7 @@
     <%if (!readOnly) {%>
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
-                <button onClick="enviarJSON('/entrenador/rutinas/editar')" type="submit"
+                <button onClick="goGuardarSesion()" type="submit"
                         class="btn btn-primary"><%=sesionExists ? "Guardar" : "Crear"%>
                 </button>
             </div>
@@ -183,24 +171,42 @@
     <%}%>
 </div>
 <script>
-    console.log(cache);
+    function goPage(action, arguments="") {
+        const nombre = document.getElementById("nombre").value;
+        const descripcion = document.getElementById("descripcion").value;
 
-    function enviarJSON(action, save = true, additionalParams = "") {
-        if (save) {
-            cache.sesiones[<%=sesionPos%>] = {
-                "id": document.getElementById("sesionId").value,
-                "nombre": document.getElementById("nombre").value,
-                "descripcion": document.getElementById("descripcion").value,
-                "ejercicios": <%=gson.toJson(sesion.getEjercicios())%>
-            }
-        } else {
-            if (Object.keys(oldSesion).length > 0) cache.sesiones[<%=sesionPos%>] = oldSesion;
-            else cache.sesiones.splice(<%=sesionPos%>, 1);
-        }
+        window.location.href = action +
+            "?nombre=" + nombre +
+            "&descripcion=" + descripcion +
+            (arguments.length === 0 ? "" : "&") + arguments;
+    }
 
-        const cacheString = encodeURIComponent(JSON.stringify(cache));
-        window.location.href =
-            action + "?cache=" + cacheString + (additionalParams.length > 0 ? "&" : "") + additionalParams;
+    function goVolverEditarRutina() {
+        window.location.href = "/entrenador/rutinas/crear/sesion/volver";
+    }
+
+    function goVolverVerRutina() {
+        window.location.href = "/entrenador/rutinas/ver?id=<%=rutina.getId()%>";
+    }
+
+    function goVerEjercicio(id) {
+        window.location.href = "/entrenador/rutinas/crear/ejercicio/ver?id=" + id;
+    }
+
+    function goSeleccionarEjercicio() {
+        goPage("/entrenador/rutinas/crear/ejercicio/seleccionar");
+    }
+
+    function goEditarEjercicio(ejPos) {
+        goPage("/entrenador/rutinas/crear/ejercicio/editar", "ejPos=" + ejPos);
+    }
+
+    function goBorrarEjercicio(ejPos) {
+        goPage("/entrenador/rutinas/crear/ejercicio/borrar", "ejPos=" + ejPos);
+    }
+
+    function goGuardarSesion() {
+        goPage("/entrenador/rutinas/crear/sesion/guardar");
     }
 
     function showDeleteModal(nombre, ejPos) {
@@ -210,7 +216,7 @@
 
         modalBody.innerHTML = `¿Estás seguro de que quieres eliminar el ejercicio <b>` + nombre + `</b>?`;
         modalButton.onclick = () => {
-            enviarJSON('/entrenador/rutinas/crear/ejercicio/borrar', save = true, 'ejPos=' + ejPos + '&pos=<%=sesionPos%>&oldSesion=<%=URLEncoder.encode(oldSesion, StandardCharsets.UTF_8)%>')
+            goBorrarEjercicio(ejPos);
         };
 
         deleteModal.show();

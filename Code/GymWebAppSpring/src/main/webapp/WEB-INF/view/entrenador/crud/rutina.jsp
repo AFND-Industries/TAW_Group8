@@ -21,9 +21,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%
-    Gson gson = new Gson();
-    String cache = (String) request.getAttribute("cache");
-    RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean rutinaExists = rutina.getId() >= 0;
@@ -39,10 +37,6 @@
     <!-- Bootstrap Icons CSS Dependencies -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        const cache = <%=cache%>;
-        console.log(cache);
-    </script>
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
@@ -65,7 +59,6 @@
     </div>
 
     <div class="container">
-        <input id="rutinaId" type="hidden" name="id" value="<%=rutina.getId()%>"/>
          <div class="row mb-3">
             <div class="col-4">
                 <h1>Crear nueva rutina</h1>
@@ -101,7 +94,7 @@
             </div>
             <%if (!readOnly) {%>
                 <div class="col-6 d-flex justify-content-end">
-                    <button class="btn btn-primary" onClick="enviarJSON('/entrenador/rutinas/crear/sesion')">Añadir sesión de entrenamiento</button>
+                    <button class="btn btn-primary" onClick="goCrearSesion()">Añadir sesión de entrenamiento</button>
                 </div>
             <%}%>
         </div>
@@ -111,7 +104,7 @@
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-                     onClick="enviarJSON('/entrenador/rutinas/crear/sesion/' + <%=(readOnly ? "'ver'" : "'editar'")%>, '<%=readOnly ? "pos=" + i : "pos=" + i + "&oldSesion=" + URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>')">
+                     onClick="<%=readOnly ? ("goVerSesion(" + sesion.getId() + ")") : ("goEditarSesion(" + i + ")")%>">
                     <div class="d-flex flex-column justify-content-center align-items-center"
                          alt="Borrar" style="width:50px; height:50px">
                         <span class="h4 mb-0">Día</span>
@@ -124,7 +117,7 @@
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar', 'pos=<%= i %>&oldSesion=<%=URLEncoder.encode(gson.toJson(sesion), StandardCharsets.UTF_8)%>')" style="cursor: pointer; text-decoration: none;">
+                        <div onClick="goCrearSesion(<%= i %>)" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
                         <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%= i %>')">
@@ -141,22 +134,42 @@
         <%if (!readOnly) {%>
             <div class="row">
                 <div class="col-12 d-flex justify-content-end">
-                    <button onClick="enviarJSON('/entrenador/rutinas/guardar');" class="btn btn-primary"><%=rutinaExists ? "Guardar" : "Crear"%></button>
+                    <button onClick="goGuardarRutina();" class="btn btn-primary"><%=rutinaExists ? "Guardar" : "Crear"%></button>
                 </div>
             </div>
         <%}%>
     </div>
 <script>
-    function enviarJSON(action, additionalParams="") {
-        cache.id = document.getElementById("rutinaId").value;
-        cache.nombre = document.getElementById("nombre").value;
-        cache.dificultad = document.getElementById("dificultad").value;
-        cache.descripcion = document.getElementById("descripcion").value;
+    function goPage(action, arguments="") {
+        const nombre = document.getElementById("nombre").value;
+        const dificultad = document.getElementById("dificultad").value;
+        const descripcion = document.getElementById("descripcion").value;
 
-        var newCache = encodeURIComponent(JSON.stringify(cache));
+        window.location.href = action +
+            "?nombre=" + nombre +
+            "&dificultad=" + dificultad +
+            "&descripcion=" + descripcion +
+            (arguments.length === 0 ? "" : "&") + arguments;
+    }
 
-        window.location.href =
-            action + "?cache=" + newCache + (additionalParams.length > 0 ? "&" : "") + additionalParams;
+    function goVerSesion(id) {
+        window.location.href = '/entrenador/rutinas/crear/sesion/ver?id=' + id; // no necesita el nombre dificultad y demas
+    }
+
+    function goCrearSesion() {
+        goPage('/entrenador/rutinas/crear/sesion/editar');
+    }
+
+    function goEditarSesion(pos) {
+        goPage('/entrenador/rutinas/crear/sesion/editar', "pos=" + pos);
+    }
+
+    function goBorrarSesion(pos) {
+        goPage('/entrenador/rutinas/crear/sesion/borrar', "pos=" + pos);
+    }
+
+    function goGuardarRutina() {
+        goPage('/entrenador/rutinas/guardar');
     }
 
     function showDeleteModal(nombre, pos) {
@@ -165,7 +178,9 @@
         const modalButton = document.getElementById("delete-modal-button");
 
         modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la sesión <b>` + nombre + `</b>?`;
-        modalButton.onclick = () => { enviarJSON('/entrenador/rutinas/crear/sesion/borrar', 'pos=' + pos) };
+        modalButton.onclick = () => {
+            goBorrarSesion(pos)
+        };
 
         deleteModal.show();
     }

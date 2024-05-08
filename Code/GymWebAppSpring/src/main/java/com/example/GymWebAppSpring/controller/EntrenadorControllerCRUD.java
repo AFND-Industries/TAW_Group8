@@ -8,6 +8,7 @@ import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/entrenador/rutinas")
@@ -55,13 +57,13 @@ public class EntrenadorControllerCRUD {
     @Autowired
     protected EjercicioRepository ejercicioRepository;
 
-    @Autowired
-    protected Gson gson;
-
     @GetMapping("")
-    public String doRutinas(HttpSession session, Model model) {
+    public String doRutinas(Model model, HttpSession session) {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
+
+        // Para que siempre que se termine una sesion se borre una cache, aunque haya veces que este vacia ya
+        session.removeAttribute("cache");
 
         Usuario entrenador = AuthUtils.getUser(session);
         List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
@@ -72,46 +74,41 @@ public class EntrenadorControllerCRUD {
     }
 
     @GetMapping("/ver")
-    public String doVerRutina(@RequestParam(value = "cache", defaultValue = "") String cache,
-                              @RequestParam(value = "id", required = false) Integer id, Model model) {
-        RutinaArgument rutina;
-        if (!cache.isEmpty())
-            rutina = gson.fromJson(cache, RutinaArgument.class);
-        else {
-            Rutina r = rutinaRepository.findById(id).orElse(null);
-            List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
-            List<SesionArgument> sesiones = new ArrayList<>();
-            for (Sesionentrenamiento s : ss) {
-                List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s);
-                sesiones.add(new SesionArgument(s, ee));
-            }
-            rutina = new RutinaArgument(r, sesiones);
+    public String doVerRutina(@RequestParam("id") Integer id,
+                              Model model, HttpSession session) {
+        Rutina r = rutinaRepository.findById(id).orElse(null);
+        List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
+        List<SesionArgument> sesiones = new ArrayList<>();
+        for (Sesionentrenamiento s : ss) {
+            List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s);
+            sesiones.add(new SesionArgument(s, ee));
         }
+        RutinaArgument rutina = new RutinaArgument(r, sesiones);
 
         model.addAttribute("readOnly", true);
-        model.addAttribute("cache", gson.toJson(rutina));
+        session.setAttribute("cache", rutina);
 
         return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/crear")
-    public String doCrearRutina(@RequestParam(value = "cache", defaultValue = "") String cache, Model model) {
+    public String doCrearRutina(HttpSession session) {
         RutinaArgument rutina = new RutinaArgument();
         rutina.setId(-1);
 
-        model.addAttribute("cache", gson.toJson(rutina));
+        session.setAttribute("cache", rutina);
 
         return "/entrenador/crud/rutina";
     }
 
 
     @GetMapping("/editar")
-    public String doEditarRutina(@RequestParam(value = "cache", defaultValue = "") String cache,
-                                 @RequestParam(value = "id", required = false) Integer id, Model model) {
+    public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id,
+                                 HttpSession session) {
         RutinaArgument rutina;
-        if (!cache.isEmpty())
-            rutina = gson.fromJson(cache, RutinaArgument.class);
-        else {
+        if (session.getAttribute("cache") != null) {
+            rutina = (RutinaArgument) session.getAttribute("cache");
+        } else {
             Rutina r = rutinaRepository.findById(id).orElse(null);
             List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
             List<SesionArgument> sesiones = new ArrayList<>();
@@ -122,15 +119,21 @@ public class EntrenadorControllerCRUD {
             rutina = new RutinaArgument(r, sesiones);
         }
 
-        model.addAttribute("cache", gson.toJson(rutina));
+        session.setAttribute("cache", rutina);
 
         return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/guardar")
-    public String doGuardarRutina(@RequestParam("cache") String cache,
+    public String doGuardarRutina(@RequestParam("nombre") String nombre,
+                                  @RequestParam("dificultad") Integer dificultad,
+                                  @RequestParam("descripcion") String descripcion,
                                   HttpSession session) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+        // Las modificaciones de rutina antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        rutina.setNombre(nombre);
+        rutina.setDificultad(dificultad);
+        rutina.setDescripcion(descripcion);
 
         // RUTINA
         // CREAR O MODIFICAR DATOS RUTINA
@@ -211,7 +214,7 @@ public class EntrenadorControllerCRUD {
                 }
 
                 es.setEjercicio(ejercicioRepository.findById(ejercicio.getEjercicio()).orElse(null));
-                es.setEspecificaciones(gson.toJson(ejercicio.getEspecificaciones()));
+                es.setEspecificaciones(new Gson().toJson(ejercicio.getEspecificaciones()));
                 es.setOrden(j + 1);
                 es.setSesionentrenamiento(s);
 
@@ -239,164 +242,252 @@ public class EntrenadorControllerCRUD {
     /*
         SESIONES DE ENTRENAMIENTO
      */
+    @GetMapping("/crear/sesion/volver")
+    public String doVolverFromSesion(HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int sesionPos = (int) session.getAttribute("sesionPos");
+        SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
+
+        rutina.getSesiones().set(sesionPos, oldSesion);
+
+        session.removeAttribute("sesionPos");
+        session.removeAttribute("oldSesion");
+
+        return "redirect:/entrenador/rutinas/editar";
+    }
+
     @GetMapping("/crear/sesion/ver")
-    public String doVerSesion(@RequestParam("cache") String cache,
-                              @RequestParam("pos") Integer pos, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
-        SesionArgument sesion = rutina.getSesiones().get(pos);
+    public String doVerSesion(@RequestParam(value = "id", required = false) Integer id,
+                              Model model, HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        List<SesionArgument> sesiones = rutina.getSesiones();
+
+        int i = 0;
+        SesionArgument sesion = null;
+        while (i < sesiones.size() && sesion == null) {
+            if (Objects.equals(sesiones.get(i).getId(), id))
+                sesion = sesiones.get(i);
+            i++;
+        }
 
         List<Integer> ids = new ArrayList<>();
         for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
             ids.add(ejerciciosesion.getEjercicio());
-        List<Ejercicio> ejercicios = ejercicioRepository.findAll();
+        List<Ejercicio> ejercicios = ejercicioRepository.findAll(); //////////////////////////////////////////////////////////////////////////////////
 
         model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("readOnly", true);
-        model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", "{}");
-        model.addAttribute("cache", gson.toJson(rutina));
+
+        session.setAttribute("sesionPos", i - 1);
+        session.setAttribute("oldSesion", new SesionArgument());
 
         return "/entrenador/crud/sesion";
     }
 
     @GetMapping("/crear/sesion")
-    public String doCrearSesion(@RequestParam("cache") String cache, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    public String doCrearSesion(@RequestParam("nombre") String nombre,
+                                @RequestParam("dificultad") Integer dificultad,
+                                @RequestParam("descripcion") String descripcion,
+                                HttpSession session) {
+        // Las modificaciones de rutina antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        rutina.setNombre(nombre);
+        rutina.setDificultad(dificultad);
+        rutina.setDescripcion(descripcion);
+
         SesionArgument sesion = new SesionArgument();
         sesion.setId(-1);
 
         rutina.getSesiones().add(sesion);
 
-        model.addAttribute("sesionPos", rutina.getSesiones().size() - 1);
-        model.addAttribute("oldSesion", "{}");
-        model.addAttribute("cache", gson.toJson(rutina));
+        session.setAttribute("sesionPos", rutina.getSesiones().size() - 1);
+        session.setAttribute("oldSesion", new SesionArgument());
 
         return "/entrenador/crud/sesion";
     }
 
     @GetMapping("/crear/sesion/editar")
-    public String doEditarSesion(@RequestParam("cache") String cache,
-                                 @RequestParam("oldSesion") String oldSesion,
-                                 @RequestParam("pos") Integer pos, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    public String doEditarSesion(@RequestParam(value = "nombre", required = false) String nombre,
+                                 @RequestParam(value = "dificultad", required = false) Integer dificultad,
+                                 @RequestParam(value = "descripcion", required = false) String descripcion,
+                                 @RequestParam(value = "pos", required = false) Integer pos,
+                                 Model model, HttpSession session) {
+        // Las modificaciones de rutina antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        if (nombre != null) rutina.setNombre(nombre);
+        if (dificultad != null) rutina.setDificultad(dificultad);
+        if (descripcion != null) rutina.setDescripcion(descripcion);
+
         SesionArgument sesion = rutina.getSesiones().get(pos);
 
         List<Integer> ids = new ArrayList<>();
         for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
             ids.add(ejerciciosesion.getEjercicio());
-        List<Ejercicio> ejercicios = ejercicioRepository.findAll();
+        List<Ejercicio> ejercicios = ejercicioRepository.findAll(); //////////////////////////////////////////////////////////////
 
         model.addAttribute("ejercicios", ejercicios);
-        model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", oldSesion);
-        model.addAttribute("cache", gson.toJson(rutina));
+
+        if (session.getAttribute("oldSesion") == null)
+            session.setAttribute("oldSesion", sesion);
+
+        if (session.getAttribute("sesionPos") == null)
+            session.setAttribute("sesionPos", pos);
 
         return "/entrenador/crud/sesion";
     }
 
+    @GetMapping("/crear/sesion/guardar")
+    public String doGuardarSesion(@RequestParam("nombre") String nombre,
+                                  @RequestParam("descripcion") String descripcion,
+                                  HttpSession session) {
+        // Las modificaciones de sesion antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
+
+        SesionArgument sesion = rutina.getSesiones().get(pos);
+        sesion.setNombre(nombre);
+        sesion.setDescripcion(descripcion);
+
+        session.removeAttribute("sesionPos");
+        session.removeAttribute("oldSesion");
+
+        return "redirect:/entrenador/rutinas/editar";
+    }
+
     @GetMapping("/crear/sesion/borrar")
-    public String doBorrarSesion(@RequestParam("cache") String cache,
-                                 @RequestParam("pos") Integer pos) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    public String doBorrarSesion(@RequestParam("nombre") String nombre,
+                                 @RequestParam("dificultad") Integer dificultad,
+                                 @RequestParam("descripcion") String descripcion,
+                                 @RequestParam("pos") Integer pos,
+                                 HttpSession session) {
+        // Las modificaciones de rutina antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        rutina.setNombre(nombre);
+        rutina.setDificultad(dificultad);
+        rutina.setDescripcion(descripcion);
+
         rutina.getSesiones().remove((int) pos);
 
-        String jsonCache = gson.toJson(rutina);
-        String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);
-
-        return "redirect:/entrenador/rutinas/editar?cache=" + encodedCache;
+        return "redirect:/entrenador/rutinas/editar";
     }
 
     /*
         EJERCICIOS
      */
     @GetMapping("/crear/ejercicio/seleccionar")
-    public String doSeleccionarEjercicio(@RequestParam("cache") String cache,
-                                         @RequestParam("oldSesion") String oldSesion,
-                                         @RequestParam("pos") Integer pos, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
-        List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
+    public String doSeleccionarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
+                                         @RequestParam(value = "descripcion", required = false) String descripcion,
+                                         Model model, HttpSession session) {
+        // Las modificaciones de sesion antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
 
+        SesionArgument sesion = rutina.getSesiones().get(pos);
+        if (nombre != null) sesion.setNombre(nombre);
+        if (descripcion != null) sesion.setDescripcion(descripcion);
+
+        List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
         EjercicioArgument ejercicio = new EjercicioArgument();
         ejercicio.setId(-1);
 
-        rutina.getSesiones().get(pos).getEjercicios().add(ejercicio);
+        sesion.getEjercicios().add(ejercicio);
 
         model.addAttribute("ejercicioPos", -1);
-        model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", gson.toJson(oldSesion));
-        model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejerciciosBase", ejerciciosBase);
 
         return "/entrenador/crud/seleccionar_ejercicio";
     }
 
     @GetMapping("/crear/ejercicio/ver")
-    public String doVerEjercicio(@RequestParam("cache") String cache,
-                                    @RequestParam("ejercicioPos") Integer ejercicioPos,
-                                    @RequestParam("oldSesion") String oldSesion,
-                                    @RequestParam("pos") Integer pos,
-                                    @RequestParam("ejbase") Integer ejbase, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
-        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+    public String doVerEjercicio(@RequestParam("id") Integer id,
+                                 Model model, HttpSession session) {
+        Ejerciciosesion ejerciciosesion = ejercicioSesionRepository.findById(id).orElse(null);
+        Ejercicio ejercicioBase = ejerciciosesion.getEjercicio();
+
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        List<SesionArgument> sesiones = rutina.getSesiones();
+
+        int pos = -1;
+        for (SesionArgument sesione : sesiones) {
+            List<EjercicioArgument> ejercicios = sesione.getEjercicios();
+            for (int j = 0; j < ejercicios.size(); j++) {
+                if (ejercicios.get(j).getId().equals(id)) {
+                    pos = j;
+                    break;
+                }
+            }
+            if (pos != -1)
+                break;
+        }
 
         model.addAttribute("readOnly", true);
-        model.addAttribute("ejercicioPos", ejercicioPos);
-        model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", gson.toJson(oldSesion));
-        model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejercicioBase", ejercicioBase);
+        model.addAttribute("ejercicioPos", pos);
 
         return "entrenador/crud/ejercicio_sesion";
     }
 
     @GetMapping("/crear/ejercicio")
-    public String doCrearEjercicio(@RequestParam("cache") String cache,
-                                   @RequestParam("ejercicioPos") Integer ejercicioPos,
-                                   @RequestParam("oldSesion") String oldSesion,
-                                   @RequestParam("pos") Integer pos,
-                                   @RequestParam("ejbase") Integer ejbase, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    public String doCrearEjercicio(@RequestParam("ejbase") Integer ejbase,
+                                   Model model) {
         Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
 
-        model.addAttribute("ejercicioPos", ejercicioPos);
-        model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", gson.toJson(oldSesion));
-        model.addAttribute("cache", gson.toJson(rutina));
         model.addAttribute("ejercicioBase", ejercicioBase);
 
         return "entrenador/crud/ejercicio_sesion";
     }
 
     @GetMapping("/crear/ejercicio/editar")
-    public String doEditarEjercicio(@RequestParam("cache") String cache,
-                                    @RequestParam("ejercicioPos") Integer ejercicioPos,
-                                    @RequestParam("oldSesion") String oldSesion,
-                                    @RequestParam("pos") Integer pos,
-                                    @RequestParam("ejbase") Integer ejbase, Model model) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
-        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+    public String doEditarEjercicio(@RequestParam("nombre") String nombre,
+                                    @RequestParam("descripcion") String descripcion,
+                                    @RequestParam("ejPos") Integer ejPos,
+                                    Model model, HttpSession session) {
+        // Las modificaciones de sesion antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
 
-        model.addAttribute("ejercicioPos", ejercicioPos);
-        model.addAttribute("sesionPos", pos);
-        model.addAttribute("oldSesion", gson.toJson(oldSesion));
-        model.addAttribute("cache", gson.toJson(rutina));
+        SesionArgument sesion = rutina.getSesiones().get(pos);
+        sesion.setNombre(nombre);
+        sesion.setDescripcion(descripcion);
+
+        int ejbase = sesion.getEjercicios().get(ejPos).getEjercicio();
+        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
         model.addAttribute("ejercicioBase", ejercicioBase);
 
         return "entrenador/crud/ejercicio_sesion";
     }
 
+    @GetMapping("/crear/ejercicio/guardar")
+    public String doGuardarEjercicio(@RequestParam("especificaciones") String especificaciones,
+                                     @RequestParam("ejpos") Integer ejpos,
+                                     HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
+        SesionArgument sesion = rutina.getSesiones().get(pos);
+        EjercicioArgument ejercicioSesion = sesion.getEjercicios().get(ejpos);
+
+        Gson gson = new Gson();
+        JsonObject esp = gson.fromJson(especificaciones, JsonObject.class);
+        ejercicioSesion.setEspecificaciones(esp);
+
+        return "redirect:/crear/sesion/editar";
+    }
+
     @GetMapping("/crear/ejercicio/borrar")
-    public String doBorrarEjercicio(@RequestParam("cache") String cache,
-                                    @RequestParam("oldSesion") String oldSesion,
-                                    @RequestParam("pos") Integer pos,
-                                    @RequestParam("ejPos") Integer ejPos) {
-        RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    public String doBorrarEjercicio(@RequestParam("nombre") String nombre,
+                                    @RequestParam("descripcion") String descripcion,
+                                    @RequestParam("ejPos") Integer ejPos,
+                                    HttpSession session) {
+        // Las modificaciones de sesion antes de venir a esta pantalla
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
+
+        SesionArgument sesion = rutina.getSesiones().get(pos);
+        sesion.setNombre(nombre);
+        sesion.setDescripcion(descripcion);
+
         rutina.getSesiones().get(pos).getEjercicios().remove((int) ejPos);
 
-        String jsonCache = gson.toJson(rutina);
-        String encodedCache = URLEncoder.encode(jsonCache, StandardCharsets.UTF_8);
-        String encodedOldSesion = URLEncoder.encode(oldSesion, StandardCharsets.UTF_8);
-
-        return "redirect:/entrenador/rutinas/crear/sesion/editar?cache=" + encodedCache + "&oldSesion=" + encodedOldSesion + "&pos=" + pos;
+        return "redirect:/entrenador/rutinas/crear/sesion/editar";
     }
 }

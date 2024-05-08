@@ -4,7 +4,6 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %>
-<%@ page import="java.util.Arrays" %>
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %><%--
   Created by IntelliJ IDEA.
   User: elgam
@@ -16,15 +15,12 @@
 
 <%
     // AÑADIR UN OJITO PARA PODER VER EL EJERCICIO BASE SOBRE EL QUE ESTAMOS TRABAJANDO
-    Gson gson = new Gson();
-    String cache = (String) request.getAttribute("cache");
-    RutinaArgument rutina = gson.fromJson(cache, RutinaArgument.class);
+    RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
 
-    Integer sesionPos = (Integer) request.getAttribute("sesionPos");
+    Integer sesionPos = (Integer) session.getAttribute("sesionPos");
     Integer ejercicioPos = (Integer) request.getAttribute("ejercicioPos");
     Ejercicio ejercicioBase = (Ejercicio) request.getAttribute("ejercicioBase");
-    String oldSesion = (String) request.getAttribute("oldSesion");
-    List<String> tiposBase = gson.fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
+    List<String> tiposBase = new Gson().fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
@@ -35,6 +31,7 @@
     SesionArgument sesion = rutina.getSesiones().get(sesionPos);
     List<EjercicioArgument> ejercicios = sesion.getEjercicios();
     EjercicioArgument ejercicio = ejercicios.get(ejercicioPos);
+    System.out.println(new Gson().toJson(ejercicio.getEspecificaciones()));
 %>
 
 <html>
@@ -46,11 +43,6 @@
     <!-- Bootstrap Icons CSS Dependencies -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        const cache = <%=cache%>;
-        const oldSesion = <%=oldSesion%>;
-        console.log(<%=sesion.getEjercicios().size()%>);
-    </script>
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
@@ -62,7 +54,7 @@
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
                 <button class="btn btn-primary"
-                        onClick="enviarJSON('<%=ejercicioExists ? "/entrenador/rutinas/crear/sesion/" + (readOnly ? "ver" : "editar") : "/entrenador/rutinas/crear/ejercicio/seleccionar"%>', save=false)">Volver</button>
+                        onClick="<%=ejercicioExists ? (readOnly ? "goVolverVerSesion()" : "goVolverEditarSesion()") : "goSeleccionarEjercicio()"%>">Volver</button>
             </div>
         </div>
 
@@ -88,37 +80,35 @@
             <div class="row">
                 <div class="col-12 d-flex justify-content-end">
                     <button class="btn btn-primary"
-                    onClick="enviarJSON('/entrenador/rutinas/crear/sesion/editar')"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
+                    onClick="goGuardarEjercicio()"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
                 </div>
             </div>
         <%}%>
     </div>
 <script>
-    console.log(cache);
+    function goVolverEditarSesion() {
+        window.location.href = "/entrenador/rutinas/crear/sesion/editar";
+    }
 
-    function enviarJSON(action, save=true, additionalParams="") {
-        if (save) {
-            cache.sesiones[<%=sesionPos%>].ejercicios[<%=ejercicioPos%>] = {
-                "id": <%=ejercicio.getId()%>,
-                "ejercicio": <%=ejercicioBase.getId()%>,
-                "especificaciones": {
-                    <%for(int i = 0; i < tiposBase.size(); i++) {%>
-                        '<%=tiposBase.get(i)%>': document.getElementById("especificacion<%=i%>").value,
-                    <%}%>
-                }
-            }
-        } else {
-            if (!<%=ejercicioExists%>) {
-                cache.sesiones[<%=sesionPos%>].ejercicios.splice(<%=ejercicioPos == -1 ? rutina.getSesiones().get(sesionPos).getEjercicios().size() - 1 : ejercicioPos%>, 1);
-            }
+    function goVolverVerSesion() {
+        window.location.href = "/entrenador/rutinas/crear/sesion/ver?id=<%=sesion.getId()%>";
+    }
+
+    function goSeleccionarEjercicio() {
+        window.location.href = "/entrenador/rutinas/crear/ejericio/seleccionar";
+    }
+
+    function goGuardarEjercicio() {
+        const especificaciones = {
+            <%for(int i = 0; i < tiposBase.size(); i++) {%>
+            '<%=tiposBase.get(i)%>': document.getElementById("especificacion<%=i%>").value,
+            <%}%>
         }
 
-        const cacheString = encodeURIComponent(JSON.stringify(cache));
+        const especificacionesJSON = encodeURIComponent(JSON.stringify(especificaciones));
 
-        console.log(cache);
-        window.location.href =
-            action + "?cache=" + cacheString + "&oldSesion=" + encodeURIComponent(oldSesion) + "&pos=<%=sesionPos%>"
-            + (additionalParams.length > 0 ? "&" : "") + additionalParams;
+        window.location.href = "/entrenador/rutinas/crear/ejercicio/guardar?especificaciones="
+            + especificacionesJSON + "&ejpos=<%=ejercicioPos%>";
     }
 </script>
 </body>
