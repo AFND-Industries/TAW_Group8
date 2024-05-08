@@ -1,22 +1,18 @@
 package com.example.GymWebAppSpring.iu;
 
-import com.example.GymWebAppSpring.entity.Ejercicio;
 import com.example.GymWebAppSpring.entity.Ejerciciosesion;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.gson.JsonObject;
 
 public class EjercicioArgument {
     private Integer id;
     private Integer ejercicio;
-    private List<String> especificaciones;
+    private JsonObject especificaciones;
 
     public EjercicioArgument() {
         this.id = -100;
         this.ejercicio = -1;
-        this.especificaciones = new ArrayList<>();
+        this.especificaciones = new JsonObject();
     }
 
     public EjercicioArgument(Ejerciciosesion e) {
@@ -24,7 +20,7 @@ public class EjercicioArgument {
         this.ejercicio = e.getEjercicio().getId();
 
         Gson gson = new Gson();
-        this.especificaciones = Arrays.asList(gson.fromJson(e.getEspecificaciones(), String[].class));
+        this.especificaciones = gson.fromJson(e.getEspecificaciones(), JsonObject.class);
     }
 
     public Integer getId() {
@@ -43,11 +39,11 @@ public class EjercicioArgument {
         this.ejercicio = ejercicio;
     }
 
-    public List<String> getEspecificaciones() {
+    public JsonObject getEspecificaciones() {
         return especificaciones;
     }
 
-    public void setEspecificaciones(List<String> especificaciones) {
+    public void setEspecificaciones(JsonObject especificaciones) {
         this.especificaciones = especificaciones;
     }
 }

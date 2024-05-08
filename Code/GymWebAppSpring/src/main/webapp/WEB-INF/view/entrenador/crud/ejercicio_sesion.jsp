@@ -78,7 +78,7 @@
                     <span class="h4 text-secondary"><%=tiposBase.get(i)%></span><br/>
                 </div>
                 <div class="col-3">
-                    <input <%=readOnly ? "disabled" : ""%> value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(i)%>"
+                    <input <%=readOnly ? "disabled" : ""%> value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(tiposBase.get(i)).getAsString()%>"
                            id="especificacion<%=i%>" type="text" class="form-control mt-2">
                 </div>
             </div>
@@ -101,11 +101,11 @@
             cache.sesiones[<%=sesionPos%>].ejercicios[<%=ejercicioPos%>] = {
                 "id": <%=ejercicio.getId()%>,
                 "ejercicio": <%=ejercicioBase.getId()%>,
-                "especificaciones": [
+                "especificaciones": {
                     <%for(int i = 0; i < tiposBase.size(); i++) {%>
-                        document.getElementById("especificacion<%=i%>").value,
+                        '<%=tiposBase.get(i)%>': document.getElementById("especificacion<%=i%>").value,
                     <%}%>
-                ]
+                }
             }
         } else {
             if (!<%=ejercicioExists%>) {

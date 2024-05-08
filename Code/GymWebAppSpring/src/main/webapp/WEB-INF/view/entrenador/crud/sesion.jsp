@@ -147,7 +147,7 @@
                         String data = "";
                         List<String> tiposBase = gson.fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
                         for (int j = 0; j < tiposBase.size(); j++) {
-                            String especificacion = ejercicioSesion.getEspecificaciones().get(j);%>
+                            String especificacion = ejercicioSesion.getEspecificaciones().get(tiposBase.get(j)).getAsString();%>
                             <%="<span style='color: black'><b>" + tiposBase.get(j) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
                          }
                     %>
