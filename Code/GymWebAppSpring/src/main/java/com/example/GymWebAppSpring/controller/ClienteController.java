@@ -3,13 +3,8 @@ package com.example.GymWebAppSpring.controller;
 import com.example.GymWebAppSpring.dao.*;
 import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +21,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/client")
-public class ClienteCotroller {
+public class ClienteController {
 
 
     @Autowired
