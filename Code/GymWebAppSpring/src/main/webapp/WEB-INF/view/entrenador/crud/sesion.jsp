@@ -171,14 +171,14 @@
     <%}%>
 </div>
 <script>
-    function goPage(action, arguments="") {
+    function goPage(action, add="") {
         const nombre = document.getElementById("nombre").value;
         const descripcion = document.getElementById("descripcion").value;
 
         window.location.href = action +
             "?nombre=" + nombre +
             "&descripcion=" + descripcion +
-            (arguments.length === 0 ? "" : "&") + arguments;
+            (add.length === 0 ? "" : "&") + add;
     }
 
     function goVolverEditarRutina() {
@@ -198,11 +198,11 @@
     }
 
     function goEditarEjercicio(ejPos) {
-        goPage("/entrenador/rutinas/crear/ejercicio/editar", "ejPos=" + ejPos);
+        goPage("/entrenador/rutinas/crear/ejercicio/editar", add = "ejPos=" + ejPos);
     }
 
     function goBorrarEjercicio(ejPos) {
-        goPage("/entrenador/rutinas/crear/ejercicio/borrar", "ejPos=" + ejPos);
+        goPage("/entrenador/rutinas/crear/ejercicio/borrar", add = "ejPos=" + ejPos);
     }
 
     function goGuardarSesion() {

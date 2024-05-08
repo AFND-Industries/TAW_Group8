@@ -140,16 +140,16 @@
         <%}%>
     </div>
 <script>
-    function goPage(action, arguments="") {
+    function goPage(action, add="") {
         const nombre = document.getElementById("nombre").value;
         const dificultad = document.getElementById("dificultad").value;
         const descripcion = document.getElementById("descripcion").value;
 
-        window.location.href = action +
+       window.location.href = action +
             "?nombre=" + nombre +
             "&dificultad=" + dificultad +
             "&descripcion=" + descripcion +
-            (arguments.length === 0 ? "" : "&") + arguments;
+            (add.length === 0 ? "" : "&") + add;
     }
 
     function goVerSesion(id) {
@@ -157,15 +157,15 @@
     }
 
     function goCrearSesion() {
-        goPage('/entrenador/rutinas/crear/sesion/editar');
+        goPage('/entrenador/rutinas/crear/sesion');
     }
 
     function goEditarSesion(pos) {
-        goPage('/entrenador/rutinas/crear/sesion/editar', "pos=" + pos);
+        goPage(action = '/entrenador/rutinas/crear/sesion/editar', add = 'pos=' + pos);
     }
 
     function goBorrarSesion(pos) {
-        goPage('/entrenador/rutinas/crear/sesion/borrar', "pos=" + pos);
+        goPage('/entrenador/rutinas/crear/sesion/borrar', 'pos=' + pos);
     }
 
     function goGuardarRutina() {

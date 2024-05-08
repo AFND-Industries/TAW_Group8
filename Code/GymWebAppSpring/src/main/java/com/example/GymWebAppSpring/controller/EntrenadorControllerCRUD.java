@@ -248,7 +248,8 @@ public class EntrenadorControllerCRUD {
         int sesionPos = (int) session.getAttribute("sesionPos");
         SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
 
-        rutina.getSesiones().set(sesionPos, oldSesion);
+        if (oldSesion.getId() < -1) rutina.getSesiones().remove(sesionPos);
+        else rutina.getSesiones().set(sesionPos, oldSesion);
 
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
@@ -345,6 +346,7 @@ public class EntrenadorControllerCRUD {
         int pos = (int) session.getAttribute("sesionPos");
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
+        sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
         sesion.setNombre(nombre);
         sesion.setDescripcion(descripcion);
 
