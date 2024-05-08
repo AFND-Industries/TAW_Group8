@@ -142,7 +142,7 @@
                             seriesArray[j] = series;
                     %>
                     <script>
-                        resultados.push(new Array(<%=series%>));
+                        resultados.push([]);
                         serieActualArray.push(0);
                         series.push(<%=series%>);
 
@@ -225,6 +225,7 @@
                                                         // Convertir el objeto JSON a una cadena
                                                         var datosString = JSON.stringify(datos);
                                                         resultados[index].push(datosString);
+                                                        console.log(resultados)
                                                         console.log(datosString);
                                                         document.getElementById("flexSwitchCheckDefault").checked = false;
                                                         document.getElementById("contador" + index).value = "0";
@@ -317,15 +318,20 @@
         // Supongamos que tienes una variable JavaScript llamada miVariable
         var vacio = {
             repeticiones: 0,
-            mpeso:  "NO"
+            mpeso: "NO"
         };
-        for (let i = 0; i < resultados.length; i++) {
-            for (let j = 0; j < resultados[i].length; j++) {
-                if (resultados[i][j] === undefined) {
+        for (let i = 0; i < <%=ejercicios.size()%>; i++) {
+            for (let j = 0; j < series[i]; j++) {
+                if (resultados[i][j] === null) {
                     resultados[i][j] = JSON.stringify(vacio);
+                    console.log("adding")
+                    console.log(resultados[i][j])
                 }
+                console.log("miau2")
             }
+            console.log("miau1")
         }
+
         var miVariable = JSON.stringify(resultados);
         console.log(resultados)
         console.log(miVariable)
