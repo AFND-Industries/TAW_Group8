@@ -31,7 +31,7 @@
     SesionArgument sesion = rutina.getSesiones().get(sesionPos);
     List<EjercicioArgument> ejercicios = sesion.getEjercicios();
     EjercicioArgument ejercicio = ejercicios.get(ejercicioPos);
-    System.out.println(new Gson().toJson(ejercicio.getEspecificaciones()));
+    ejercicio.setEjercicio(ejercicioBase.getId());
 %>
 
 <html>
@@ -54,7 +54,7 @@
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
                 <button class="btn btn-primary"
-                        onClick="<%=ejercicioExists ? (readOnly ? "goVolverVerSesion()" : "goVolverEditarSesion()") : "goSeleccionarEjercicio()"%>">Volver</button>
+                        onClick="<%=ejercicioExists ? (readOnly ? "goVolverVerSesion()" : "goVolverEditarSesion()") : "doVolverToSeleccionar()"%>">Volver</button>
             </div>
         </div>
 
@@ -94,8 +94,8 @@
         window.location.href = "/entrenador/rutinas/crear/sesion/ver?id=<%=sesion.getId()%>";
     }
 
-    function goSeleccionarEjercicio() {
-        window.location.href = "/entrenador/rutinas/crear/ejericio/seleccionar";
+    function doVolverToSeleccionar() {
+        window.location.href = "/entrenador/rutinas/crear/ejercicio/volver?ejpos=<%=ejercicioPos%>";
     }
 
     function goGuardarEjercicio() {

@@ -352,7 +352,8 @@ public class EntrenadorControllerCRUD {
         int pos = (int) session.getAttribute("sesionPos");
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
-        sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
+        if (sesion.getId() < -1)
+            sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
         sesion.setNombre(nombre);
         sesion.setDescripcion(descripcion);
 
@@ -382,6 +383,17 @@ public class EntrenadorControllerCRUD {
     /*
         EJERCICIOS
      */
+    @GetMapping("/crear/ejercicio/volver")
+    public String doVolverFromCrearEjercicio(@RequestParam("ejpos") Integer ejpos,
+                                             HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
+        SesionArgument sesion = rutina.getSesiones().get(pos);
+        sesion.getEjercicios().remove((int) ejpos);
+
+        return "redirect:/entrenador/rutinas/crear/ejercicio/seleccionar";
+    }
+
     @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
                                          @RequestParam(value = "descripcion", required = false) String descripcion,
@@ -395,12 +407,7 @@ public class EntrenadorControllerCRUD {
         if (descripcion != null) sesion.setDescripcion(descripcion);
 
         List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
-        EjercicioArgument ejercicio = new EjercicioArgument();
-        ejercicio.setId(-1);
 
-        sesion.getEjercicios().add(ejercicio);
-
-        model.addAttribute("ejercicioPos", -1);
         model.addAttribute("ejerciciosBase", ejerciciosBase);
 
         return "/entrenador/crud/seleccionar_ejercicio";
@@ -437,9 +444,16 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio")
     public String doCrearEjercicio(@RequestParam("ejbase") Integer ejbase,
-                                   Model model) {
-        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+                                   Model model, HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int pos = (int) session.getAttribute("sesionPos");
+        SesionArgument sesion = rutina.getSesiones().get(pos);
 
+        if (sesion.getEjercicios().isEmpty() || sesion.getEjercicios().getLast().getId() >= -1)
+            sesion.getEjercicios().add(new EjercicioArgument());
+
+        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+        model.addAttribute("ejercicioPos", -1);
         model.addAttribute("ejercicioBase", ejercicioBase);
 
         return "entrenador/crud/ejercicio_sesion";
@@ -474,6 +488,8 @@ public class EntrenadorControllerCRUD {
         int pos = (int) session.getAttribute("sesionPos");
         SesionArgument sesion = rutina.getSesiones().get(pos);
         EjercicioArgument ejercicioSesion = sesion.getEjercicios().get(ejpos);
+        if (ejercicioSesion.getId() < -1)
+            ejercicioSesion.setId(-1);
 
         Gson gson = new Gson();
         JsonObject esp = gson.fromJson(especificaciones, JsonObject.class);
