@@ -42,6 +42,11 @@ public class EntrenadorControllerCRUD {
     // meter el campo DIA en sesion y que se ordene por eso
     // meter el boton del ojito en editar/ver en el ejercicio
     // hacer FILTROS DE BUSQUEDA
+
+    // FILTROS DE BUSQUEDA (FACIL)
+    // JAVASCRIPT COMPROBAR CAMPOS VALIDOS LO TIPICO DE FORMULARIO
+    // RECUPERAR LO QUE ESTABAS HACIENDO SESION
+    // PONER PARA VOLVER UN MODAL PQ SE PIERDEN LOS CAMBIOS SABE
     @Autowired
     protected RutinaRepository rutinaRepository;
 
