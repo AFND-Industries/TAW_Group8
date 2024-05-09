@@ -64,6 +64,8 @@ public class EntrenadorControllerCRUD {
 
         // Para que siempre que se termine una sesion se borre una cache, aunque haya veces que este vacia ya
         session.removeAttribute("cache");
+        session.removeAttribute("sesionPos");
+        session.removeAttribute("oldSesion");
 
         Usuario entrenador = AuthUtils.getUser(session);
         List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
@@ -296,13 +298,14 @@ public class EntrenadorControllerCRUD {
         rutina.setDificultad(dificultad);
         rutina.setDescripcion(descripcion);
 
-        SesionArgument sesion = new SesionArgument();
-        sesion.setId(-1);
+        if (session.getAttribute("oldSesion") == null) { // Para que si recargas la pagina no se cree otra
+            SesionArgument sesion = new SesionArgument();
 
-        rutina.getSesiones().add(sesion);
+            rutina.getSesiones().add(sesion);
 
-        session.setAttribute("sesionPos", rutina.getSesiones().size() - 1);
-        session.setAttribute("oldSesion", new SesionArgument());
+            session.setAttribute("sesionPos", rutina.getSesiones().size() - 1);
+            session.setAttribute("oldSesion", sesion); // al crear no hay ninguna antigua, metemos la misma que estamos creando
+        }
 
         return "/entrenador/crud/sesion";
     }
@@ -319,7 +322,10 @@ public class EntrenadorControllerCRUD {
         if (dificultad != null) rutina.setDificultad(dificultad);
         if (descripcion != null) rutina.setDescripcion(descripcion);
 
-        SesionArgument sesion = rutina.getSesiones().get(pos);
+        Object sesionPosObject = session.getAttribute("sesionPos");
+        int sesionPos = sesionPosObject != null ? (int) sesionPosObject : pos;
+
+        SesionArgument sesion = rutina.getSesiones().get(sesionPos);
 
         List<Integer> ids = new ArrayList<>();
         for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
@@ -332,7 +338,7 @@ public class EntrenadorControllerCRUD {
             session.setAttribute("oldSesion", sesion);
 
         if (session.getAttribute("sesionPos") == null)
-            session.setAttribute("sesionPos", pos);
+            session.setAttribute("sesionPos", sesionPos);
 
         return "/entrenador/crud/sesion";
     }
@@ -455,6 +461,7 @@ public class EntrenadorControllerCRUD {
         int ejbase = sesion.getEjercicios().get(ejPos).getEjercicio();
         Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
         model.addAttribute("ejercicioBase", ejercicioBase);
+        model.addAttribute("ejercicioPos", ejPos);
 
         return "entrenador/crud/ejercicio_sesion";
     }
@@ -472,7 +479,7 @@ public class EntrenadorControllerCRUD {
         JsonObject esp = gson.fromJson(especificaciones, JsonObject.class);
         ejercicioSesion.setEspecificaciones(esp);
 
-        return "redirect:/crear/sesion/editar";
+        return "redirect:/entrenador/rutinas/crear/sesion/editar";
     }
 
     @GetMapping("/crear/ejercicio/borrar")

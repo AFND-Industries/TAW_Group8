@@ -117,7 +117,7 @@
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div onClick="goCrearSesion(<%= i %>)" style="cursor: pointer; text-decoration: none;">
+                        <div onClick="goEditarSesion(<%= i %>)" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
                         <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%= i %>')">
