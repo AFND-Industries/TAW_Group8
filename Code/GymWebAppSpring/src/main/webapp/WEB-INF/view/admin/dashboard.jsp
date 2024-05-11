@@ -44,7 +44,7 @@
 <div class="container">
     <div class="row g-5">
         <div class="col-12">
-            <a href="/admin/users" class="text">
+            <a href="/admin/users/" class="text">
                 <div class="card card-btn">
                     <div class="card-body d-flex justify-content-center align-items-center p-5">
                         <i class="bi bi-person-lines-fill me-2 fs-4"></i> <span class="fs-4">Usuarios</span>
@@ -53,7 +53,7 @@
             </a>
         </div>
         <div class="col-md-6 col-12">
-            <a href="/admin/">
+            <a href="/admin/exercises/">
                 <div class="card card-btn">
                     <div class="card-body d-flex justify-content-center align-items-center  p-5">
                         <i class="bi bi-list-nested me-2 fs-4"></i> <span class="fs-4">Ejercicios</span>

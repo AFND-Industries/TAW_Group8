@@ -42,7 +42,7 @@
                         if (user.getTipo().getNombre().equals("Administrador")){
                     %>
                     <li><a class="dropdown-item" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2" style="font-size: 16px"></i>Panel de control</a></li>
-                    <li><a class="dropdown-item" href="/admin/users"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Usuarios</a></li>
+                    <li><a class="dropdown-item" href="/admin/users/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Usuarios</a></li>
                     <%
                         } else if (user.getTipo().getNombre().equals("Entrenador")){
                     %>

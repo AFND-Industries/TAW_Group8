@@ -29,7 +29,7 @@
 <jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h2 class="text-center"><%=user != null ? (edit ? "Editar" : "Ver") : "Registro de un nuevo"%> usuario</h2>
-    <form class="row g-3 was-validated" method="post" action="<%=user != null ? "/admin/edit" : "/admin/register"%>">
+    <form class="row g-3 was-validated" method="post" action="<%=user != null ? "/admin/users/edit" : "/admin/users/register"%>">
         <input type="hidden" value="<%=user != null ? user.getId() : ""%>" name="id"/>
         <div class="col-md-6 mb-3">
             <label for="nombreInput" class="form-label">Nombre</label>
@@ -119,7 +119,7 @@
             <%
                 if (!edit) {
             %>
-            <a href="/admin/users">
+            <a href="/admin/users/">
                 <button type="button" class="btn btn-primary w-100">
                     <i class="bi bi-arrow-left me-1" style="font-size: 15px"></i> Volver atrás
                 </button>
