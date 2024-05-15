@@ -1,6 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
+<%@ page import="java.util.Objects" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -11,6 +13,7 @@
 
 <%
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
+    List<Dificultad> dificultades = (List<Dificultad>) request.getAttribute("dificultades");
 %>
 
 <html>
@@ -65,7 +68,7 @@
                         </div>
                         <div class="col-4 d-flex align-items-center">
                             <select class="form-select" id="num-sesiones">
-                                <option value="4">No seleccionado</option>
+                                <option value="-1">No seleccionado</option>
                                 <option value="1">Igual</option>
                                 <option value="2">Mayor</option>
                                 <option value="3">Menor</option>
@@ -84,10 +87,10 @@
                         </div>
                         <div class="col-9 d-flex align-items-center">
                             <select class="form-select" id="dificultad">
-                                <option value="0">No seleccionado</option>
-                                <option value="1">Principiante</option>
-                                <option value="2">Intermedio</option>
-                                <option value="3">Avanzado</option>
+                                <option value="-1">No seleccionado</option>
+                                <%for(Dificultad dificultad : dificultades) {%>
+                                <option value="<%=dificultad.getId()%>"><%=dificultad.getNombre()%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>

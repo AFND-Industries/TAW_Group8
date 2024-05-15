@@ -10,4 +10,5 @@ import java.util.List;
 public interface RutinaRepository extends JpaRepository<Rutina, Integer> {
     @Query("select r from Rutina r where r.entrenador = :entrenador")
     public List<Rutina> findRutinaByEntrenadorId(Usuario entrenador);
+
 }

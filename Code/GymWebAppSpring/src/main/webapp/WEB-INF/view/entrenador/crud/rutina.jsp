@@ -21,6 +21,7 @@
 
 <%
     RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+    List<Dificultad> dificultades = (List<Dificultad>) request.getAttribute("dificultades");
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean rutinaExists = rutina.getId() >= 0;
@@ -75,9 +76,10 @@
             <div class="col-6">
                 <span class="h4 text-secondary">Dificultad</span><br/>
                 <select id="dificultad" name="dificultad" class="form-select mt-2" id="dificultad" <%=readOnly ? "disabled" : ""%>>
-                    <option <%=rutina.getDificultad() == 1 ? "selected" : ""%> value="1">Principiante</option>
-                    <option <%=rutina.getDificultad() == 2 ? "selected" : ""%> value="2">Intermedio</option>
-                    <option <%=rutina.getDificultad() == 3 ? "selected" : ""%> value="3">Avanzado</option>
+                    <%for(Dificultad dificultad : dificultades) {%>
+                    <option <%=Objects.equals(rutina.getDificultad(), dificultad.getId()) ? "selected" : ""%>
+                            value="<%=dificultad.getId()%>"><%=dificultad.getNombre()%></option>
+                    <%}%>
                 </select>
             </div>
         </div>

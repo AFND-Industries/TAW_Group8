@@ -63,6 +63,7 @@ public class EntrenadorControllerCRUD {
         List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
 
         model.addAttribute("rutinas", rutinas);
+        model.addAttribute("dificultades", dificultadRepository.findAll());
 
         return "/entrenador/crud/rutinas";
     }
@@ -82,15 +83,19 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("readOnly", true);
         session.setAttribute("cache", rutina);
 
+        model.addAttribute("dificultades", dificultadRepository.findAll());
+
         return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/crear")
-    public String doCrearRutina(HttpSession session) {
+    public String doCrearRutina(HttpSession session, Model model) {
         RutinaArgument rutina = new RutinaArgument();
         rutina.setId(-1);
 
         session.setAttribute("cache", rutina);
+
+        model.addAttribute("dificultades", dificultadRepository.findAll());
 
         return "/entrenador/crud/rutina";
     }
@@ -98,7 +103,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/editar")
     public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id,
-                                 HttpSession session) {
+                                 HttpSession session, Model model) {
         RutinaArgument rutina;
         if (session.getAttribute("cache") != null) {
             rutina = (RutinaArgument) session.getAttribute("cache");
@@ -114,6 +119,8 @@ public class EntrenadorControllerCRUD {
         }
 
         session.setAttribute("cache", rutina);
+
+        model.addAttribute("dificultades", dificultadRepository.findAll());
 
         return "/entrenador/crud/rutina";
     }
