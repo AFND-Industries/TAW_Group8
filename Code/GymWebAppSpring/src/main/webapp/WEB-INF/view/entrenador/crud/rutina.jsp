@@ -108,7 +108,7 @@
                     <div class="d-flex flex-column justify-content-center align-items-center"
                          alt="Borrar" style="width:50px; height:50px">
                         <span class="h4 mb-0">Día</span>
-                        <span class="h2 mb-0 text-danger"><%=i+1%></span>
+                        <span class="h2 mb-0 text-danger"><%=sesion.getDia()%></span>
                     </div>
                     <div class="ms-3">
                         <span class="h2" style="color: black;"><%=sesion.getNombre()%></span><br>

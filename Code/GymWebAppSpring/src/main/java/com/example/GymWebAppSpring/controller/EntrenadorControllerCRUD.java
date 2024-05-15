@@ -15,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +24,11 @@ import java.util.Objects;
 @RequestMapping("/entrenador/rutinas")
 public class EntrenadorControllerCRUD {
     // preguntar como hacer un post o si puedo hacerlo con javascript o que
-    // si psa algo por usar post
-    // preguntar como hago lo de editar/<%=rutina.getId()%> de una manera mas elegante
-    // como hago que lo de arriba sea un string referenciable prefix o path
     // preguntar como hacer cosas como restricciones de que no deje crear si algun cmapo esta vacio o cosas asi
     // si hacerlas con javascript o que
-    // como hago lo de guardar que estoy hacindo una rutina y una sesion y blablabla
-    // preguntar si en las query es mejor pasar el objeto o el id
-    // en que caso una entidad tendira por atributo una lista?
 
     // cambiar la bd tiposbase muchos mas caracteres, la descripcion igual
-    // pensar si los tipos base en categoria o donde
-    // meter los días
-    // hacer un ver con otra jsp para hacerlo mas bonito y sin disabled, sin depender de la de crear y editar y hacerlo todo solo con ids
     // meter el campo DIA en sesion y que se ordene por eso
-    // meter el boton del ojito en editar/ver en el ejercicio
-    // hacer FILTROS DE BUSQUEDA
 
     // FILTROS DE BUSQUEDA (FACIL)
     // JAVASCRIPT COMPROBAR CAMPOS VALIDOS LO TIPICO DE FORMULARIO
@@ -190,7 +177,7 @@ public class EntrenadorControllerCRUD {
             }
 
             s.setNombre(sesion.getNombre());
-            s.setDia(i + 1);
+            s.setDia(sesion.getDia());
             s.setDescripcion(sesion.getDescripcion());
 
             sesionentrenamientoRepository.save(s);
@@ -350,6 +337,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/sesion/guardar")
     public String doGuardarSesion(@RequestParam("nombre") String nombre,
+                                  @RequestParam("dia") Integer dia,
                                   @RequestParam("descripcion") String descripcion,
                                   HttpSession session) {
         // Las modificaciones de sesion antes de venir a esta pantalla
@@ -360,6 +348,7 @@ public class EntrenadorControllerCRUD {
         if (sesion.getId() < -1)
             sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
         sesion.setNombre(nombre);
+        sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
 
         session.removeAttribute("sesionPos");
@@ -466,6 +455,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/editar")
     public String doEditarEjercicio(@RequestParam("nombre") String nombre,
+                                    @RequestParam("dia") Integer dia,
                                     @RequestParam("descripcion") String descripcion,
                                     @RequestParam("ejPos") Integer ejPos,
                                     Model model, HttpSession session) {
@@ -475,6 +465,7 @@ public class EntrenadorControllerCRUD {
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
         sesion.setNombre(nombre);
+        sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
 
         int ejbase = sesion.getEjercicios().get(ejPos).getEjercicio();
@@ -505,6 +496,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/borrar")
     public String doBorrarEjercicio(@RequestParam("nombre") String nombre,
+                                    @RequestParam("dia") Integer dia,
                                     @RequestParam("descripcion") String descripcion,
                                     @RequestParam("ejPos") Integer ejPos,
                                     HttpSession session) {
@@ -514,6 +506,7 @@ public class EntrenadorControllerCRUD {
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
         sesion.setNombre(nombre);
+        sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
 
         rutina.getSesiones().get(pos).getEjercicios().remove((int) ejPos);

@@ -92,13 +92,22 @@
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-12">
+    <div class="row">
+        <div class="col-6">
             <span class="h4 text-secondary">Nombre de la sesión</span><br/>
         </div>
-        <div class="col-12">
+        <div class="col-6">
+            <span class="h4 text-secondary">Día</span><br/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-6">
             <input id="nombre" type="text" class="form-control mt-2"
                    value="<%=sesion.getNombre()%>" <%=readOnly ? "disabled" : ""%>>
+        </div>
+        <div class="col-6">
+            <input id="dia" type="text" class="form-control mt-2"
+                   value='<%=sesion.getDia() == -1 ? "" : sesion.getDia()%>' <%=readOnly ? "disabled" : ""%>>
         </div>
     </div>
     <div class="row mb-3">
@@ -120,6 +129,7 @@
     </div>
     <%
         Gson gson = new Gson();
+
         List<EjercicioArgument> ejerciciosArguments = sesion.getEjercicios();
         for (int i = 0; i < ejerciciosArguments.size(); i++) {
             EjercicioArgument ejercicioSesion = ejerciciosArguments.get(i);
@@ -173,10 +183,12 @@
 <script>
     function goPage(action, add="") {
         const nombre = document.getElementById("nombre").value;
+        const dia = document.getElementById("dia").value;
         const descripcion = document.getElementById("descripcion").value;
 
         window.location.href = action +
             "?nombre=" + nombre +
+            "&dia=" + dia +
             "&descripcion=" + descripcion +
             (add.length === 0 ? "" : "&") + add;
     }
