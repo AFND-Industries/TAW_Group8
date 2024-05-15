@@ -1,7 +1,8 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
-<%@ page import="java.util.Arrays" %><%--
+<%@ page import="java.util.Arrays" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 23/04/2024
@@ -10,7 +11,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
+    List<Rutinacliente> rutinas = (List<Rutinacliente>) request.getAttribute("rutinas");
     Usuario usuario = (Usuario) session.getAttribute("cliente");
     int[] sesiones = (int[]) request.getAttribute("numSesiones");
 %>
@@ -89,11 +90,11 @@
             </thead>
             <tbody>
             <% int i = 0;
-                for (Rutina rutina : rutinas) { %>
+                for (Rutinacliente rutina : rutinas) { %>
             <tr>
                 <td><a class="btn" style="font-size: 18px; border: transparent"
-                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>">
-                    <%= rutina.getNombre() %>
+                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getRutina().getId() %>">
+                    <%= rutina.getRutina().getNombre() %>
                 </a></td>
                 <td>
                     <div class="my-2" style="font-size: 18px">
@@ -103,8 +104,8 @@
                 <td>
                     <div class="my-3" data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
                         <i class="bi bi-trash delete-icon"
-                           data-rutina-nombre="<%= rutina.getNombre() %>"
-                           data-rutina-id="<%= rutina.getId() %>"
+                           data-rutina-nombre="<%= rutina.getRutina().getNombre() %>"
+                           data-rutina-id="<%= rutina.getRutina().getId() %>"
                         >
                         </i>
                     </div>

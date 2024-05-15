@@ -66,12 +66,23 @@
                         <%= porcentaje.get(i)%>%
                     </div>
                 </td>
+                <%
+                    if (porcentaje.get(i) != 0) {
+                %>
                 <td>
                     <a class="btn border border-black"
                        href="/entrenador/clientes/rutinas/verSesion?idSesion=<%= sesion.getId()%>">
                         Ver desempeño
                     </a>
                 </td>
+                <%
+                } else {
+                %>
+                <td>
+                </td>
+                <%
+                    }
+                %>
             </tr>
             <%
                     i++;
