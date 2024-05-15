@@ -139,9 +139,8 @@
                             : "Vaya, parece que aún no has creado ninguna rutina... ¿A qué esperas?"%>
                     </h3>
                 </div>
-            <%} else {
+        <%}
 
-            }
             for (Rutina rutina : rutinas) {
         %>
             <div class="row">

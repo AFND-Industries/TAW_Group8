@@ -76,17 +76,28 @@ public class EntrenadorControllerCRUD {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
 
+        // Si se ignora uno de los dos campos, el otro también, pues van de la mano
+        if (filtro.getIntegerSesionNum() == -1 || filtro.getSesionMode() == -1) {
+            filtro.setSesionMode(-1);
+            filtro.setSesionNum("");
+        }
+
         if (filtro.estaVacio())
             return "redirect:/entrenador/rutinas";
 
+        String nombre = filtro.getNombre();
+        Integer sesionNum = filtro.getIntegerSesionNum();
+        Integer sesionMode = filtro.getSesionMode();
+        Integer dificultadid = filtro.getDificultad();
+
         Usuario entrenador = AuthUtils.getUser(session);
-        Dificultad dificultad = dificultadRepository.findById(filtro.getDificultad()).orElse(null);
+        Dificultad dificultad = dificultadRepository.findById(dificultadid).orElse(null);
 
-        Integer limiteBajo = filtro.getSesionMode() == 3 ? 0 : filtro.getIntegerSesionNum();
-        Integer limiteAlto = filtro.getSesionMode() == 2 ? 7 : filtro.getIntegerSesionNum();
+        Integer limiteBajo = sesionMode == 3 || sesionMode == -1 ? 0 : sesionNum;
+        Integer limiteAlto = sesionMode == 2 || sesionMode == -1 ? 7 : sesionNum;
 
-        List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorWithFilter(entrenador,
-                filtro.getNombre(), limiteBajo, limiteAlto,dificultad);
+        List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorWithFilter(
+                entrenador, nombre, limiteBajo, limiteAlto,dificultad);
 
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadRepository.findAll());

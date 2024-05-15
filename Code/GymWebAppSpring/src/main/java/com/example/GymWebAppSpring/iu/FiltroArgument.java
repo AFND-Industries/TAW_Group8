@@ -46,7 +46,7 @@ public class FiltroArgument {
     }
 
     public Integer getIntegerSesionNum() {
-        return this.sesionNum.isEmpty() ? 0 : Integer.parseInt(sesionNum);
+        return this.sesionNum.isEmpty() ? -1 : Integer.parseInt(sesionNum);
     }
 
     public boolean estaVacio() {
