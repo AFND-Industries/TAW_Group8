@@ -1,8 +1,10 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="java.util.Objects" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
+<%@ page import="com.example.GymWebAppSpring.iu.FiltroArgument" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -14,6 +16,8 @@
 <%
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
     List<Dificultad> dificultades = (List<Dificultad>) request.getAttribute("dificultades");
+    FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
+    boolean isFiltering = !filtro.estaVacio();
 %>
 
 <html>
@@ -53,52 +57,54 @@
                     <h2 class="modal-title">Filtros de búsqueda</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-3 d-flex align-items-center">
-                            <label for="nombre-rutina" class="form-label">Nombre de la rutina</label>
+                <form:form action="/entrenador/rutinas/filtrar" method="get" modelAttribute="filtro">
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-3 d-flex align-items-center">
+                                <label for="nombre-rutina" class="form-label">Nombre de la rutina</label>
+                            </div>
+                            <div class="col-9 d-flex align-items-center">
+                                <form:input path="nombre" type="text" class="form-control" id="nombre-rutina" placeholder="Nombre de la rutina"/>
+                            </div>
                         </div>
-                        <div class="col-9 d-flex align-items-center">
-                            <input type="text" class="form-control" id="nombre-rutina" placeholder="Nombre de la rutina">
+                        <div class="row mb-3">
+                            <div class="col-3 d-flex align-items-center">
+                                <label for="num-sesiones" class="form-label">Número de sesiones</label>
+                            </div>
+                            <div class="col-4 d-flex align-items-center">
+                                <form:select path="sesionMode" class="form-select" id="num-sesiones">
+                                    <form:option value="-1">No seleccionado</form:option>
+                                    <form:option value="1">Igual</form:option>
+                                    <form:option value="2">Mayor o igual</form:option>
+                                    <form:option value="3">Menor o igual</form:option>
+                                </form:select>
+                            </div>
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <span>a</span>
+                            </div>
+                            <div class="col-4 d-flex align-items-center">
+                                <form:input path="sesionNum" type="text" class="form-control" id="num-sesiones-valor" placeholder="Número"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 d-flex align-items-center">
+                                <label for="dificultad" class="form-label">Dificultad</label>
+                            </div>
+                            <div class="col-9 d-flex align-items-center">
+                                <form:select path="dificultad" class="form-select" id="dificultad">
+                                    <form:option value="-1">No seleccionado</form:option>
+                                    <%for(Dificultad dificultad : dificultades) {%>
+                                    <form:option value="<%=dificultad.getId()%>"><%=dificultad.getNombre()%></form:option>
+                                    <%}%>
+                                </form:select>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-3 d-flex align-items-center">
-                            <label for="num-sesiones" class="form-label">Número de sesiones</label>
-                        </div>
-                        <div class="col-4 d-flex align-items-center">
-                            <select class="form-select" id="num-sesiones">
-                                <option value="-1">No seleccionado</option>
-                                <option value="1">Igual</option>
-                                <option value="2">Mayor</option>
-                                <option value="3">Menor</option>
-                            </select>
-                        </div>
-                        <div class="col-1 d-flex justify-content-center align-items-center">
-                            <span>a</span>
-                        </div>
-                        <div class="col-4 d-flex align-items-center">
-                            <input type="text" class="form-control" id="num-sesiones-valor" placeholder="Número">
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form:button class="btn btn-primary">Aplicar</form:button>
                     </div>
-                    <div class="row">
-                        <div class="col-3 d-flex align-items-center">
-                            <label for="dificultad" class="form-label">Dificultad</label>
-                        </div>
-                        <div class="col-9 d-flex align-items-center">
-                            <select class="form-select" id="dificultad">
-                                <option value="-1">No seleccionado</option>
-                                <%for(Dificultad dificultad : dificultades) {%>
-                                <option value="<%=dificultad.getId()%>"><%=dificultad.getNombre()%></option>
-                                <%}%>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Aplicar</button>
-                </div>
+                </form:form>
             </div>
         </div>
     </div>
@@ -107,7 +113,15 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-4">
-                <h1>Tus rutinas</h1>
+                <div class="d-flex align-items-center">
+                    <h1 class="me-3">Tus rutinas</h1>
+                    <%if (isFiltering) {%>
+                    <a href="/entrenador/rutinas" class="btn btn-outline-danger">
+                        <i class="bi bi-x-lg me-2"></i>
+                        <span class="d-sm-inline d-none">Eliminar filtros</span>
+                    </a>
+                    <%}%>
+                </div>
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
                 <div>
@@ -117,6 +131,17 @@
             </div>
         </div>
         <%
+            if (rutinas.isEmpty()) {%>
+                <div class="d-flex justify-content-center align-items-center">
+                    <h3 class="alert alert-danger">
+                        <%=isFiltering
+                            ? "No se encontró ningun resultado. Prueba a cambiar el filtro..."
+                            : "Vaya, parece que aún no has creado ninguna rutina... ¿A qué esperas?"%>
+                    </h3>
+                </div>
+            <%} else {
+
+            }
             for (Rutina rutina : rutinas) {
         %>
             <div class="row">

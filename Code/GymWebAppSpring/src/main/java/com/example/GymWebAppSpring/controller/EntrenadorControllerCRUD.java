@@ -3,6 +3,7 @@ package com.example.GymWebAppSpring.controller;
 import com.example.GymWebAppSpring.dao.*;
 import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.iu.EjercicioArgument;
+import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
@@ -64,6 +65,32 @@ public class EntrenadorControllerCRUD {
 
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("filtro", new FiltroArgument());
+
+        return "/entrenador/crud/rutinas";
+    }
+
+    @GetMapping("/filtrar")
+    public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro,
+                            Model model, HttpSession session) {
+        if(!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
+        if (filtro.estaVacio())
+            return "redirect:/entrenador/rutinas";
+
+        Usuario entrenador = AuthUtils.getUser(session);
+        Dificultad dificultad = dificultadRepository.findById(filtro.getDificultad()).orElse(null);
+
+        Integer limiteBajo = filtro.getSesionMode() == 3 ? 0 : filtro.getIntegerSesionNum();
+        Integer limiteAlto = filtro.getSesionMode() == 2 ? 7 : filtro.getIntegerSesionNum();
+
+        List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorWithFilter(entrenador,
+                filtro.getNombre(), limiteBajo, limiteAlto,dificultad);
+
+        model.addAttribute("rutinas", rutinas);
+        model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("filtro", filtro);
 
         return "/entrenador/crud/rutinas";
     }
