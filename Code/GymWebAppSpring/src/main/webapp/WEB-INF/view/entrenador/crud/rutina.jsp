@@ -1,5 +1,3 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
@@ -10,7 +8,8 @@
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="javax.script.ScriptEngineManager" %>
 <%@ page import="javax.script.ScriptEngine" %>
-<%@ page import="java.io.UnsupportedEncodingException" %><%--
+<%@ page import="java.io.UnsupportedEncodingException" %>
+<%@ page import="java.util.*" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -99,12 +98,21 @@
             <%}%>
         </div>
         <%
-            for (int i = 0 ; i< rutina.getSesiones().size(); i++) {
-                SesionArgument sesion = rutina.getSesiones().get(i);
+            List<SesionArgument> sesiones = rutina.getSesiones();
+            Map<Integer, Integer> sesionIndices = new HashMap<>();
+            for (int i = 0; i < sesiones.size(); i++)
+                sesionIndices.put(sesiones.get(i).getDia(), i);
+
+            List<Integer> diasOrdenados = new ArrayList<>(sesionIndices.keySet());
+            Collections.sort(diasOrdenados);
+
+            for (int dia : diasOrdenados) {
+                int posReal = sesionIndices.get(dia);
+                SesionArgument sesion = sesiones.get(posReal);
         %>
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-                     onClick="<%=readOnly ? ("goVerSesion(" + sesion.getId() + ")") : ("goEditarSesion(" + i + ")")%>">
+                     onClick="<%=readOnly ? ("goVerSesion(" + sesion.getId() + ")") : ("goEditarSesion(" + posReal + ")")%>">
                     <div class="d-flex flex-column justify-content-center align-items-center"
                          alt="Borrar" style="width:50px; height:50px">
                         <span class="h4 mb-0">Día</span>
@@ -117,10 +125,10 @@
                 </div>
                 <%if (!readOnly) {%>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div onClick="goEditarSesion(<%= i %>)" style="cursor: pointer; text-decoration: none;">
+                        <div onClick="goEditarSesion(<%= posReal %>)" style="cursor: pointer; text-decoration: none;">
                             <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
-                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%= i %>')">
+                        <div style="cursor: pointer;" onclick="showDeleteModal('<%=sesion.getNombre()%>', '<%= posReal %>')">
                             <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                         </div>
                     </div>
