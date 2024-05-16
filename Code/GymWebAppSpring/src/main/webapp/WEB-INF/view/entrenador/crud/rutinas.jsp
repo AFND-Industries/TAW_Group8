@@ -4,7 +4,8 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="java.util.Objects" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
-<%@ page import="com.example.GymWebAppSpring.iu.FiltroArgument" %><%--
+<%@ page import="com.example.GymWebAppSpring.iu.FiltroArgument" %>
+<%@ page import="com.google.gson.Gson" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -16,8 +17,10 @@
 <%
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
     List<Dificultad> dificultades = (List<Dificultad>) request.getAttribute("dificultades");
+    Rutina rutinaChanged = (Rutina) request.getAttribute("rutinaChanged");
+    Integer changeMode = (Integer) request.getAttribute("changeMode");
+
     FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
-    boolean isFiltering = !filtro.estaVacio();
 %>
 
 <html>
@@ -29,6 +32,10 @@
     <!-- Bootstrap Icons CSS Dependencies -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const rutinaChangedName = '<%=rutinaChanged != null ? rutinaChanged.getNombre() : ""%>';
+        const changeMode = <%=changeMode != null ? changeMode : -1%>;
+    </script>
 </head>
 <body>
 <jsp:include page="../../components/header.jsp"/>
@@ -46,6 +53,19 @@
                     <button id="delete-modal-button" type="button" class="btn btn-danger">Eliminar</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <div class="rounded me-2" style="background-color: green; width: 20px; height: 20px"></div>
+                <strong id="toast-title" class="me-auto">Titulo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toast-body" class="toast-body">
+                Cuerpo
             </div>
         </div>
     </div>
@@ -126,7 +146,7 @@
         </div>
         <div class="row">
             <div class="col-12 d-flex align-items-center">
-                <%if (isFiltering) {
+                <%if (!filtro.estaVacio()) {
                     if (!filtro.getNombre().isEmpty()) {%>
                     <span class="border border-secondary rounded me-2"
                           style="padding: 6px 12px">Nombre: <%=filtro.getNombre()%></span>
@@ -151,7 +171,7 @@
             if (rutinas.isEmpty()) {%>
                 <div class="d-flex justify-content-center align-items-center mt-3">
                     <h3 class="alert alert-danger">
-                        <%=isFiltering
+                        <%=filtro.estaVacio()
                             ? "No se encontró ningun resultado. Prueba a cambiar el filtro..."
                             : "Vaya, parece que aún no has creado ninguna rutina... ¿A qué esperas?"%>
                     </h3>
@@ -194,6 +214,21 @@
 
         deleteModal.show();
     }
+
+    function showToast(titulo, mensaje) {
+        const toastTitle = document.getElementById('toast-title');
+        const toastBody = document.getElementById('toast-body');
+        const toastLiveExample = document.getElementById('liveToast');
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+
+        toastTitle.innerHTML = titulo;
+        toastBody.innerHTML = mensaje;
+
+        toastBootstrap.show();
+    }
+
+    if (rutinaChangedName.length > 0)
+        showToast('Rutina ' + (changeMode === 0 ? 'creada' : 'editada') +  ' correctamente', 'Has ' + (changeMode === 0 ? 'creado' : 'editado') +  ' la rutina <b>' + rutinaChangedName + '</b> correctamente.');
 </script>
 </body>
 </html>

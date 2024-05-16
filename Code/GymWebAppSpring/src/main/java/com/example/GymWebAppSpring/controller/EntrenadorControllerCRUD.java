@@ -51,7 +51,9 @@ public class EntrenadorControllerCRUD {
     protected EjercicioRepository ejercicioRepository;
 
     @GetMapping("")
-    public String doRutinas(Model model, HttpSession session) {
+    public String doRutinas(@RequestParam(value = "changed", required = false) Integer changed,
+                            @RequestParam(value = "mode", required = false) Integer mode,
+                            Model model, HttpSession session) {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
 
@@ -66,6 +68,8 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadRepository.findAll());
         model.addAttribute("filtro", new FiltroArgument());
+        if (changed != null) model.addAttribute("rutinaChanged", rutinaRepository.findById(changed).orElse(null));
+        if (mode != null) model.addAttribute("changeMode", mode);
 
         return "/entrenador/crud/rutinas";
     }
@@ -261,7 +265,7 @@ public class EntrenadorControllerCRUD {
             }
         }
 
-        return "redirect:/entrenador/rutinas";
+        return "redirect:/entrenador/rutinas?changed=" + r.getId() + "&mode=" + (rutina.getId() < 0 ? 0 : 1);
     }
 
     @GetMapping("/borrar")
