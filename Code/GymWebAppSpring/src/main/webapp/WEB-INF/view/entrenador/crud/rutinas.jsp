@@ -111,16 +111,10 @@
 
 
     <div class="container">
-        <div class="row mb-3">
+        <div class="row">
             <div class="col-4">
                 <div class="d-flex align-items-center">
                     <h1 class="me-3">Tus rutinas</h1>
-                    <%if (isFiltering) {%>
-                    <a href="/entrenador/rutinas" class="btn btn-outline-danger">
-                        <i class="bi bi-x-lg me-2"></i>
-                        <span class="d-sm-inline d-none">Eliminar filtros</span>
-                    </a>
-                    <%}%>
                 </div>
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
@@ -130,9 +124,32 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12 d-flex align-items-center">
+                <%if (isFiltering) {
+                    if (!filtro.getNombre().isEmpty()) {%>
+                    <span class="border border-secondary rounded me-2"
+                          style="padding: 6px 12px">Nombre: <%=filtro.getNombre()%></span>
+                    <%}
+                    if (!filtro.getSesionNum().isEmpty()) {
+                    String simbolo = filtro.getSesionMode() == 0 ? "=" : (filtro.getSesionMode() == 1 ? "<=" : "=>");%>
+                    <span class="border border-secondary rounded me-2"
+                          style="padding: 6px 12px">Nºsesiones <%=simbolo%> <%=filtro.getIntegerSesionNum()%></span>
+                    <%}
+                    if (filtro.getDificultad() != -1) {%>
+                    <span class="border border-secondary rounded me-2"
+                          style="padding: 6px 12px">Dificultad: ${dificultades.get(filtro.dificultad - 1).nombre}</span>
+                    <%}%>
+                <a href="/entrenador/rutinas" class="btn btn-outline-danger">
+                    <i class="bi bi-x-lg me-2"></i>
+                    <span class="d-sm-inline d-none">Eliminar filtros</span>
+                </a>
+                <%}%>
+            </div>
+        </div>
         <%
             if (rutinas.isEmpty()) {%>
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center mt-3">
                     <h3 class="alert alert-danger">
                         <%=isFiltering
                             ? "No se encontró ningun resultado. Prueba a cambiar el filtro..."
