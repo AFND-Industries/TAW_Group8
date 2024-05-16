@@ -75,17 +75,20 @@ public class ClienteController {
 
     }
 
-    @PostMapping("/sesioninfo")
+    @GetMapping("/sesioninfo")
     public String doVerSesion(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession sesion, Model modelo) {
         if (!AuthUtils.isClient(sesion))
             return "redirect:/";
+
         sesion.setAttribute("sesionEntrenamiento", sesionEntrenamiento);
+
+
         Usuario user = (Usuario) sesion.getAttribute("user");
+
+        List<Ejerciciosesion> ejercicios = ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento);
         modelo.addAttribute("usuario", user);
         modelo.addAttribute("sesionEntrenamiento", sesionEntrenamiento);
-        List<Ejerciciosesion> ejercicios = ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento);
         modelo.addAttribute("ejercicios", ejercicios);
-        modelo.addAttribute("ejercicioElegido", ejercicios.getFirst());
         return "client/verSesion";
     }
 

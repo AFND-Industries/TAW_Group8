@@ -43,7 +43,7 @@
             <% if (sesionesEjercicios.isEmpty()) { %>
             <h1 class="text-center"> No hay sesiones!</h1>
             <% } else { %>
-            <form method="post" action="sesioninfo">
+            <form method="get" action="sesioninfo">
             <table class="table ">
                 <thead>
                 <tr>
