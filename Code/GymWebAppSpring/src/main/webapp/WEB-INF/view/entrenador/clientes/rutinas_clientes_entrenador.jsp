@@ -2,7 +2,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="java.util.Arrays" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 23/04/2024
@@ -11,9 +14,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Rutinacliente> rutinas = (List<Rutinacliente>) request.getAttribute("rutinas");
+    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
     Usuario usuario = (Usuario) session.getAttribute("cliente");
     int[] sesiones = (int[]) request.getAttribute("numSesiones");
+    Map<Rutina, LocalDate> fechasInicio = (Map<Rutina, LocalDate>) request.getAttribute("fechas");
 %>
 <html>
 <head>
@@ -85,17 +89,23 @@
             <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Dia de inicio</th>
                 <th>Sesiones</th>
             </tr>
             </thead>
             <tbody>
             <% int i = 0;
-                for (Rutinacliente rutina : rutinas) { %>
+                for (Rutina rutina : rutinas) { %>
             <tr>
                 <td><a class="btn" style="font-size: 18px; border: transparent"
-                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getRutina().getId() %>">
-                    <%= rutina.getRutina().getNombre() %>
+                       href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>">
+                    <%= rutina.getNombre() %>
                 </a></td>
+                <td>
+                    <div class="my-2" style="font-size: 18px">
+                        <%=fechasInicio.get(rutina)%>
+                    </div>
+                </td>
                 <td>
                     <div class="my-2" style="font-size: 18px">
                         <%= sesiones[i] %>
@@ -104,8 +114,8 @@
                 <td>
                     <div class="my-3" data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
                         <i class="bi bi-trash delete-icon"
-                           data-rutina-nombre="<%= rutina.getRutina().getNombre() %>"
-                           data-rutina-id="<%= rutina.getRutina().getId() %>"
+                           data-rutina-nombre="<%= rutina.getNombre() %>"
+                           data-rutina-id="<%= rutina.getId() %>"
                         >
                         </i>
                     </div>

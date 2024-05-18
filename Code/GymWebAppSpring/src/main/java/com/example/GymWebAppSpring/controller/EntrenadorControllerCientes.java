@@ -2,22 +2,27 @@ package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.*;
 import com.example.GymWebAppSpring.entity.*;
+import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
+@RequestMapping("/entrenador/clientes")
 public class EntrenadorControllerCientes {
 
 
@@ -50,7 +55,10 @@ public class EntrenadorControllerCientes {
     @Autowired
     private SesionentrenamientoRepository sesionentrenamientoRepository;
 
-    @GetMapping("/entrenador/clientes")
+    @Autowired
+    private DificultadRepository dificultadRepository;
+
+    @GetMapping("")
     public String entrenadorClientes(Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -63,7 +71,7 @@ public class EntrenadorControllerCientes {
         return "/entrenador/clientes/clientes_entrenador";
     }
 
-    @GetMapping("/entrenador/clientes/rutinas")
+    @GetMapping("/rutinas")
     public String doListarRutinas(@RequestParam("id") Usuario usuario, Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -75,16 +83,19 @@ public class EntrenadorControllerCientes {
         session.setAttribute("cliente", usuario);
 
         List<Rutina> rutinas = rutinaUsuarioRepository.findRutinaById(usuario.getId());
+        Map<Rutina, LocalDate> map = new HashMap<>();
         int[] numSesiones = new int[rutinas.size()];
         for (Rutina rutina : rutinas) {
+            map.put(rutina, rutinaClienteReporsitory.findFechaInicioByRutinaAndUsuario(rutina, usuario));
             numSesiones[rutinas.indexOf(rutina)] = sesionentrenamientoRepository.findSesionesByRutina(rutina).size();
         }
         model.addAttribute("numSesiones", numSesiones);
         model.addAttribute("rutinas", rutinas);
+        model.addAttribute("fechas", map);
         return "/entrenador/clientes/rutinas_clientes_entrenador";
     }
 
-    @GetMapping("/entrenador/clientes/rutinas/anyadirRutina")
+    @GetMapping("/rutinas/anyadirRutina")
     public String doAnyadirRutina(HttpSession session, Model model) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -94,12 +105,82 @@ public class EntrenadorControllerCientes {
 
         model.addAttribute("rutinasCliente", rutinasCliente);
         model.addAttribute("rutinasEntrenador", rutinasEntrenador);
+        model.addAttribute("filtro", new FiltroArgument());
 
         return "/entrenador/clientes/anyadir_rutina_cliente";
     }
 
-    @PostMapping("/entrenador/clientes/rutinas/guardar")
+    @PostMapping("/rutinas/anyadirRutinaFilter")
+    public String doAnyadirRutina(@ModelAttribute("filtro") FiltroArgument filtro,
+                                  Model model, HttpSession session) {
+        if (!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
+        return getString(model, session, filtro);
+    }
+
+    private String getString(Model model, HttpSession session, FiltroArgument filtro) {
+        Usuario cliente = (Usuario) session.getAttribute("cliente");
+        List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(cliente.getId());
+
+        List<Rutina> rutinasEntrenador = getRutinasEntrenador(filtro, session);
+
+        if (rutinasEntrenador == null) {
+            return "redirect:/entrenador/clientes/rutinas/anyadirRutina";
+        }
+
+        model.addAttribute("rutinasCliente", rutinasCliente);
+        model.addAttribute("rutinasEntrenador", rutinasEntrenador);
+        model.addAttribute("filtro", filtro);
+
+        return "/entrenador/clientes/anyadir_rutina_cliente";
+    }
+
+
+    private List<Rutina> getRutinasEntrenador(FiltroArgument filtro, HttpSession session) {
+        if (filtro.getIntegerSesionNum() == -1 || filtro.getSesionMode() == -1) {
+            filtro.setSesionMode(-1);
+            filtro.setSesionNum("");
+        }
+
+        if (filtro.estaVacio()) {
+            return null;
+        }
+
+        Dificultad dificultad = dificultadRepository.findById(filtro.getDificultad()).orElse(null);
+        Integer sesionMode = filtro.getSesionMode();
+        Integer limiteBajo = sesionMode == 3 || sesionMode == -1 ? 0 : filtro.getIntegerSesionNum();
+        Integer limiteAlto = sesionMode == 2 || sesionMode == -1 ? 7 : filtro.getIntegerSesionNum();
+
+        List<Rutina> rutinasEntrenador = rutinaRepository.findRutinaByEntrenadorWithFilter(AuthUtils.getUser(session),
+                filtro.getNombre(), limiteBajo, limiteAlto, dificultad);
+
+        return rutinasEntrenador;
+    }
+
+    @PostMapping("/rutinas/eliminarFiltro")
+    public String doEliminarFiltro(@RequestParam("nombre") String nombre,
+                                   @RequestParam("sesionMode") Integer sesionMode,
+                                   @RequestParam("sesionNum") String sesionNum,
+                                   @RequestParam("dificultad") Integer dificultad,
+                                   RedirectAttributes redirectAttributes,
+                                   Model model, HttpSession session) {
+        if (!AuthUtils.isTrainer(session))
+            return "redirect:/";
+
+        FiltroArgument filtro = new FiltroArgument();
+        filtro.setNombre(nombre);
+        filtro.setSesionMode(sesionMode);
+        filtro.setSesionNum(sesionNum);
+        filtro.setDificultad(dificultad);
+
+        return getString(model, session, filtro);
+    }
+
+
+    @PostMapping("/rutinas/guardar")
     public String doGuardarRutina(@RequestParam("rutinas") List<Rutina> rutinas,
+                                  @RequestParam Map<String, String> datId,
                                   HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -107,11 +188,12 @@ public class EntrenadorControllerCientes {
         List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(usuario.getId());
 
         for (Rutina rutina : rutinas) {
+            LocalDate date = LocalDate.parse(datId.get("dateId_" + rutina.getId()));
             if (!rutinasCliente.contains(rutina)) {
                 Rutinacliente rutinaCliente = new Rutinacliente();
                 rutinaCliente.setRutina(rutina);
                 rutinaCliente.setUsuario(usuario);
-                rutinaCliente.setFechaInicio(rutina.getFechaCreacion());
+                rutinaCliente.setFechaInicio(date);
                 RutinaclienteId rutinaclienteId = new RutinaclienteId();
                 rutinaclienteId.setRutinaId(rutina.getId());
                 rutinaclienteId.setUsuarioId(usuario.getId());
@@ -125,7 +207,7 @@ public class EntrenadorControllerCientes {
 
     }
 
-    @GetMapping("/entrenador/clientes/rutinas/eliminarRutina")
+    @GetMapping("/rutinas/eliminarRutina")
     public String doEliminarRutina(@RequestParam("idRutina") Rutina rutina,
                                    HttpSession session) {
         if (!AuthUtils.isTrainer(session))
@@ -139,7 +221,7 @@ public class EntrenadorControllerCientes {
         return "redirect:/entrenador/clientes/rutinas?id=" + cliente.getId();
     }
 
-    @GetMapping("/entrenador/clientes/rutinas/verRutina")
+    @GetMapping("/rutinas/verRutina")
     public String doVerRutina(@RequestParam("idRutina") Rutina rutina,
                               Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
@@ -158,15 +240,26 @@ public class EntrenadorControllerCientes {
         for (Sesionentrenamiento sesion : sesiones) {
             ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
             informacionSesion = informacionSesionRepository.findByUsuarioAndSesion(cliente, sesion);
-            for (Ejerciciosesion ejercicio : ejercicios) {
-                total += Integer.parseInt(gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get("series").getAsString());
-                Informacionejercicio info = informacionEjercicioRepository.findByEjercicioAndInfo(informacionSesion, ejercicio);
-                sesionesEjercicios.add(gson.fromJson(info.getEvaluacion(), JsonArray.class).size());
-                i += (gson.fromJson(info.getEvaluacion(), JsonArray.class).size());
+            if (informacionSesion == null) {
+                porcentaje.add(0);
+                for (int n = 0; n < ejercicios.size(); n++) {
+                    sesionesEjercicios.add(0);
+                }
+            } else {
+                for (Ejerciciosesion ejercicio : ejercicios) {
+                    total += Integer.parseInt(gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get("series").getAsString());
+                    Informacionejercicio info = informacionEjercicioRepository.findByEjercicioAndInfo(informacionSesion, ejercicio);
+                    if (info != null) {
+                        sesionesEjercicios.add(gson.fromJson(info.getEvaluacion(), JsonArray.class).size());
+                        i += (gson.fromJson(info.getEvaluacion(), JsonArray.class).size());
+                    } else {
+                        sesionesEjercicios.add(0);
+                    }
+                }
+                porcentaje.add((i * 100) / total);
+                i = 0;
+                total = 0;
             }
-            porcentaje.add((i * 100) / total);
-            i = 0;
-            total = 0;
         }
 
         session.setAttribute("rutina", rutina);
@@ -177,7 +270,7 @@ public class EntrenadorControllerCientes {
         return "/entrenador/clientes/ver_rutina_cliente";
     }
 
-    @GetMapping("/entrenador/clientes/rutinas/verSesion")
+    @GetMapping("/rutinas/verSesion")
     public String doVerSesion(@RequestParam("idSesion") Sesionentrenamiento sesion,
                               Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
@@ -195,7 +288,7 @@ public class EntrenadorControllerCientes {
         return "/entrenador/clientes/ver_sesion_cliente";
     }
 
-    @GetMapping("/entrenador/clientes/rutinas/verSesion/verDesempeno")
+    @GetMapping("/verSesion/verDesempeno")
     public String doVerDesempeno(@RequestParam("idEjercicio") Ejerciciosesion ejercicio,
                                  @RequestParam("idInfo") Informacionsesion informacionSesion,
                                  @RequestParam("idSesion") Sesionentrenamiento sesion,
