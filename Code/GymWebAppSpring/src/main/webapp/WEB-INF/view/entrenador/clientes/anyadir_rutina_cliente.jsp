@@ -2,7 +2,17 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="java.util.List" %>
 
-<%@ page import="com.example.GymWebAppSpring.iu.FiltroArgument" %><%--
+<%@ page import="com.example.GymWebAppSpring.iu.FiltroArgument" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.google.gson.JsonArray" %>
+<%@ page import="com.google.gson.JsonElement" %>
+<%@ page import="java.io.Reader" %>
+<%@ page import="com.google.gson.GsonBuilder" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="com.example.GymWebAppSpring.util.LocalDateAdapter" %>
+<%@ page import="org.apache.commons.lang3.StringEscapeUtils" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 24/04/2024
@@ -15,6 +25,7 @@
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinasEntrenador");
     Usuario cliente = (Usuario) session.getAttribute("cliente");
     FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
+    Map<Rutina, List<Sesionentrenamiento>> mapSesiones = (Map<Rutina, List<Sesionentrenamiento>>) request.getAttribute("mapSesiones");
     if (filtro == null) {
         filtro = new FiltroArgument();
     }
@@ -198,6 +209,126 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="view-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="rutina_title"></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-6 ">
+                        <span class="h6 text-black">Nombre:</span>
+                        <span class="text-secondary" id="rutina_nombre"></span>
+                    </div>
+                    <div class="col-6 ">
+                        <span class="h6 text-black">Dificultad:</span>
+                        <span class="text-secondary" id="rutina_Dificultad"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <span class="h6 text-black">Descripcion:</span>
+                    <span class="text-secondary" id="rutina_desc"></span>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6 ">
+                        <span class="h6 text-black">Sesiones:</span>
+                        <span class="text-secondary" id="rutina_sesiones"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mostrarRutina(nombre, dificultad, desc, sesiones) {
+        document.getElementById('rutina_title').textContent = nombre;
+        document.getElementById('rutina_nombre').textContent = nombre;
+        document.getElementById('rutina_Dificultad').textContent = dificultad;
+        document.getElementById('rutina_desc').textContent = desc;
+
+        const rutinaSesionesContainer = document.getElementById('rutina_sesiones');
+        rutinaSesionesContainer.innerHTML = '';
+
+        sesiones.map((sesion, index) => {
+            // Create row div
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'row my-3';
+
+            // Create column div
+            const colDiv = document.createElement('div');
+            colDiv.className = 'col-9 d-flex align-items-center';
+            colDiv.style.height = '75px';
+            colDiv.style.textDecoration = 'none';
+            colDiv.style.cursor = 'pointer';
+            colDiv.setAttribute('onClick', `goVerSesion(${sesion.id})`);
+
+            // Create inner div for day display
+            const innerDiv = document.createElement('div');
+            innerDiv.className = 'd-flex flex-column justify-content-center align-items-center';
+            innerDiv.style.width = '50px';
+            innerDiv.style.height = '50px';
+
+            const spanDay = document.createElement('span');
+            spanDay.className = ' h3 mb-0';
+            spanDay.textContent = 'Día';
+
+            const spanDayNumber = document.createElement('span');
+            spanDayNumber.className = 'h3 mb-0 text-danger';
+            spanDayNumber.textContent = sesion.dia;
+
+            innerDiv.appendChild(spanDay);
+            innerDiv.appendChild(spanDayNumber);
+
+            // Create description div
+            const descDiv = document.createElement('div');
+            descDiv.className = 'ms-3';
+
+            const spanName = document.createElement('span');
+            spanName.className = 'h6';
+            spanName.style.color = 'black';
+            spanName.textContent = sesion.nombre;
+
+            const spanDesc = document.createElement('span');
+            spanDesc.className = ' text-secondary';
+            spanDesc.textContent = sesion.descripcion;
+
+            descDiv.appendChild(spanName);
+            descDiv.appendChild(document.createElement('br'));
+            descDiv.appendChild(spanDesc);
+
+            // Append all to the column div
+            colDiv.appendChild(innerDiv);
+            colDiv.appendChild(descDiv);
+
+            // Append the column div to the row div
+            rowDiv.appendChild(colDiv);
+
+            // Append the row div to the main container
+            rutinaSesionesContainer.appendChild(rowDiv);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var viewIcon = document.querySelectorAll('.view-icon');
+
+        viewIcon.forEach(function (icon) {
+            icon.addEventListener('click', function () {
+                var nombre = icon.getAttribute('data-rutina-nombre');
+                var dificultad = icon.getAttribute('data-rutina-dificultad');
+                var desc = icon.getAttribute('data-rutina-desc');
+                var sesiones = icon.getAttribute('data-sesiones');
+                var sesionesDecoded = JSON.parse(sesiones);
+                mostrarRutina(nombre, dificultad, desc, sesionesDecoded);
+            });
+        });
+
+    })
+</script>
+
 <div class="container">
     <div class="row mb-4">
         <div class="col-4">
@@ -288,6 +419,12 @@
             (
                     Rutina rutina : rutinas
             ) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+                Gson gson = gsonBuilder.create();
+                List<Sesionentrenamiento> sesiones = mapSesiones.get(rutina);
+                sesiones.forEach(s -> s.setRutina(null));
+                String sesionesString = StringEscapeUtils.escapeHtml4(gson.toJson(sesiones));
         %>
         <div class="row mb-3">
             <div class="form-check">
@@ -299,11 +436,19 @@
                             <%= rutina.getNombre() %>
                         </label>
                     </div>
-                    <div class="col">
-
-                        <input name="dateId_<%=rutina.getId()%>" type="date" class="form-control" placeholder=""
+                    <div class="col d-flex  align-items-center">
+                        <input name="dateId_<%=rutina.getId()%>" type="date" class="form-control me-3" placeholder=""
                                aria-label="Example text with button addon"
                                aria-describedby="button-addon1" <%= rutinasCliente.contains(rutina) ? "disabled" : ""%>>
+                        <div data-bs-toggle="modal" data-bs-target="#view-modal" style="cursor: pointer;">
+                            <i class="bi bi-eye view-icon"
+                               data-rutina-nombre="<%= rutina.getNombre() %>"
+                               data-rutina-dificultad="<%= rutina.getDificultad().getNombre() %>"
+                               data-rutina-desc="<%= rutina.getDescripcion() %>"
+                               data-sesiones="<%= sesionesString %>"
+                            >
+                            </i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -312,7 +457,7 @@
         <%
             }
         %>
-        <div class="row">
+        <div class=" row">
             <div class="col-12 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Guardar Rutinas</button>
             </div>

@@ -99,15 +99,8 @@ public class EntrenadorControllerCientes {
     public String doAnyadirRutina(HttpSession session, Model model) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
-        Usuario cliente = (Usuario) session.getAttribute("cliente");
-        List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(cliente.getId());
-        List<Rutina> rutinasEntrenador = rutinaRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session));
 
-        model.addAttribute("rutinasCliente", rutinasCliente);
-        model.addAttribute("rutinasEntrenador", rutinasEntrenador);
-        model.addAttribute("filtro", new FiltroArgument());
-
-        return "/entrenador/clientes/anyadir_rutina_cliente";
+        return getString(model, session, new FiltroArgument());
     }
 
     @PostMapping("/rutinas/anyadirRutinaFilter")
@@ -122,15 +115,22 @@ public class EntrenadorControllerCientes {
     private String getString(Model model, HttpSession session, FiltroArgument filtro) {
         Usuario cliente = (Usuario) session.getAttribute("cliente");
         List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(cliente.getId());
-
         List<Rutina> rutinasEntrenador = getRutinasEntrenador(filtro, session);
+        Map<Rutina, List<Sesionentrenamiento>> mapSesiones = new HashMap<>();
+
 
         if (rutinasEntrenador == null) {
             return "redirect:/entrenador/clientes/rutinas/anyadirRutina";
+        } else {
+            for (Rutina rutina : rutinasEntrenador) {
+                List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(rutina);
+                mapSesiones.put(rutina, sesiones);
+            }
         }
 
         model.addAttribute("rutinasCliente", rutinasCliente);
         model.addAttribute("rutinasEntrenador", rutinasEntrenador);
+        model.addAttribute("mapSesiones", mapSesiones);
         model.addAttribute("filtro", filtro);
 
         return "/entrenador/clientes/anyadir_rutina_cliente";
@@ -144,7 +144,7 @@ public class EntrenadorControllerCientes {
         }
 
         if (filtro.estaVacio()) {
-            return null;
+            return rutinaRepository.findRutinaByEntrenadorId(AuthUtils.getUser(session));
         }
 
         Dificultad dificultad = dificultadRepository.findById(filtro.getDificultad()).orElse(null);
