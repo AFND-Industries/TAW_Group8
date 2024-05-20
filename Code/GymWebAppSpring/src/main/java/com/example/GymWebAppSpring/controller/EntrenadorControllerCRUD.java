@@ -396,6 +396,7 @@ public class EntrenadorControllerCRUD {
         SesionArgument sesion = rutina.getSesiones().get(pos);
         if (sesion.getId() < -1)
             sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
+
         sesion.setNombre(nombre);
         sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
@@ -439,6 +440,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
+                                         @RequestParam(value = "dia", required = false) Integer dia,
                                          @RequestParam(value = "descripcion", required = false) String descripcion,
                                          Model model, HttpSession session) {
         // Las modificaciones de sesion antes de venir a esta pantalla
@@ -447,6 +449,7 @@ public class EntrenadorControllerCRUD {
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
         if (nombre != null) sesion.setNombre(nombre);
+        if (dia != null) sesion.setDia(dia);
         if (descripcion != null) sesion.setDescripcion(descripcion);
 
         List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
