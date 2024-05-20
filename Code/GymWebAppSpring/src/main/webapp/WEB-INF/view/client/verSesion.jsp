@@ -109,8 +109,6 @@
                         Ejerciciosesion ejerciciosesion = ejercicios.get(tabIndex);
                         Ejercicio ejercicio = ejerciciosesion.getEjercicio();
                         Categoria categoria = ejerciciosesion.getEjercicio().getCategoria();
-
-
                 %>
                 <li class="nav-item">
                     <a class="nav-link <%=tabIndex==0 ? "active": ""%>" id="tab<%=tabIndex%>-tab" data-bs-toggle="tab"
@@ -124,6 +122,12 @@
             </ul>
             <div class="mb-5 border border-primary border-3 rounded">
                 <div class="tab-content" id="myTabContent">
+                    <script>
+                        let resultados = [];
+                        let seriesArray = [];
+                        let seriesTotal = 0;
+                        let serieActual = 0;
+                    </script>
                     <%
                         int[] seriesArray = new int[ejercicios.size()];
                         for (int i = 0; i < ejercicios.size(); i++) {
@@ -132,9 +136,7 @@
                             Categoria categoria = ejercicio.getCategoria();
                             HashMap<String, String> especificaciones = gson.fromJson(ejercicioSesion.getEspecificaciones(), HashMap.class);
                     %>
-                    <script>
-                        let resultados = [];
-                    </script>
+
                     <div class=" tab-pane fade <%=i==0 ? "active show" : ""%>" id="tab<%=i%>" role="tabpanel"
                          aria-labelledby="tab<%=i%>-tab">
 
@@ -146,11 +148,11 @@
                                     int peso = Integer.parseInt(especificaciones.getOrDefault("Peso añadido", "0"));
                                     int series = Integer.parseInt(especificaciones.getOrDefault("Series", "0"));
                                     int repeticiones = Integer.parseInt(especificaciones.getOrDefault("Repeticiones", "0"));
-                                    String[] resultados;
                         %>
                         <script>
-                            let seriesTotal = <%=series%>;
-                            let serieActual = 0;
+                            seriesTotal = <%=series%>;
+                            serieActual = 0;
+                            seriesArray.push(<%=series%>);
                             resultados.push([]);
                         </script>
                         <div class="container">
@@ -239,39 +241,6 @@
                                 </div>
                             </div>
                         </div>
-                        <script>
-                            function incrementarSerie(index) {
-                                let menosPeso = document.getElementById("menos-peso-swich" + index);
-                                let repeticiones = document.getElementById("contador" + index).value;
-
-                                if (serieActual < seriesTotal) {
-                                    serieActual++;
-                                    document.getElementById('serieText' + index).innerHTML = 'Serie ' + serieActual + '/' + seriesTotal;
-
-                                    var datos = {
-                                        repeticiones: repeticiones,
-                                        mpeso: menosPeso.checked ? "SI" : "NO"
-                                    };
-
-                                    // Convertir el objeto JSON a una cadena
-                                    var datosString = JSON.stringify(datos);
-                                    resultados[index].push(datosString);
-
-                                    console.log(resultados)
-                                    console.log(datosString);
-                                    document.getElementById("menos-peso-swich" + index).checked = false;
-                                    document.getElementById("contador" + index).value = "0";
-                                }
-                                if (serieActual === seriesTotal) {
-                                    document.getElementById("boton-serie" + index).disabled = true;
-                                    alert("Ya has completado todas las series!");
-                                    console.log(resultados.at(index));
-                                }
-
-
-                            }
-                        </script>
-
                         <%
                                 break;
                             }
@@ -284,8 +253,9 @@
                                 int repeticiones = Integer.parseInt(especificaciones.getOrDefault("Repeticiones", "0"));
                         %>
                         <script>
-                            let seriesTotal = <%=series%>;
-                            let serieActual = 0;
+                            seriesTotal = <%=series%>;
+                            serieActual = 0;
+                            seriesArray.push(<%=series%>);
                             resultados.push([]);
                         </script>
                         <div class="container">
@@ -348,38 +318,7 @@
                                                             onclick="incrementarSerie(<%=i%>)">Siguiente Serie
                                                     </button>
                                                 </div>
-                                                <script>
-                                                    function incrementarSerie(index) {
-                                                        let menosPeso = document.getElementById("menos-peso-swich" + index);
-                                                        let repeticiones = document.getElementById("contador" + index).value;
 
-                                                        if (serieActual < seriesTotal) {
-                                                            serieActual++;
-                                                            document.getElementById('serieText' + index).innerHTML = 'Serie ' + serieActual + '/' + seriesTotal;
-
-                                                            var datos = {
-                                                                repeticiones: repeticiones,
-                                                                mpeso: menosPeso.checked ? "SI" : "NO"
-                                                            };
-
-                                                            // Convertir el objeto JSON a una cadena
-                                                            var datosString = JSON.stringify(datos);
-                                                            resultados[index].push(datosString);
-
-                                                            console.log(resultados)
-                                                            console.log(datosString);
-                                                            document.getElementById("menos-peso-swich" + index).checked = false;
-                                                            document.getElementById("contador" + index).value = "0";
-                                                        }
-                                                        if (serieActual === seriesTotal) {
-                                                            document.getElementById("boton-serie" + index).disabled = true;
-                                                            alert("Ya has completado todas las series!");
-                                                            console.log(resultados.at(index));
-                                                        }
-
-
-                                                    }
-                                                </script>
                                             </div>
                                             <div class="row justify-content-between ">
                                                 <div class="col-5">
@@ -437,77 +376,167 @@
                     <%
                         }
                     %>
-
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form action="valorarEntrenamiento" method="post">
-                                    <!-- URL para procesar el formulario -->
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <input id="datosEntrenamientoInput" type="hidden" name="datosEntrenamiento"
-                                               value="">
-                                        <input id="datosEjercicios" type="hidden" name="ejerciciosID"
-                                               value="<%=ejerciciosID%>">
-                                        <p>Estas seguro que deseas acabar este entrenamieto? Se guardaran los datos
-                                            de
-                                            todas las repteciones pendientes!!!</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
-                                        <!-- Cambiado a type="submit" -->
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <% } %>
         </div>
     </div>
 </div>
+<!-- Modal -->
+
+<div class="modal fade" id="finishModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="valorarEntrenamiento" method="post">
+                    <!-- URL para procesar el formulario -->
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Muy bien!</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="datosEntrenamientoInput" type="hidden" name="datosEntrenamiento"
+                               value="">
+                        <input id="datosEjercicios" type="hidden" name="sesionEntrenamiento"
+                               value="<%=sesionEntrenamiento%>">
+                        <p>Tomate un respiro. Ya has acabado tu sesion de entrenamiento!</p>
+                        <p>Ahora puedes valorar tu entrenamiento para ayudar a nuestro coaches a mejorar!
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary">
+                            Salir sin valorar
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="showValoration()">Valorar entrenamiento
+                        </button>
+                        <!-- Cambiado a type="submit" -->
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Segundo modal para la valoración -->
+<div class="modal fade" id="valorarModal" tabindex="-1" aria-labelledby="valorarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="submitValoracion" method="post">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="valorarModalLabel">Valora tu entrenamiento</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="valoracion" class="form-control" rows="4"
+                                  placeholder="Escribe tu valoración aquí..."></textarea>
+                    </div>
+                    <fieldset class="rating al">
+                        <input type="radio" id="star5" name="rating" value="5"/><label class="full" for="star5"
+                                                                                       title="Magnifico - 5 stars"></label>
+                        <input type="radio" id="star4half" name="rating" value="4.5"/><label class="half"
+                                                                                             for="star4half"
+                                                                                             title="Bastante bueno - 4.5 stars"></label>
+                        <input type="radio" id="star4" name="rating" value="4"/><label class="full" for="star4"
+                                                                                       title="Bueno - 4 stars"></label>
+                        <input type="radio" id="star3half" name="rating" value="3.5"/><label class="half"
+                                                                                             for="star3half"
+                                                                                             title="Meh - 3.5 stars"></label>
+                        <input type="radio" id="star3" name="rating" value="3"/><label class="full" for="star3"
+                                                                                       title="Meh - 3 stars"></label>
+                        <input type="radio" id="star2half" name="rating" value="2.5"/><label class="half"
+                                                                                             for="star2half"
+                                                                                             title="Malillo - 2.5 stars"></label>
+                        <input type="radio" id="star2" name="rating" value="2"/><label class="full" for="star2"
+                                                                                       title="Malo - 2 stars"></label>
+                        <input type="radio" id="star1half" name="rating" value="1.5"/><label class="half"
+                                                                                             for="star1half"
+                                                                                             title="Bastante Malo - 1.5 stars"></label>
+                        <input type="radio" id="star1" name="rating" value="1"/><label class="full" for="star1"
+                                                                                       title="Horrible - 1 star"></label>
+                        <input type="radio" id="starhalf" name="rating" value="0.5"/><label class="half" for="starhalf"
+                                                                                            title="Me quiero morir - 0.5 stars"></label>
+                        <input type="radio" class="reset-option" name="rating" value="reset"/>
+                    </fieldset>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Enviar valoración</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script>
+    function showValoration() {
+
+        var finishModal = bootstrap.Modal.getInstance(document.getElementById('finishModal'));
+        finishModal.hide();
+
+        var secondModal = new bootstrap.Modal(document.getElementById('valorarModal'));
+        secondModal.show();
+    }
+
+    function incrementarSerie(index) {
+        let menosPeso = document.getElementById("menos-peso-swich" + index);
+        let repeticiones = document.getElementById("contador" + index).value;
+
+        if (serieActual < seriesTotal) {
+            serieActual++;
+            document.getElementById('serieText' + index).innerHTML = 'Serie ' + serieActual + '/' + seriesTotal;
+
+            var datos = {
+                repeticiones: repeticiones,
+                mpeso: menosPeso.checked ? "SI" : "NO"
+            };
+
+            // Convertir el objeto JSON a una cadena
+            var datosString = JSON.stringify(datos);
+            resultados[index].push(datosString);
+
+            console.log(resultados)
+            console.log(datosString);
+            document.getElementById("menos-peso-swich" + index).checked = false;
+            document.getElementById("contador" + index).value = "0";
+        }
+        if (serieActual === seriesTotal) {
+            document.getElementById("boton-serie" + index).disabled = true;
+            alert("Ya has completado todas las series!");
+            console.log(resultados.at(index));
+        }
+
+
+    }
+
     function terminarEntrenamiento() {
-        // Mostrar el modal de confirmación
-        // Supongamos que tienes una variable JavaScript llamada miVariable
         var vacio = {
             repeticiones: 0,
             mpeso: "NO"
         };
         for (let i = 0; i < <%=ejercicios.size()%>; i++) {
-            for (let j = 0; j < series[i]; j++) {
-                if (resultados[i][j] === null) {
+            for (let j = 0; j < seriesArray.at(i); j++) {
+                if (resultados[i][j] === undefined || resultados[i][j] === null) {
                     resultados[i][j] = JSON.stringify(vacio);
-                    console.log("adding")
                     console.log(resultados[i][j])
+
                 }
-                console.log("miau2")
             }
-            console.log("miau1")
         }
 
-        var miVariable = JSON.stringify(resultados);
+        let miVariable = JSON.stringify(resultados);
         console.log(resultados)
         console.log(miVariable)
         // Obtén el campo de entrada oculto por su ID
-        var datosEntrenamientoInput = document.getElementById("datosEntrenamientoInput");
+        let datosEntrenamientoInput = document.getElementById("datosEntrenamientoInput");
 
         // Establece el valor del campo de entrada oculto usando la variable JavaScript
         datosEntrenamientoInput.value = miVariable;
+
+        var finishModal = new bootstrap.Modal(document.getElementById('finishModal'));
+        finishModal.show();
+
     }
 
     function confirmarAccion() {
@@ -540,4 +569,87 @@
         tabContent[index].classList.add('active', 'show');
     }
 </script>
+<style>
+    @import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+    @import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+
+
+    fieldset, label {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 20px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin: 10px;
+    }
+
+    /****** Style Star Rating Widget *****/
+
+    .rating {
+        border: none;
+        margin-right: 49px;
+    }
+
+    .myratings {
+
+        font-size: 85px;
+        color: green;
+    }
+
+    .rating > [id^="star"] {
+        display: none;
+    }
+
+    .rating > label:before {
+        margin: 5px;
+        font-size: 2.25em;
+        font-family: FontAwesome;
+        display: inline-block;
+        content: "\f005";
+    }
+
+    .rating > .half:before {
+        content: "\f089";
+        position: absolute;
+    }
+
+    .rating > label {
+        color: #ddd;
+        float: right;
+    }
+
+    /***** CSS Magic to Highlight Stars on Hover *****/
+
+    .rating > [id^="star"]:checked ~ label, /* show gold star when clicked */
+    .rating:not(:checked) > label:hover, /* hover current star */
+    .rating:not(:checked) > label:hover ~ label {
+        color: #FFD700;
+    }
+
+    /* hover previous stars in list */
+
+    .rating > [id^="star"]:checked + label:hover, /* hover current star when changing rating */
+    .rating > [id^="star"]:checked ~ label:hover,
+    .rating > label:hover ~ [id^="star"]:checked ~ label, /* lighten current selection */
+    .rating > [id^="star"]:checked ~ label:hover ~ label {
+        color: #FFED85;
+    }
+
+    .reset-option {
+        display: none;
+    }
+
+    .reset-button {
+        margin: 6px 12px;
+        background-color: rgb(255, 255, 255);
+        text-transform: uppercase;
+    }
+
+
+</style>
 </html>
