@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -247,11 +247,13 @@ public class EntrenadorControllerCientes {
                 }
             } else {
                 for (Ejerciciosesion ejercicio : ejercicios) {
-                    total += Integer.parseInt(gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get("series").getAsString());
+                    String string = ejercicio.getEjercicio().getCategoria().getTiposBase();
+                    String tipoCantidad = gson.fromJson(string, JsonArray.class).get(0).getAsString();
+                    total += Integer.parseInt(gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get(tipoCantidad).getAsString());
                     Informacionejercicio info = informacionEjercicioRepository.findByEjercicioAndInfo(informacionSesion, ejercicio);
                     if (info != null) {
-                        sesionesEjercicios.add(gson.fromJson(info.getEvaluacion(), JsonArray.class).size());
-                        i += (gson.fromJson(info.getEvaluacion(), JsonArray.class).size());
+                        sesionesEjercicios.add(Integer.parseInt(gson.fromJson(info.getEvaluacion(), JsonObject.class).get(tipoCantidad).getAsString()));
+                        i += Integer.parseInt(gson.fromJson(info.getEvaluacion(), JsonObject.class).get(tipoCantidad).getAsString());
                     } else {
                         sesionesEjercicios.add(0);
                     }
@@ -306,6 +308,6 @@ public class EntrenadorControllerCientes {
         String repeticiones = gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get("repeticiones").getAsString();
         model.addAttribute("repeticionesTotales", repeticiones);
 
-        return "/entrenador/clientes/ver_desempeno";
+        return "(LEGACY)ver_desempeno";
     }
 }

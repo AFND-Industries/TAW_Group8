@@ -57,15 +57,21 @@
                 <td>
                     <div class="my-2" style="font-size: 18px">
                         <%
-                            String series = "";
+                            String[] parametros = null;
                             if (ejercicio.getEspecificaciones() != null) {
                                 Gson gson = new Gson();
+                                JsonArray jsonArray = gson.fromJson(ejercicio.getEjercicio().getCategoria().getTiposBase(), JsonArray.class);
+                                parametros = new String[jsonArray.size()];
+                                String tipoCantidad = jsonArray.get(0).getAsString();
                                 JsonObject jsonObject = gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class);
-                                series = jsonObject.get("series").getAsString();
+                                for (int i = 0; i < jsonArray.size(); i++) {
+                                    parametros[i] = jsonObject.get(jsonArray.get(i).getAsString()).getAsString();
+                                }
+
                             }
 
                         %>
-                        <%= sesionesTotales.get(j) %> / <%= series %>
+                        <%= sesionesTotales.get(j) %> / <%= parametros[0] %>
                     </div>
                 </td>
                 <td>
