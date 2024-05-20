@@ -93,18 +93,14 @@ public class ClienteController {
     }
 
     @PostMapping("/valorarEntrenamiento")
-    public String doValorarEntrenamiento(@RequestParam("datosEntrenamiento") String datos, HttpSession session) {
+    public String doValorarEntrenamiento(@RequestParam("datosEntrenamiento") String datos, @RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession session) {
         ObjectMapper objectMapper = new ObjectMapper();
         Gson gson = new Gson();
-        List<Ejerciciosesion> ejercicios = (List<Ejerciciosesion>) session.getAttribute("listaEjercicos");
 
+        Usuario user = (Usuario) session.getAttribute("user");
+        List<Ejerciciosesion> ejercicios = ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento);
 
-//        List<Ejerciciosesion> ejerciciosesions = (List<Ejerciciosesion>) ejercicios;
-        // Convertir el JSON en un árbol de nodos
         try {
-            // Crear una instancia de Gson
-
-
             // Convertir la cadena de texto JSON a un array de arrays de cadenas
             String[][] resultados = gson.fromJson(datos, String[][].class);
 
@@ -113,8 +109,8 @@ public class ClienteController {
             resultadoSesion.setComentario("");
             resultadoSesion.setFechaFin(LocalDate.now());
             resultadoSesion.setValoracion(0);
-            resultadoSesion.setSesionentrenamiento((Sesionentrenamiento) session.getAttribute("sesionEntrenamiento"));
-            resultadoSesion.setUsuario((Usuario) session.getAttribute("user"));
+            resultadoSesion.setSesionentrenamiento(sesionEntrenamiento);
+            resultadoSesion.setUsuario(user);
             informacionSesionRepository.save(resultadoSesion);
             int i = 0;
             for (String[] fila : resultados) {
