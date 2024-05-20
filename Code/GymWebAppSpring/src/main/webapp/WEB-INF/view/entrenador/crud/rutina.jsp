@@ -26,6 +26,8 @@
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean rutinaExists = rutina.getId() >= 0;
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
+
+    List<String> errorList = (List<String>) request.getAttribute("errorList");
 %>
 
 <html>
@@ -59,6 +61,15 @@
     </div>
 
     <div class="container">
+         <%if (errorList != null && !errorList.isEmpty()) {%>
+         <div class="row-mb-3">
+             <%for (String error : errorList) {%>
+             <div class="alert alert-danger">
+                 <%=error%>
+             </div>
+             <%}%>
+         </div>
+         <%}%>
          <div class="row mb-3">
             <div class="col-4">
                 <h1>Crear nueva rutina</h1>
@@ -101,14 +112,14 @@
         </div>
         <%
             List<SesionArgument> sesiones = rutina.getSesiones();
-            Map<Integer, Integer> sesionIndices = new HashMap<>();
+            Map<String, Integer> sesionIndices = new HashMap<>();
             for (int i = 0; i < sesiones.size(); i++)
                 sesionIndices.put(sesiones.get(i).getDia(), i);
 
-            List<Integer> diasOrdenados = new ArrayList<>(sesionIndices.keySet());
+            List<String> diasOrdenados = new ArrayList<>(sesionIndices.keySet());
             Collections.sort(diasOrdenados);
 
-            for (int dia : diasOrdenados) {
+            for (String dia : diasOrdenados) {
                 int posReal = sesionIndices.get(dia);
                 SesionArgument sesion = sesiones.get(posReal);
         %>
@@ -179,7 +190,7 @@
     }
 
     function goGuardarRutina() {
-        goPage('/entrenador/rutinas/guardar');
+        goPage('/entrenador/rutinas/guardar', 'from=<%=rutinaExists ? "1" : "0"%>');
     }
 
     function showDeleteModal(nombre, pos) {

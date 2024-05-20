@@ -167,13 +167,33 @@ public class EntrenadorControllerCRUD {
         return "/entrenador/crud/rutina";
     }
 
-    @GetMapping("/guardar")
+    @GetMapping("/guardar") // 0 = CREAR, 1 = EDITAR
     public String doGuardarRutina(@RequestParam("nombre") String nombre,
                                   @RequestParam("dificultad") Integer dificultad,
                                   @RequestParam("descripcion") String descripcion,
-                                  HttpSession session) {
+                                  @RequestParam("from") Integer from,
+                                  HttpSession session, Model model) {
         // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+
+        List<String> errorList = new ArrayList<>();
+        if (nombre.isEmpty())
+            errorList.add("No puedes crear una rutina sin nombre");
+
+        if (descripcion.isEmpty())
+            errorList.add("No puedes tener una descripción vacía");
+
+        if (rutina.getSesiones().isEmpty())
+            errorList.add("No puedes crear una rutina sin sesiones");
+
+        if (!errorList.isEmpty()) {
+            model.addAttribute("errorList", errorList);
+
+            if (from == 0) return doCrearRutina(session, model);
+            else if (from == 1) return doEditarRutina(rutina.getId(), session, model);
+        }
+
+
         rutina.setNombre(nombre);
         rutina.setDificultad(dificultad);
         rutina.setDescripcion(descripcion);
@@ -226,7 +246,7 @@ public class EntrenadorControllerCRUD {
             }
 
             s.setNombre(sesion.getNombre());
-            s.setDia(sesion.getDia());
+            s.setDia(Integer.parseInt(sesion.getDia()));
             s.setDescripcion(sesion.getDescripcion());
 
             sesionentrenamientoRepository.save(s);
@@ -386,7 +406,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/sesion/guardar")
     public String doGuardarSesion(@RequestParam("nombre") String nombre,
-                                  @RequestParam("dia") Integer dia,
+                                  @RequestParam("dia") String dia,
                                   @RequestParam("descripcion") String descripcion,
                                   HttpSession session) {
         // Las modificaciones de sesion antes de venir a esta pantalla
@@ -396,6 +416,7 @@ public class EntrenadorControllerCRUD {
         SesionArgument sesion = rutina.getSesiones().get(pos);
         if (sesion.getId() < -1)
             sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
+
         sesion.setNombre(nombre);
         sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
@@ -439,6 +460,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/seleccionar")
     public String doSeleccionarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
+                                         @RequestParam(value = "dia", required = false) String dia,
                                          @RequestParam(value = "descripcion", required = false) String descripcion,
                                          Model model, HttpSession session) {
         // Las modificaciones de sesion antes de venir a esta pantalla
@@ -447,6 +469,7 @@ public class EntrenadorControllerCRUD {
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
         if (nombre != null) sesion.setNombre(nombre);
+        if (dia != null) sesion.setDia(dia);
         if (descripcion != null) sesion.setDescripcion(descripcion);
 
         List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
@@ -504,7 +527,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/editar")
     public String doEditarEjercicio(@RequestParam("nombre") String nombre,
-                                    @RequestParam("dia") Integer dia,
+                                    @RequestParam("dia") String dia,
                                     @RequestParam("descripcion") String descripcion,
                                     @RequestParam("ejPos") Integer ejPos,
                                     Model model, HttpSession session) {
@@ -545,7 +568,7 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/crear/ejercicio/borrar")
     public String doBorrarEjercicio(@RequestParam("nombre") String nombre,
-                                    @RequestParam("dia") Integer dia,
+                                    @RequestParam("dia") String dia,
                                     @RequestParam("descripcion") String descripcion,
                                     @RequestParam("ejPos") Integer ejPos,
                                     HttpSession session) {

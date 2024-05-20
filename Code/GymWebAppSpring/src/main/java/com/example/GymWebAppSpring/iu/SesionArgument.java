@@ -10,14 +10,14 @@ import java.util.List;
 public class SesionArgument {
     private Integer id;
     private String nombre;
-    private Integer dia;
+    private String dia;
     private String descripcion;
     private List<EjercicioArgument> ejercicios;
 
     public SesionArgument() {
         this.id = -100;
         this.nombre = "";
-        this.dia = -1;
+        this.dia = "";
         this.descripcion = "";
         this.ejercicios = new ArrayList<>();
     }
@@ -25,7 +25,7 @@ public class SesionArgument {
     public SesionArgument(Sesionentrenamiento s, List<Ejerciciosesion> ee) {
         this.id = s.getId();
         this.nombre = s.getNombre();
-        this.dia = s.getDia();
+        this.dia = s.getDia().toString();
         this.descripcion = s.getDescripcion();
         this.ejercicios = new ArrayList<>();
         for (Ejerciciosesion e : ee)
@@ -47,10 +47,10 @@ public class SesionArgument {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public Integer getDia() {
+    public String getDia() {
         return dia;
     }
-    public void setDia(Integer dia) {
+    public void setDia(String dia) {
         this.dia = dia;
     }
 
