@@ -32,6 +32,8 @@
     List<EjercicioArgument> ejercicios = sesion.getEjercicios();
     EjercicioArgument ejercicio = ejercicios.get(ejercicioPos);
     ejercicio.setEjercicio(ejercicioBase.getId());
+
+    List<String> errorList = (List<String>) request.getAttribute("errorList");
 %>
 
 <html>
@@ -48,6 +50,16 @@
 <jsp:include page="../../components/header.jsp"/>
 
     <div class="container">
+        <%if (errorList != null && !errorList.isEmpty()) {%>
+        <div class="row-mb-3">
+            <%for (String error : errorList) {%>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%=error%>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <%}%>
+        </div>
+        <%}%>
         <div class="row mb-3">
             <div class="col-4">
                 <h1>Añadir ejercicio</h1>

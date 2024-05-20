@@ -171,16 +171,19 @@ public class EntrenadorControllerCRUD {
     public String doGuardarRutina(@RequestParam("nombre") String nombre,
                                   @RequestParam("dificultad") Integer dificultad,
                                   @RequestParam("descripcion") String descripcion,
-                                  @RequestParam("from") Integer from,
                                   HttpSession session, Model model) {
         // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
 
+        rutina.setNombre(nombre);
+        rutina.setDificultad(dificultad);
+        rutina.setDescripcion(descripcion);
+
         List<String> errorList = new ArrayList<>();
-        if (nombre.isEmpty())
+        if (nombre.trim().isEmpty())
             errorList.add("No puedes crear una rutina sin nombre");
 
-        if (descripcion.isEmpty())
+        if (descripcion.trim().isEmpty())
             errorList.add("No puedes tener una descripción vacía");
 
         if (rutina.getSesiones().isEmpty())
@@ -189,14 +192,8 @@ public class EntrenadorControllerCRUD {
         if (!errorList.isEmpty()) {
             model.addAttribute("errorList", errorList);
 
-            if (from == 0) return doCrearRutina(session, model);
-            else if (from == 1) return doEditarRutina(rutina.getId(), session, model);
+            return doEditarRutina(rutina.getId(), session, model);
         }
-
-
-        rutina.setNombre(nombre);
-        rutina.setDificultad(dificultad);
-        rutina.setDescripcion(descripcion);
 
         // RUTINA
         // CREAR O MODIFICAR DATOS RUTINA
@@ -376,7 +373,7 @@ public class EntrenadorControllerCRUD {
                                  @RequestParam(value = "dificultad", required = false) Integer dificultad,
                                  @RequestParam(value = "descripcion", required = false) String descripcion,
                                  @RequestParam(value = "pos", required = false) Integer pos,
-                                 Model model, HttpSession session) {
+                                 HttpSession session, Model model) {
         // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         if (nombre != null) rutina.setNombre(nombre);
@@ -408,18 +405,44 @@ public class EntrenadorControllerCRUD {
     public String doGuardarSesion(@RequestParam("nombre") String nombre,
                                   @RequestParam("dia") String dia,
                                   @RequestParam("descripcion") String descripcion,
-                                  HttpSession session) {
+                                  HttpSession session, Model model) {
         // Las modificaciones de sesion antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         int pos = (int) session.getAttribute("sesionPos");
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
-        if (sesion.getId() < -1)
-            sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
 
         sesion.setNombre(nombre);
         sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
+
+        List<String> errorList = new ArrayList<>();
+        if (nombre.trim().isEmpty())
+            errorList.add("No puedes crear una sesión sin nombre");
+
+        if (dia.trim().isEmpty())
+            errorList.add("Debes especificar un día");
+
+        // si no es numerico
+
+        // si no es mayor que cero y menor o igual que 7
+
+        // si el día está repetido
+
+        if (descripcion.trim().isEmpty())
+            errorList.add("No puedes tener una descripción vacía");
+
+        if (sesion.getEjercicios().isEmpty())
+            errorList.add("No puedes crear una sesión sin ejercicios");
+
+        if (!errorList.isEmpty()) {
+            model.addAttribute("errorList", errorList);
+
+            return doEditarSesion(null, null, null, null, session, model);
+        }
+
+        if (sesion.getId() < -1)
+            sesion.setId(-1); // para indicar que ha sido guardada y no es una dummy recien creada, se usa en doVolverFromSesion
 
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
@@ -526,19 +549,19 @@ public class EntrenadorControllerCRUD {
     }
 
     @GetMapping("/crear/ejercicio/editar")
-    public String doEditarEjercicio(@RequestParam("nombre") String nombre,
-                                    @RequestParam("dia") String dia,
-                                    @RequestParam("descripcion") String descripcion,
+    public String doEditarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
+                                    @RequestParam(value = "dia", required = false) String dia,
+                                    @RequestParam(value = "descripcion", required = false) String descripcion,
                                     @RequestParam("ejPos") Integer ejPos,
-                                    Model model, HttpSession session) {
+                                    HttpSession session, Model model) {
         // Las modificaciones de sesion antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         int pos = (int) session.getAttribute("sesionPos");
 
         SesionArgument sesion = rutina.getSesiones().get(pos);
-        sesion.setNombre(nombre);
-        sesion.setDia(dia);
-        sesion.setDescripcion(descripcion);
+        if (nombre != null) sesion.setNombre(nombre);
+        if (dia != null) sesion.setDia(dia);
+        if (descripcion != null) sesion.setDescripcion(descripcion);
 
         int ejbase = sesion.getEjercicios().get(ejPos).getEjercicio();
         Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
@@ -551,17 +574,32 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/crear/ejercicio/guardar")
     public String doGuardarEjercicio(@RequestParam("especificaciones") String especificaciones,
                                      @RequestParam("ejpos") Integer ejpos,
-                                     HttpSession session) {
+                                     HttpSession session, Model model) {
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         int pos = (int) session.getAttribute("sesionPos");
         SesionArgument sesion = rutina.getSesiones().get(pos);
         EjercicioArgument ejercicioSesion = sesion.getEjercicios().get(ejpos);
-        if (ejercicioSesion.getId() < -1)
-            ejercicioSesion.setId(-1);
 
         Gson gson = new Gson();
         JsonObject esp = gson.fromJson(especificaciones, JsonObject.class);
         ejercicioSesion.setEspecificaciones(esp);
+
+        List<String> errorList = new ArrayList<>();
+        for (String tipoBase : esp.keySet()) {
+            String value = esp.get(tipoBase).getAsString();
+
+            if (value.trim().isEmpty())
+                errorList.add("No has especificado el atributo " + tipoBase);
+        }
+
+        if (!errorList.isEmpty()) {
+            model.addAttribute("errorList", errorList);
+
+            return doEditarEjercicio(null, null, null, ejpos, session, model);
+        }
+
+        if (ejercicioSesion.getId() < -1)
+            ejercicioSesion.setId(-1);
 
         return "redirect:/entrenador/rutinas/crear/sesion/editar";
     }

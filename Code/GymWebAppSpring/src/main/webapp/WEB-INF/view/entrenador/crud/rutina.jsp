@@ -61,15 +61,16 @@
     </div>
 
     <div class="container">
-         <%if (errorList != null && !errorList.isEmpty()) {%>
-         <div class="row-mb-3">
-             <%for (String error : errorList) {%>
-             <div class="alert alert-danger">
-                 <%=error%>
-             </div>
-             <%}%>
-         </div>
-         <%}%>
+        <%if (errorList != null && !errorList.isEmpty()) {%>
+        <div class="row-mb-3">
+            <%for (String error : errorList) {%>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%=error%>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <%}%>
+        </div>
+        <%}%>
          <div class="row mb-3">
             <div class="col-4">
                 <h1>Crear nueva rutina</h1>
@@ -190,7 +191,7 @@
     }
 
     function goGuardarRutina() {
-        goPage('/entrenador/rutinas/guardar', 'from=<%=rutinaExists ? "1" : "0"%>');
+        goPage('/entrenador/rutinas/guardar');
     }
 
     function showDeleteModal(nombre, pos) {

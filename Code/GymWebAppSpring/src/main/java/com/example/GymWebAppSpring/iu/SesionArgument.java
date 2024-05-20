@@ -47,9 +47,11 @@ public class SesionArgument {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public String getDia() {
         return dia;
     }
+
     public void setDia(String dia) {
         this.dia = dia;
     }
