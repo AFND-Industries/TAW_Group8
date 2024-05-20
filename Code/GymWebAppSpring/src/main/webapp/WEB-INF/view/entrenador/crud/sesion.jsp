@@ -107,7 +107,7 @@
         </div>
         <div class="col-6">
             <input id="dia" type="text" class="form-control mt-2"
-                   value='<%=sesion.getDia() == -1 ? "" : sesion.getDia()%>' <%=readOnly ? "disabled" : ""%>>
+                   value='<%=sesion.getDia().isEmpty() ? "" : sesion.getDia()%>' <%=readOnly ? "disabled" : ""%>>
         </div>
     </div>
     <div class="row mb-3">

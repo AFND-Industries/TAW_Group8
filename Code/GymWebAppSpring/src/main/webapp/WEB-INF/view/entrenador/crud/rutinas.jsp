@@ -227,8 +227,9 @@
         toastBootstrap.show();
     }
 
-    if (rutinaChangedName.length > 0)
-        showToast('Rutina ' + (changeMode === 0 ? 'creada' : 'editada') +  ' correctamente', 'Has ' + (changeMode === 0 ? 'creado' : 'editado') +  ' la rutina <b>' + rutinaChangedName + '</b> correctamente.');
+    if (rutinaChangedName.length > 0) {
+        showToast('Rutina ' + (changeMode === 0 ? 'creada' : 'editada') + ' correctamente', 'Has ' + (changeMode === 0 ? 'creado' : 'editado') + ' la rutina <b>' + rutinaChangedName + '</b> correctamente.');
+    }
 </script>
 </body>
 </html>
