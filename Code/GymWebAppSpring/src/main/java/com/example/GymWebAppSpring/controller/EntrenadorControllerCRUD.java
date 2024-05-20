@@ -176,6 +176,23 @@ public class EntrenadorControllerCRUD {
         // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
 
+        List<String> errorList = new ArrayList<>();
+        if (nombre.isEmpty())
+            errorList.add("No puedes crear una rutina sin nombre");
+
+        if (descripcion.isEmpty())
+            errorList.add("No puedes tener una descripción vacía");
+
+        if (rutina.getSesiones().isEmpty())
+            errorList.add("No puedes crear una rutina sin sesiones");
+
+        if (!errorList.isEmpty()) {
+            model.addAttribute("errorList", errorList);
+
+            if (from == 0) return doCrearRutina(session, model);
+            else if (from == 1) return doEditarRutina(rutina.getId(), session, model);
+        }
+
 
         rutina.setNombre(nombre);
         rutina.setDificultad(dificultad);
