@@ -16,7 +16,7 @@
     Integer _edad = (Integer) request.getAttribute("edadFilter");
     Tipousuario _tipo = (Tipousuario) request.getAttribute("tipoFilter");
 %>
-<html>
+<html lang="es">
 <head>
     <title>Listado de usuarios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,6 +64,18 @@
         </div>
         <div class="col">
             <i class="bi bi-person-check me-1"></i> Asignar entrenador al usuario
+        </div>
+    </div>
+    <div class="row mb-2 g-2">
+        <div class="col">
+            <a href="/admin/users/register" class="btn btn-primary w-100">
+                <i class="bi bi-person"></i> Añadir ejercicio
+            </a>
+        </div>
+        <div class="col">
+            <a href="" class="btn btn-outline-danger w-100">
+                <i class="bi bi-funnel me-2"></i> Borrar filtrado
+            </a>
         </div>
     </div>
     <table class="table table-striped">
@@ -120,11 +132,6 @@
     <h5 class="text-center"><%=usuarios.size()%> usuario<%=usuarios.size() != 1 ? "s" : ""%>
         obtenido<%=usuarios.size() != 1 ? "s" : ""%>
     </h5>
-    <div class="text-center">
-        <a class="btn btn-outline-secondary px-2 mb-3" href="/admin/register">
-            <i class="bi bi-plus-circle me-1"></i> Añadir usuario
-        </a>
-    </div>
 </div>
 <!-- Bootstrap Javascript Dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

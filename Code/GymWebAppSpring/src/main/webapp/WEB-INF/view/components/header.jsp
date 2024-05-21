@@ -16,13 +16,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("clientes.jsp") ? "active" : "")%>" href="/entrenador/clientes" >Clientes</a>
+                        <a class="nav-link" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("rutinas.jsp") ? "active" : "")%>" href="/entrenador/rutinas">Rutinas</a>
+                        <a class="nav-link" href="/"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="<%="nav-link "+(request.getRequestURI().endsWith("client.jsp") ? "active" : "")%>" href="/client">Area personal</a>
+                        <a class="nav-link" href="/">Contacto</a>
                     </li>
                 </ul>
             </div>
@@ -42,7 +42,10 @@
                         if (user.getTipo().getNombre().equals("Administrador")){
                     %>
                     <li><a class="dropdown-item" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2" style="font-size: 16px"></i>Panel de control</a></li>
+                    <hr class="dropdown-divider">
                     <li><a class="dropdown-item" href="/admin/users/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Usuarios</a></li>
+                    <li><a class="dropdown-item" href="/admin/exercises/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Ejercicios</a></li>
+                    <li><a class="dropdown-item" href="/admin/categories/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Categorías</a></li>
                     <%
                         } else if (user.getTipo().getNombre().equals("Entrenador")){
                     %>

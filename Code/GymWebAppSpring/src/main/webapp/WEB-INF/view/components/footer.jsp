@@ -109,7 +109,7 @@
                     <p><i class="fas fa-home me-3"></i> ETSII, Malaga, 29010, ES</p>
                     <p>
                         <i class="fas fa-envelope me-3"></i>
-                        afndindustries@gmail.com
+                        <a style="text-decoration: none" href="mailto:afndindustries@gmail.com">afndindustries@gmail.com</a>
                     </p>
                     <p><i class="fas fa-phone me-3"></i> + 34 664 98 23 11</p>
                     <p><i class="fas fa-print me-3"></i> + 34 982 33 12 44</p>

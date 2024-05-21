@@ -32,8 +32,10 @@ public class SessionController {
             session.setAttribute("user",usuario);
             if (AuthUtils.isTrainer(session))
                 return "redirect:/entrenador";
+            else if (AuthUtils.isAdmin(session))
+                return "redirect:/admin/dashboard";
             else
-                return "redirect:/";
+                return "redirect:/client";
         }
 
         model.addAttribute("error", "El usuario o la contraseña no son válidos");

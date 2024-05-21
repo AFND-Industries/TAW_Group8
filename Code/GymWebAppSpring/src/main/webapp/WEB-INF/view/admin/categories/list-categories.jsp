@@ -1,7 +1,7 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Categoria" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Musculo" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 07/05/2024
@@ -10,13 +10,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Ejercicio> ejercicios = (List<Ejercicio>) request.getAttribute("ejercicios");
     List<Categoria> categorias = (List<Categoria>) request.getAttribute("categorias");
-    List<Musculo> musculos = (List<Musculo>) request.getAttribute("musculos");
 
     String _nombre = (String) request.getAttribute("nombre");
     Categoria _categoria = (Categoria) request.getAttribute("categoria");
-    Musculo _musculo = (Musculo) request.getAttribute("musculo");
 %>
 <html lang="es">
 <head>
@@ -48,30 +45,6 @@
     <h1 class="text-center mb-2">Listado de ejercicios</h1>
     <form class="d-flex justify-content-between" method="post" action="">
         <input type="text" class="form-control" value="<%= _nombre != null ? _nombre : ""%>" name="nombre" placeholder="Nombre"/>
-        <select class="form-select ms-2" name="categoria">
-            <option disabled <%=_categoria == null ? "selected" : ""%>>Categoría</option>
-            <%
-                for (Categoria categoria : categorias) {
-            %>
-            <option value="<%=categoria.getId()%>" <%=categoria != null && categoria.equals(_categoria) ? "selected" : ""%>>
-                <%=categoria.getNombre()%>
-            </option>
-            <%
-                }
-            %>
-        </select>
-        <select class="form-select ms-2" name="musculo">
-            <option disabled <%=_musculo == null ? "selected" : ""%>>Músculo</option>
-            <%
-                for (Musculo musculo : musculos) {
-            %>
-            <option value="<%=musculo.getId()%>" <%=musculo != null && musculo.equals(_categoria) ? "selected" : ""%>>
-                <%=musculo.getNombre()%>
-            </option>
-            <%
-                }
-            %>
-        </select>
         <button class="btn btn-primary d-flex align-items-center ms-2">
             <i class="bi bi-funnel-fill me-2"></i> Filtrar
         </button>
@@ -79,19 +52,19 @@
     <div class="row mb-2">
         <h5>Leyenda</h5>
         <div class="col">
-            <i class="bi bi-book me-1"></i> Ver información del ejercicio
+            <i class="bi bi-book me-1"></i> Ver información de la categoría
         </div>
         <div class="col">
-            <i class="bi bi-pencil-square me-1"></i> Editar ejercicio
+            <i class="bi bi-pencil-square me-1"></i> Editar categoría
         </div>
         <div class="col">
-            <i class="bi bi-trash3 me-1"></i> Eliminar ejercicio
+            <i class="bi bi-trash3 me-1"></i> Eliminar categoría
         </div>
     </div>
     <div class="row mb-2 g-2">
         <div class="col">
-            <a href="/admin/exercises/new" class="btn btn-primary w-100">
-                <i class="bi bi-person"></i> Añadir ejercicio
+            <a href="/admin/categories/new" class="btn btn-primary w-100">
+                <i class="bi bi-person"></i> Añadir categoría
             </a>
         </div>
         <div class="col">
@@ -102,19 +75,18 @@
     </div>
     <div class="row g-3">
         <%
-            for (Ejercicio ejercicio : ejercicios){
+            for (Categoria categoria : categorias){
         %>
 
             <div class="col-md-3 col-sm-6 col-12 h-100">
                 <div class="card">
-                    <img src="<%=ejercicio.getLogo()%>" class="card-img-top" />
                     <div class="card-body">
-                        <span class="fw-bold fs-4"><%=ejercicio.getNombre()%></span><br>
-                        <span class="text-secondary"><%=ejercicio.getMusculo().getNombre()%></span>
+                        <img src="<%=categoria.getIcono()%>" class="card-img-top" />
+                        <span class="fw-bold fs-4"><%=categoria.getNombre()%></span><br>
                         <div class="d-flex justify-content-around mt-4">
-                            <a href="/admin/exercises/view?id=<%=ejercicio.getId()%>" class="icon-btn"><i class="bi bi-book me-1"></i></a>
-                            <a href="/admin/exercises/edit?id=<%=ejercicio.getId()%>" class="icon-btn"><i class="bi bi-pencil-square me-1"></i></a>
-                            <a href="/admin/exercises/delete?id=<%=ejercicio.getId()%>" class="icon-btn"><i class="bi bi-trash3 me-1"></i></a>
+                            <a href="/admin/categories/view?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-book me-1"></i></a>
+                            <a href="/admin/categories/edit?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-pencil-square me-1"></i></a>
+                            <a href="/admin/categories/delete?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-trash3 me-1"></i></a>
                         </div>
                     </div>
                 </div>

@@ -116,9 +116,8 @@ public class UsersController {
             return "redirect:/login";
 
         model.addAttribute("user",usuario);
-        model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
-        model.addAttribute("editable",false);
-        return "admin/users/edit-user";
+
+        return "admin/users/view-user";
     }
     /* ------------------------- End Read Functions */
 

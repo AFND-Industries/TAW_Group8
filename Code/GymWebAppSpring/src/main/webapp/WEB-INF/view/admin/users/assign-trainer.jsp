@@ -11,9 +11,8 @@
     Usuario usuario = (Usuario) request.getAttribute("user");
     List<Usuario> entrenadores = (List<Usuario>) request.getAttribute("trainers");
     List<Usuario> selected = (List<Usuario>) request.getAttribute("sTrainers");
-    Boolean contains = (Boolean) request.getAttribute("contains");
 %>
-<html>
+<html lang="es">
 <head>
     <title>Asignar entrenador</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">

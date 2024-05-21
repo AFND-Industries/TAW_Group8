@@ -7,17 +7,14 @@
   Time: 20:53
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%
     Usuario user = (Usuario) request.getAttribute("user");
     List<Tipousuario> tiposUsuario = (List<Tipousuario>) request.getAttribute("tiposUsuario");
-    Boolean edit = (Boolean) request.getAttribute("editable");
-    edit = edit == null ? true : false;
-    String editable = user != null && !edit ? "disabled" : "";
 %>
-<html>
+<html lang="es">
 <head>
-    <title><%=user != null ? (edit ? "Editar" : "Ver") : "Nuevo"%> usuario</title>
+    <title><%=user != null ? "Editar" : "Nuevo"%> usuario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,14 +25,15 @@
 <body>
 <jsp:include page="../../components/header.jsp"/>
 <div class="container">
-    <h2 class="text-center"><%=user != null ? (edit ? "Editar" : "Ver") : "Registro de un nuevo"%> usuario</h2>
-    <form class="row g-3 was-validated" method="post" action="<%=user != null ? "/admin/users/edit" : "/admin/users/register"%>">
+    <h2 class="text-center"><%=user != null ? "Editar" : "Registro de un nuevo"%> usuario</h2>
+    <form class="row g-3 was-validated" method="post"
+          action="<%=user != null ? "/admin/users/edit" : "/admin/users/register"%>">
         <input type="hidden" value="<%=user != null ? user.getId() : ""%>" name="id"/>
         <div class="col-md-6 mb-3">
             <label for="nombreInput" class="form-label">Nombre</label>
             <input type="text" class="form-control" maxlength="32" id="nombreInput" name="nombre"
                    value="<%=user != null ? user.getNombre() : ""%>"
-                <%=editable%>
+
                    required>
             <div class="invalid-feedback">
                 Por favor, escriba un nombre válido
@@ -45,7 +43,7 @@
             <label for="apellidosInput" class="form-label">Apellidos</label>
             <input type="text" class="form-control" maxlength="32" id="apellidosInput" name="apellidos"
                    value="<%=user != null ? user.getApellidos() : ""%>"
-                <%=editable%>
+
                    required>
             <div class="invalid-feedback">
                 Por favor, escriba un(os) apellido(s) válido(s)
@@ -53,7 +51,7 @@
         </div>
         <div class="col-md-4 mb-3">
             <label for="generoInput" class="form-label">Género</label>
-            <select class="form-select" id="generoInput" name="genero" required <%=editable%>>
+            <select class="form-select" id="generoInput" name="genero" required>
                 <option <%=user == null ? "selected" : ""%> disabled value="">Selecciona...</option>
                 <%
                     for (String str : new String[]{"Masculino", "Femenino"}) {
@@ -73,7 +71,7 @@
             <label for="edadInput" class="form-label">Edad</label>
             <input type="number" class="form-control" id="edadInput" name="edad"
                    value="<%=user != null ? user.getEdad() : ""%>"
-                <%=editable%>
+
                    required>
             <div class="invalid-feedback">
                 Por favor, indique una edad válida
@@ -83,7 +81,7 @@
             <label for="dniInput" class="form-label">Documento de Identificación</label>
             <input type="text" class="form-control" maxlength="10" id="dniInput" name="dni"
                    value="<%=user != null ? user.getDni() : ""%>"
-                <%=editable%>
+
                    required>
             <div class="invalid-feedback">
                 Por favor, indique un documento de identificación válido
@@ -92,15 +90,15 @@
         <div class="col-md-6 mb-3">
             <label for="claveInput" class="form-label">Clave</label>
             <input type="password" class="form-control" id="claveInput" name="clave"
-                   placeholder="<%=user != null ? (edit ? "Si se deja vacío se mantiene la clave anterior" : "************") : ""%>"
-                <%=user == null ? "required" : ""%> <%=editable%>>
+                   placeholder="<%=user != null ? "Si se deja vacío se mantiene la clave anterior" : ""%>"
+                <%=user == null ? "required" : ""%> >
             <div class="invalid-feedback">
                 Por favor, indique una clave válida
             </div>
         </div>
         <div class="col-md-6 mb-3">
             <label for="tipoUsuarioInput" class="form-label">Tipo de Usuario</label>
-            <select class="form-select" id="tipoUsuarioInput" name="tipoUsuario" required <%=editable%>>
+            <select class="form-select" id="tipoUsuarioInput" name="tipoUsuario" required>
                 <option selected disabled value="">Selecciona...</option>
                 <%
                     for (Tipousuario tipo : tiposUsuario) {
@@ -116,17 +114,6 @@
             </div>
         </div>
         <div class="col mb-3">
-            <%
-                if (!edit) {
-            %>
-            <a href="/admin/users/">
-                <button type="button" class="btn btn-primary w-100">
-                    <i class="bi bi-arrow-left me-1" style="font-size: 15px"></i> Volver atrás
-                </button>
-            </a>
-            <%
-            } else {
-            %>
             <button type="submit" class="btn btn-primary w-100">
                 <%
                     if (user != null) {
@@ -140,9 +127,6 @@
                     }
                 %>
             </button>
-            <%
-                }
-            %>
         </div>
     </form>
 </div>
