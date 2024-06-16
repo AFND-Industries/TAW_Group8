@@ -83,13 +83,13 @@ public class ClienteController {
     }
 
     @GetMapping("rutina/sesion")
-    public String doVerSesion(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession session, Model modelo) {
+    public String doVerSesion(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
-        List<Ejerciciosesion> ejercicios = ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento); //Cambiar por una querry de solo 1
+        //Cambiar por una querry de solo 1
 
-        return "redirect:/client/rutina/sesion/ejercicio?sesionEntrenamiento=" + sesionEntrenamiento.getId() + "&ejercicio=0";
+        return "redirect:/client/rutina/sesion/ejercicio?sesionEntrenamiento=" + sesionEntrenamiento.getId();
     }
 
     @GetMapping("rutina/sesion/ejercicio")
@@ -124,7 +124,6 @@ public class ClienteController {
 
         session.removeAttribute("sesionEntrenamiento");
         session.setAttribute("sesionEntrenamiento", sesionEntrenamiento);
-        Usuario user = (Usuario) session.getAttribute("user");
 
         modelo.addAttribute("sesionEntrenamiento", sesionEntrenamiento);
         modelo.addAttribute("ejercicioSesion", ejercicios.get(ejercicioIndex));
@@ -153,17 +152,16 @@ public class ClienteController {
             informacionSesionRepository.save(informacionSesion);
         }
         List<Informacionejercicio> informacionEjercicioLista = informacionEjercicioRepository.findBySesionentrenamiento(sesionEntrenamiento);
+        Informacionejercicio informacionEjercicio;
         if (informacionEjercicioLista.size() <= ejercicioIndex) {
-            Informacionejercicio informacionEjercicio = new Informacionejercicio();
+            informacionEjercicio = new Informacionejercicio();
             informacionEjercicio.setEjerciciosesion(ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento).get(ejercicioIndex));
             informacionEjercicio.setInformacionsesion(informacionSesion);
-            informacionEjercicio.setEvaluacion(resultados);
-            informacionEjercicioRepository.save(informacionEjercicio);
         } else {
-            Informacionejercicio informacionEjercicio = informacionEjercicioLista.get(ejercicioIndex);
-            informacionEjercicio.setEvaluacion(resultados);
-            informacionEjercicioRepository.save(informacionEjercicio);
+            informacionEjercicio = informacionEjercicioLista.get(ejercicioIndex);
         }
+        informacionEjercicio.setEvaluacion(resultados);
+        informacionEjercicioRepository.save(informacionEjercicio);
 
 
         return "redirect:/client/rutina/sesion/ejercicio?sesionEntrenamiento=" + sesionEntrenamiento.getId() + "&ejercicioIndex=" + (ejercicioIndex + 1);
@@ -175,7 +173,7 @@ public class ClienteController {
     public String doModificarEjercicio(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento,
                                        @RequestParam("resultados") String resultados,
                                        @RequestParam(value = "ejercicioSesion") Ejerciciosesion ejerciciosesion,
-                                       HttpSession session, Model modelo) {
+                                       HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
@@ -197,7 +195,7 @@ public class ClienteController {
                                          HttpSession session, Model modelo) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
-        Informacionsesion informacionSesion = null;
+        Informacionsesion informacionSesion;
         if (informacionSesionModif == null) {
             informacionSesion = informacionSesionRepository.findByUsuarioAndSesion((Usuario) session.getAttribute("user"), sesionEntrenamiento);
         } else {
@@ -259,7 +257,7 @@ public class ClienteController {
     }
 
     @PostMapping("/rutina/sesion/desempenyo/borrar")
-    public String doBorrarDesempenyo(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession session, Model modelo) {
+    public String doBorrarDesempenyo(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
