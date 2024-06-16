@@ -250,7 +250,7 @@ public class EntrenadorControllerCientes {
                     String string = ejercicio.getEjercicio().getCategoria().getTiposBase();
                     String tipoCantidad = gson.fromJson(string, JsonArray.class).get(0).getAsString();
                     total += Integer.parseInt(gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get(tipoCantidad).getAsString());
-                    Informacionejercicio info = informacionEjercicioRepository.findByEjercicioAndInfo(informacionSesion, ejercicio);
+                    Informacionejercicio info = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejercicio, informacionSesion );
                     if (info != null) {
                         sesionesEjercicios.add(Integer.parseInt(gson.fromJson(info.getEvaluacion(), JsonObject.class).get(tipoCantidad).getAsString()));
                         i += Integer.parseInt(gson.fromJson(info.getEvaluacion(), JsonObject.class).get(tipoCantidad).getAsString());
@@ -298,7 +298,7 @@ public class EntrenadorControllerCientes {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
-        Informacionejercicio informacionEjercicio = informacionEjercicioRepository.findByEjercicioAndInfo(informacionSesion, ejercicio);
+        Informacionejercicio informacionEjercicio = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejercicio,informacionSesion);
 
         model.addAttribute("ejercicio", ejercicio.getEjercicio());
         model.addAttribute("informacionEjercicio", informacionEjercicio);

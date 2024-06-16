@@ -382,7 +382,7 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
+
 
 <div class="modal fade" id="finishModal" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -419,6 +419,7 @@
         </div>
     </div>
 </div>
+
 <!-- Segundo modal para la valoración -->
 <div class="modal fade" id="valorarModal" tabindex="-1" aria-labelledby="valorarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

@@ -50,7 +50,7 @@
                 <%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
                 <%--                    The current link item--%>
                 <%--                </a>--%>
-                <form method="post" action="client/verrutina">
+                <form method="get" action="client/rutina">
                     <%
                         for (Rutina r : rutinas) {
 
@@ -61,7 +61,7 @@
                             value="<%=r.getId()%>" name="rutinaElegida">
 
                         <span><%=r.getNombre()%></span>
-                        <span><%=r.getId()%></span>
+                        <span>Fecha Creacion: <%=r.getFechaCreacion()%></span>
 
                     </button>
 
@@ -74,26 +74,27 @@
                 <%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>
                 <%--                        item</a>--%>
             </div>
-            <div class="d-flex justify-content-center">
-                <nav aria-label="..." class="mt-1 ">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
-                        </li>
-                        <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+
             <%
                 }
             %>
+        </div>
+        <div class="d-flex justify-content-center">
+            <nav aria-label="..." class="mt-1 ">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                    <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
