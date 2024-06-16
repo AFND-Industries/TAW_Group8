@@ -100,7 +100,7 @@ public class EntrenadorControllerCientes {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
-        return getString(model, session, new FiltroArgument());
+        return getString(model, session, new FiltroArgument(), "");
     }
 
     @PostMapping("/rutinas/anyadirRutinaFilter")
@@ -109,12 +109,12 @@ public class EntrenadorControllerCientes {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
-        return getString(model, session, filtro);
+        return getString(model, session, filtro, "");
     }
 
-    private String getString(Model model, HttpSession session, FiltroArgument filtro) {
+    private String getString(Model model, HttpSession session, FiltroArgument filtro, String error) {
         Usuario cliente = (Usuario) session.getAttribute("cliente");
-        List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(cliente.getId());
+        List<Rutinacliente> rutinasCliente = rutinaClienteReporsitory.findByUsuario(cliente);
         List<Rutina> rutinasEntrenador = getRutinasEntrenador(filtro, session);
         Map<Rutina, List<Sesionentrenamiento>> mapSesiones = new HashMap<>();
 
@@ -132,6 +132,7 @@ public class EntrenadorControllerCientes {
         model.addAttribute("rutinasEntrenador", rutinasEntrenador);
         model.addAttribute("mapSesiones", mapSesiones);
         model.addAttribute("filtro", filtro);
+        model.addAttribute("error", error);
 
         return "/entrenador/clientes/anyadir_rutina_cliente";
     }
@@ -163,7 +164,6 @@ public class EntrenadorControllerCientes {
                                    @RequestParam("sesionMode") Integer sesionMode,
                                    @RequestParam("sesionNum") String sesionNum,
                                    @RequestParam("dificultad") Integer dificultad,
-                                   RedirectAttributes redirectAttributes,
                                    Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -174,13 +174,14 @@ public class EntrenadorControllerCientes {
         filtro.setSesionNum(sesionNum);
         filtro.setDificultad(dificultad);
 
-        return getString(model, session, filtro);
+        return getString(model, session, filtro, "");
     }
 
 
     @PostMapping("/rutinas/guardar")
     public String doGuardarRutina(@RequestParam("rutinas") List<Rutina> rutinas,
                                   @RequestParam Map<String, String> datId,
+                                  Model model,
                                   HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -188,7 +189,13 @@ public class EntrenadorControllerCientes {
         List<Rutina> rutinasCliente = rutinaUsuarioRepository.findRutinaById(usuario.getId());
 
         for (Rutina rutina : rutinas) {
-            LocalDate date = LocalDate.parse(datId.get("dateId_" + rutina.getId()));
+            LocalDate date;
+            try {
+                date = LocalDate.parse(datId.get("dateId_" + rutina.getId()));
+            } catch (Exception e) {
+                return getString(model, session, new FiltroArgument(), "Por favor, Seleccione una fecha válida");
+            }
+
             if (!rutinasCliente.contains(rutina)) {
                 Rutinacliente rutinaCliente = new Rutinacliente();
                 rutinaCliente.setRutina(rutina);

@@ -12,7 +12,9 @@
 <%@ page import="com.google.gson.GsonBuilder" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="com.example.GymWebAppSpring.util.LocalDateAdapter" %>
-<%@ page import="org.apache.commons.lang3.StringEscapeUtils" %><%--
+<%@ page import="org.apache.commons.lang3.StringEscapeUtils" %>
+<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 24/04/2024
@@ -21,7 +23,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Rutina> rutinasCliente = (List<Rutina>) request.getAttribute("rutinasCliente");
+    List<Rutinacliente> rutinasClienteObject = (List<Rutinacliente>) request.getAttribute("rutinasCliente");
+    List<Rutina> rutinasCliente = new ArrayList<>();
+    for (Rutinacliente rutinacliente : rutinasClienteObject) {
+        rutinasCliente.add(rutinacliente.getRutina());
+    }
     List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinasEntrenador");
     Usuario cliente = (Usuario) session.getAttribute("cliente");
     FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
@@ -29,6 +35,7 @@
     if (filtro == null) {
         filtro = new FiltroArgument();
     }
+    String error = (String) request.getAttribute("error");
 %>
 <html>
 <head>
@@ -244,93 +251,98 @@
 </div>
 
 <script>
-    function mostrarRutina(nombre, dificultad, desc, sesiones) {
-        document.getElementById('rutina_title').textContent = nombre;
-        document.getElementById('rutina_nombre').textContent = nombre;
-        document.getElementById('rutina_Dificultad').textContent = dificultad;
-        document.getElementById('rutina_desc').textContent = desc;
+	function mostrarRutina(nombre, dificultad, desc, sesiones) {
+		document.getElementById('rutina_title').textContent = nombre;
+		document.getElementById('rutina_nombre').textContent = nombre;
+		document.getElementById('rutina_Dificultad').textContent = dificultad;
+		document.getElementById('rutina_desc').textContent = desc;
 
-        const rutinaSesionesContainer = document.getElementById('rutina_sesiones');
-        rutinaSesionesContainer.innerHTML = '';
+		const rutinaSesionesContainer = document.getElementById('rutina_sesiones');
+		rutinaSesionesContainer.innerHTML = '';
 
-        sesiones.map((sesion, index) => {
-            // Create row div
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'row my-3';
+		sesiones.map((sesion, index) => {
+			// Create row div
+			const rowDiv = document.createElement('div');
+			rowDiv.className = 'row my-3';
 
-            // Create column div
-            const colDiv = document.createElement('div');
-            colDiv.className = 'col-9 d-flex align-items-center';
-            colDiv.style.height = '75px';
-            colDiv.style.textDecoration = 'none';
-            colDiv.style.cursor = 'pointer';
-            colDiv.setAttribute('onClick', `goVerSesion(${sesion.id})`);
+			// Create column div
+			const colDiv = document.createElement('div');
+			colDiv.className = 'col-9 d-flex align-items-center';
+			colDiv.style.height = '75px';
+			colDiv.style.textDecoration = 'none';
+			colDiv.style.cursor = 'pointer';
+			colDiv.setAttribute('onClick', `goVerSesion(${sesion.id})`);
 
-            // Create inner div for day display
-            const innerDiv = document.createElement('div');
-            innerDiv.className = 'd-flex flex-column justify-content-center align-items-center';
-            innerDiv.style.width = '50px';
-            innerDiv.style.height = '50px';
+			// Create inner div for day display
+			const innerDiv = document.createElement('div');
+			innerDiv.className = 'd-flex flex-column justify-content-center align-items-center';
+			innerDiv.style.width = '50px';
+			innerDiv.style.height = '50px';
 
-            const spanDay = document.createElement('span');
-            spanDay.className = ' h3 mb-0';
-            spanDay.textContent = 'Día';
+			const spanDay = document.createElement('span');
+			spanDay.className = ' h3 mb-0';
+			spanDay.textContent = 'Día';
 
-            const spanDayNumber = document.createElement('span');
-            spanDayNumber.className = 'h3 mb-0 text-danger';
-            spanDayNumber.textContent = sesion.dia;
+			const spanDayNumber = document.createElement('span');
+			spanDayNumber.className = 'h3 mb-0 text-danger';
+			spanDayNumber.textContent = sesion.dia;
 
-            innerDiv.appendChild(spanDay);
-            innerDiv.appendChild(spanDayNumber);
+			innerDiv.appendChild(spanDay);
+			innerDiv.appendChild(spanDayNumber);
 
-            // Create description div
-            const descDiv = document.createElement('div');
-            descDiv.className = 'ms-3';
+			// Create description div
+			const descDiv = document.createElement('div');
+			descDiv.className = 'ms-3';
 
-            const spanName = document.createElement('span');
-            spanName.className = 'h6';
-            spanName.style.color = 'black';
-            spanName.textContent = sesion.nombre;
+			const spanName = document.createElement('span');
+			spanName.className = 'h6';
+			spanName.style.color = 'black';
+			spanName.textContent = sesion.nombre;
 
-            const spanDesc = document.createElement('span');
-            spanDesc.className = ' text-secondary';
-            spanDesc.textContent = sesion.descripcion;
+			const spanDesc = document.createElement('span');
+			spanDesc.className = ' text-secondary';
+			spanDesc.textContent = sesion.descripcion;
 
-            descDiv.appendChild(spanName);
-            descDiv.appendChild(document.createElement('br'));
-            descDiv.appendChild(spanDesc);
+			descDiv.appendChild(spanName);
+			descDiv.appendChild(document.createElement('br'));
+			descDiv.appendChild(spanDesc);
 
-            // Append all to the column div
-            colDiv.appendChild(innerDiv);
-            colDiv.appendChild(descDiv);
+			// Append all to the column div
+			colDiv.appendChild(innerDiv);
+			colDiv.appendChild(descDiv);
 
-            // Append the column div to the row div
-            rowDiv.appendChild(colDiv);
+			// Append the column div to the row div
+			rowDiv.appendChild(colDiv);
 
-            // Append the row div to the main container
-            rutinaSesionesContainer.appendChild(rowDiv);
-        });
-    }
+			// Append the row div to the main container
+			rutinaSesionesContainer.appendChild(rowDiv);
+		});
+	}
 
-    document.addEventListener("DOMContentLoaded", function () {
-        var viewIcon = document.querySelectorAll('.view-icon');
+	document.addEventListener("DOMContentLoaded", function () {
+		var viewIcon = document.querySelectorAll('.view-icon');
 
-        viewIcon.forEach(function (icon) {
-            icon.addEventListener('click', function () {
-                var nombre = icon.getAttribute('data-rutina-nombre');
-                var dificultad = icon.getAttribute('data-rutina-dificultad');
-                var desc = icon.getAttribute('data-rutina-desc');
-                var sesiones = icon.getAttribute('data-sesiones');
-                var sesionesDecoded = JSON.parse(sesiones);
-                mostrarRutina(nombre, dificultad, desc, sesionesDecoded);
-            });
-        });
+		viewIcon.forEach(function (icon) {
+			icon.addEventListener('click', function () {
+				var nombre = icon.getAttribute('data-rutina-nombre');
+				var dificultad = icon.getAttribute('data-rutina-dificultad');
+				var desc = icon.getAttribute('data-rutina-desc');
+				var sesiones = icon.getAttribute('data-sesiones');
+				var sesionesDecoded = JSON.parse(sesiones);
+				mostrarRutina(nombre, dificultad, desc, sesionesDecoded);
+			});
+		});
 
-    })
+	})
 </script>
 
 <div class="container">
     <div class="row mb-4">
+        <% if (!error.equals("")) {%>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+        <%}%>
         <div class="col-4">
             <h1>Tus Rutinas</h1>
         </div>
@@ -437,9 +449,20 @@
                         </label>
                     </div>
                     <div class="col d-flex  align-items-center">
+                        <%
+                            String fechaInicio = "";
+                            for (Rutinacliente rutinacliente : rutinasClienteObject) {
+                                if (rutina.equals(rutinacliente.getRutina())) {
+                                    fechaInicio = rutinacliente.getFechaInicio().toString();
+                                    break;
+                                }
+                            }
+                        %>
                         <input name="dateId_<%=rutina.getId()%>" type="date" class="form-control me-3" placeholder=""
                                aria-label="Example text with button addon"
-                               aria-describedby="button-addon1" <%= rutinasCliente.contains(rutina) ? "disabled" : ""%>>
+                               aria-describedby="button-addon1" <%= rutinasCliente.contains(rutina) ? "disabled" : ""%>
+                               value="<%= fechaInicio %>"
+                        >
                         <div data-bs-toggle="modal" data-bs-target="#view-modal" style="cursor: pointer;">
                             <i class="bi bi-eye view-icon"
                                data-rutina-nombre="<%= rutina.getNombre() %>"
@@ -467,19 +490,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous">
-</script>
-<script>
-    document.getElementById("rutinaForm").addEventListener("submit", function (event) {
-        var rutinasSelected = document.querySelectorAll("input[type=checkbox]:checked");
-
-        rutinasSelected.forEach(function (rutina) {
-            var date = document.querySelector("input[name=dateId_" + rutina.value + "]");
-            if (date.value === "") {
-                alert("Debe seleccionar una fecha para todas las rutinas seleccionadas");
-                event.preventDefault();
-            }
-        });
-    })
 </script>
 
 </body>

@@ -75,10 +75,7 @@
                     </div>
                 </td>
                 <td>
-                    <a class="btn border border-black"
-                       href="/entrenador/clientes/rutinas/verSesion/verDesempeno?idEjercicio=<%= ejercicio.getId()%>&idInfo=<%=info.getId()%>&idSesion=<%=sesion.getId()%>">
-                        Ver desempeño
-                    </a>
+                    
                 </td>
             </tr>
             <%

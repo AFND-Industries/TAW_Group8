@@ -49,6 +49,7 @@
             <div class="modal-body">
                 <p style="display: flex; justify-content: center"> ¿Estás seguro de que quieres eliminar la rutina? </p>
                 <p id="rutina-nombre"></p>
+                <p id="fecha-rutina"></p>
             </div>
             <div class="modal-footer">
                 <a id="delete-option" class="btn btn-danger">Eliminar</a>
@@ -59,22 +60,24 @@
 </div>
 
 <script>
-    function mostrarDetalleRutina(nombreRutina, idRutina) {
-        document.getElementById('rutina-nombre').textContent = 'Nombre: ' + nombreRutina;
-        document.getElementById('delete-option').setAttribute('href', '/entrenador/clientes/rutinas/eliminarRutina?idRutina=' + idRutina);
-    }
+	function mostrarDetalleRutina(nombreRutina, idRutina, fechaRutina) {
+		document.getElementById('rutina-nombre').textContent = 'Nombre: ' + nombreRutina;
+		document.getElementById('delete-option').setAttribute('href', '/entrenador/clientes/rutinas/eliminarRutina?idRutina=' + idRutina);
+		document.getElementById('fecha-rutina').textContent = 'Fecha de inicio: ' + fechaRutina;
+	}
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var trashIcons = document.querySelectorAll('.delete-icon');
+	document.addEventListener('DOMContentLoaded', function () {
+		var trashIcons = document.querySelectorAll('.delete-icon');
 
-        trashIcons.forEach(function (icon) {
-            icon.addEventListener('click', function () {
-                var nombreRutina = icon.getAttribute('data-rutina-nombre');
-                var idRutina = icon.getAttribute('data-rutina-id');
-                mostrarDetalleRutina(nombreRutina, idRutina);
-            });
-        });
-    });
+		trashIcons.forEach(function (icon) {
+			icon.addEventListener('click', function () {
+				var nombreRutina = icon.getAttribute('data-rutina-nombre');
+				var idRutina = icon.getAttribute('data-rutina-id');
+				var fechaRutina = icon.getAttribute('data-fecha-rutina');
+				mostrarDetalleRutina(nombreRutina, idRutina, fechaRutina);
+			});
+		});
+	});
 
 
 </script>
@@ -116,6 +119,7 @@
                         <i class="bi bi-trash delete-icon"
                            data-rutina-nombre="<%= rutina.getNombre() %>"
                            data-rutina-id="<%= rutina.getId() %>"
+                           data-fecha-rutina="<%= fechasInicio.get(rutina) %>"
                         >
                         </i>
                     </div>
