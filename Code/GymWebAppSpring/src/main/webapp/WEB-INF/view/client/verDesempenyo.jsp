@@ -64,7 +64,7 @@
 </button>
 <div class="container mt-4">
 
-    <h1 class="text-center">Sesión <%=sesionEntrenamiento.getNombre()%>
+    <h1 class="text-center"><%=sesionEntrenamiento.getNombre()%>
     </h1>
     <h2 class="text-center">Tu desempeño</h2>
 

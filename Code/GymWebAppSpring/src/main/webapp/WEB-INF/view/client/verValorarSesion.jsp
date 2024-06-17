@@ -11,9 +11,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Usuario cliente = (Usuario) request.getAttribute("usuario");
     Informacionsesion informacionSesion = (Informacionsesion) request.getAttribute("informacionSesion");
     Sesionentrenamiento sesionentrenamiento = (Sesionentrenamiento) request.getAttribute("sesionEntrenamiento");
+
+    String comentario = informacionSesion.getComentario();
+    String contenidoTextarea = comentario.equals("NaN") ? "" : comentario.trim();
 %>
 <html>
 
@@ -30,55 +32,60 @@
 </head>
 <jsp:include page="../components/header.jsp"/>
 <body style="height: 80vh;  background-color: #f8f9fa">
-<div class="container-flex align-items-center justify-content-center">
-    <div class="row justify-content-center align-items-center ">
-        <div class="col-md-6">
+<div class="container-flex">
+    <div class="row justify-content-center align-items-center mt-5">
+        <div class="col-md-6 mt-5">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title text-center">Deja tu valoración</h2>
                     <form action="/client/rutina/sesion/valorarEntrenamiento/guardar" method="post">
                         <input type="hidden" name="sesionEntrenamiento" value="<%=sesionentrenamiento.getId()%>">
-                        <div class="form-group">
-                            <textarea name="comentario" class="form-control" rows="4"
-                                      placeholder="Escribe tu valoración aquí...">
-<%= informacionSesion.getComentario().equals("NaN") ? "Escribe tu valoración aquí..." : informacionSesion.getComentario() %>
-</textarea>
-
+                        <div class="form-group my-3">
+                            <label class="fs-3" for="coment">Comentario:</label>
+                            <textarea id="coment" name="comentario" class="form-control"
+                                      rows="4"
+                                      placeholder="Escribe tu valoración aquí..."><%=contenidoTextarea%></textarea>
                         </div>
-                        <fieldset class="rating al">
-                            <input type="radio" id="star5" name="rating"
-                                   value="5" <%=informacionSesion.getValoracion() == 5 ? "checked" : ""%>
-                            /><label class="full"
-                                     for="star5"
-                                     title="Magnifico - 5 stars"></label>
-                            <input type="radio" id="star4" name="rating"
-                                   value="4" <%=informacionSesion.getValoracion() == 4 ? "checked" : ""%>
-                            /><label class="full"
-                                     for="star4"
-                                     title="Bueno - 4 stars"></label>
-
-                            <input type="radio" id="star3" name="rating"
-                                   value="3" <%=informacionSesion.getValoracion() == 3 ? "checked" : ""%>
-                            /><label class="full"
-                                     for="star3"
-                                     title="Meh - 3 stars"></label>
-                            <input type="radio" id="star2" name="rating"
-                                   value="2" <%=informacionSesion.getValoracion() == 2 ? "checked" : ""%>
-                            /><label class="full"
-                                     for="star2"
-                                     title="Malo - 2 stars"></label>
-                            <input type="radio" id="star1" name="rating"
-                                   value="1"  <%=informacionSesion.getValoracion() == 1 || informacionSesion.getValoracion() == 0 ? "checked" : ""%>
-                            /><label class="full"
-                                     for="star1"
-                                     title="Horrible - 1 star"></label>
-                            <input type="radio" class="reset-option" name="rating" value="reset"/>
-                        </fieldset>
+                        <div class="form-group">
+                            <label class="fs-3" for="stars">Puntuación:</label>
+                            <fieldset id="stars" class="rating al">
+                                <input type="radio" id="star5" name="rating"
+                                       value="5" <%=informacionSesion.getValoracion() == 5 ? "checked" : ""%>
+                                />
+                                <label class="full"
+                                       for="star5"
+                                       title="Magnifico - 5 stars">
+                                </label>
+                                <input type="radio" id="star4" name="rating"
+                                       value="4" <%=informacionSesion.getValoracion() == 4 ? "checked" : ""%>/>
+                                <label class="full"
+                                       for="star4"
+                                       title="Bueno - 4 stars">
+                                </label>
+                                <input type="radio" id="star3" name="rating"
+                                       value="3" <%=informacionSesion.getValoracion() == 3 ? "checked" : ""%>/>
+                                <label class="full"
+                                       for="star3"
+                                       title="Meh - 3 stars">
+                                </label>
+                                <input type="radio" id="star2" name="rating"
+                                       value="2" <%=informacionSesion.getValoracion() == 2 ? "checked" : ""%>/>
+                                <label class="full"
+                                       for="star2"
+                                       title="Malo - 2 stars">
+                                </label>
+                                <input type="radio" id="star1" name="rating"
+                                       value="1"  <%=informacionSesion.getValoracion() == 1 || informacionSesion.getValoracion() == 0 ? "checked" : ""%>/>
+                                <label class="full"
+                                       for="star1"
+                                       title="Horrible - 1 star">
+                                </label>
+                            </fieldset>
+                        </div>
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-primary">Enviar valoración</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -94,13 +101,7 @@
 
     .rating {
         border: none;
-        margin-right: 49px;
-    }
 
-    .myratings {
-
-        font-size: 85px;
-        color: green;
     }
 
     .rating > [id^="star"] {
@@ -141,17 +142,6 @@
     .rating > [id^="star"]:checked ~ label:hover ~ label {
         color: #FFED85;
     }
-
-    .reset-option {
-        display: none;
-    }
-
-    .reset-button {
-        margin: 6px 12px;
-        background-color: rgb(255, 255, 255);
-        text-transform: uppercase;
-    }
-
 
 </style>
 </html>

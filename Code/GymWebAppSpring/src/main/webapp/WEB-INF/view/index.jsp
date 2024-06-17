@@ -25,6 +25,10 @@
         font-style: normal;
     }
 
+    .vt323 {
+        font-family: 'VT323', sans-serif;
+    }
+
     .blurry-background {
 
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
@@ -63,109 +67,10 @@
 
     </div>
 
-
-
-<%--    <div class="row row-cols-2 row-cols-md-3 g-4">--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Transforma tu vida con cada entrenamiento</h5>--%>
-<%--                    <p class="card-text">Imagina un lugar donde cada gota de sudor, cada repetición y cada paso te lleva--%>
-<%--                        más cerca de tu mejor versión. En nuestro gimnasio virtual, no estás solo; estás rodeado de--%>
-<%--                        personas con la misma determinación y ganas de superarse. Ofrecemos una amplia variedad de--%>
-<%--                        rutinas de ejercicios diseñadas por expertos en fitness que se adaptan a todos los niveles de--%>
-<%--                        habilidad y objetivos, desde perder peso hasta ganar masa muscular y mejorar tu resistencia.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Entrena a tu manera, en tu propio tiempo</h5>--%>
-<%--                    <p class="card-text">Entendemos que la vida puede ser agitada y que encontrar tiempo para ir al--%>
-<%--                        gimnasio puede ser un desafío. Por eso, nuestro gimnasio online está disponible las 24 horas del--%>
-<%--                        día, los 7 días de la semana. Puedes acceder a nuestras sesiones de entrenamiento desde la--%>
-<%--                        comodidad de tu hogar, en el parque, o donde quiera que estés. Ya sea que prefieras entrenar--%>
-<%--                        temprano en la mañana, durante tu descanso del almuerzo o tarde en la noche, nuestro contenido--%>
-<%--                        está siempre disponible para ti.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Educación y motivación en cada clic</h5>--%>
-<%--                    <p class="card-text">Además de las sesiones de entrenamiento, nuestro gimnasio virtual ofrece una--%>
-<%--                        rica biblioteca de recursos educativos. Aprende sobre nutrición, técnicas de entrenamiento y--%>
-<%--                        cómo mantener una mentalidad positiva. Nuestros entrenadores certificados comparten sus--%>
-<%--                        conocimientos a través de blogs, videos y webinars, brindándote las herramientas necesarias para--%>
-<%--                        tomar decisiones informadas sobre tu salud y bienestar.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Una comunidad que te apoya</h5>--%>
-<%--                    <p class="card-text">En nuestro gimnasio online, no solo entrenas; también formas parte de una--%>
-<%--                        comunidad vibrante y solidaria. Conéctate con otros miembros a través de nuestros foros y grupos--%>
-<%--                        de discusión. Comparte tus progresos, celebra tus logros y encuentra inspiración en las--%>
-<%--                        historias de éxito de otros. Juntos, celebramos cada pequeño paso hacia una vida más activa y--%>
-<%--                        saludable.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Programas personalizados para tus necesidades</h5>--%>
-<%--                    <p class="card-text">Sabemos que cada persona es única, con necesidades y objetivos diferentes. Por--%>
-<%--                        eso, ofrecemos programas de entrenamiento personalizados. Trabaja con nuestros entrenadores para--%>
-<%--                        crear un plan que se adapte a tus metas específicas. Ya sea que estés empezando tu viaje de--%>
-<%--                        fitness o buscando llevar tu entrenamiento al siguiente nivel, estamos aquí para ayudarte a--%>
-<%--                        diseñar un plan que funcione para ti.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Herramientas tecnológicas para optimizar tu entrenamiento</h5>--%>
-<%--                    <p class="card-text">Nuestra plataforma aprovecha la tecnología para brindarte la mejor experiencia--%>
-<%--                        posible. Usa nuestras herramientas de seguimiento para monitorizar tu progreso, ajusta tus--%>
-<%--                        rutinas basándote en tus avances y recibe feedback instantáneo sobre tu rendimiento. Con--%>
-<%--                        nuestras aplicaciones móviles, puedes llevar tu gimnasio contigo a donde vayas, asegurándote de--%>
-<%--                        que nunca pierdas una sesión de entrenamiento.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Inspírate y alcanza nuevas alturas</h5>--%>
-<%--                    <p class="card-text">Nuestro objetivo es inspirarte a ser la mejor versión de ti mismo. Creemos en--%>
-<%--                        el poder de la disciplina, la constancia y el esfuerzo diario. Cada entrenamiento es una--%>
-<%--                        oportunidad para desafiar tus límites y descubrir de lo que eres capaz. No importa dónde--%>
-<%--                        comiences, lo importante es dar el primer paso y continuar avanzando.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="col">--%>
-<%--            <div class="card h-100">--%>
-<%--                <div class="card-body">--%>
-<%--                    <h5 class="card-title">Bienvenido a tu gimnasio online</h5>--%>
-<%--                    <p class="card-text">En nuestro gimnasio virtual, te proporcionamos el entorno, las herramientas y--%>
-<%--                        el apoyo necesarios para que transformes tu vida. No solo es un lugar para hacer ejercicio, sino--%>
-<%--                        un espacio donde se forjan hábitos saludables, se construyen cuerpos fuertes y se cultivan--%>
-<%--                        mentes resilientes. Te invitamos a unirte a nuestra comunidad y comenzar tu viaje hacia una vida--%>
-<%--                        más activa, saludable y plena. ¡Vamos juntos hacia el éxito, un entrenamiento a la vez!</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-
-    ¡Vamos juntos hacia el éxito, un entrenamiento a la vez! ¡Bienvenido a tu gimnasio online, donde cada día es una
-    oportunidad para ser mejor que ayer!
+    <h3 class="vt323 text-center mb-5">
+        ¡Vamos juntos hacia el éxito, un entrenamiento a la vez! ¡Bienvenido a tu gimnasio online, donde cada día es una
+        oportunidad para ser mejor que ayer!
+    </h3>
 </div>
 
 <!-- Bootstrap Javascript Dependencies -->

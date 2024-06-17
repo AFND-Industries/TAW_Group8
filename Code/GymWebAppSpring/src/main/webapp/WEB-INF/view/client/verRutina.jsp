@@ -74,23 +74,23 @@
                             %>
                             <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>"
                                     value="<%= entrada.getKey().getId()%>"
-                                    name="sesionEntrenamiento" <%=!hayEjercicios ? "disabled" : ""%>>Comenzar Sesion
-                                de <%= entrada.getKey().getNombre() %>
+                                    name="sesionEntrenamiento" <%=!hayEjercicios ? "disabled" : ""%>>Comenzar
+                                <%= entrada.getKey().getNombre() %>
                             </button>
                             <%
                             } else if (numEjerciciosCompletados >= numEjercicios) {
                             %>
                             <button type="submit" class="<%="btn btn-danger"  %>"
-                                    value="<%= entrada.getKey().getId()%>" name="sesionEntrenamiento" disabled>Sesion
-                                de <%= entrada.getKey().getNombre() %>  Completada!
+                                    value="<%= entrada.getKey().getId()%>" name="sesionEntrenamiento" disabled>
+                                <%= entrada.getKey().getNombre() %>  Completada!
                             </button>
                             <%
                             } else {
                             %>
                             <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-success"  %>"
                                     value="<%= entrada.getKey().getId()%>" name="sesionEntrenamiento"
-                                    <%=!hayEjercicios ? "disabled" : ""%>>Continuar Sesion
-                                de <%= entrada.getKey().getNombre() %>
+                                    <%=!hayEjercicios ? "disabled" : ""%>>Continuar
+                                <%= entrada.getKey().getNombre() %>
                             </button>
                             <%
                                 }
@@ -105,7 +105,8 @@
                                     value="<%= entrada.getKey().getId()%>"
                                     name="sesionEntrenamiento"
                                     onclick="goRendimiento()"
-                                    <%=!hayEjercicios || numEjerciciosCompletados<=0 || numEjerciciosCompletados>numEjercicios ? "disabled" : ""%>>Ver mi
+                                    <%=!hayEjercicios || numEjerciciosCompletados <= 0 || numEjerciciosCompletados > numEjercicios ? "disabled" : ""%>>
+                                Ver mi
                                 rendimiento
                             </button>
 
