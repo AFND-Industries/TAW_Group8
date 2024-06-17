@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface SesionEntrenamientoRepository extends JpaRepository<Sesionentrenamiento, Integer> {
-    @Query("select s from Sesionentrenamiento s where s.rutina = :rutina")
-    public List<Sesionentrenamiento> findSesionesByRutina(@Param("rutina") Rutina rutina);
+    @Query("select s from Sesionentrenamiento s where s.rutina.id = :rutinaId")
+    public List<Sesionentrenamiento> findSesionesByRutina(@Param("rutinaId") Integer rutinaId);
 
 
 }

@@ -16,13 +16,6 @@ import java.util.List;
 
 @Service
 public class RutinaService extends DTOService<RutinaDTO, Rutina>{
-    /*
-    findByEntrenadorId
-findById
-findRutinaByEntrenadorWithFilter
-save
-delete
-     */
 
     @Autowired
     protected RutinaRepository rutinaRepository;
@@ -62,6 +55,7 @@ delete
         rutina.setNombre(rutinaDTO.getNombre());
         rutina.setEntrenador(this.usuarioRepository.findById(rutinaDTO.getEntrenador().getId()).orElse(null));
         rutina.setFechaCreacion(rutinaDTO.getFechaCreacion());
+        this.rutinaRepository.save(rutina);
     }
 
     public void delete(Integer rutinaId) {
