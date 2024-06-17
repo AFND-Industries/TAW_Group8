@@ -25,7 +25,7 @@
 <jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h2 class="text-center"><%=ejercicio.getId() != null ? "Editar" : "Registro de un nuevo"%> ejercicio</h2>
-    <form:form action="/admin/exercises/edit" modelAttribute="ejercicio" cssClass="row g-3 was-validated" method="post">
+    <form:form action="/admin/exercises/edit" modelAttribute="ejercicio" cssClass="row g-3" method="post">
         <form:hidden path="id" />
         <div class="col-md-6 mb-3">
             <label for="nombreInput" class="form-label">Nombre</label>

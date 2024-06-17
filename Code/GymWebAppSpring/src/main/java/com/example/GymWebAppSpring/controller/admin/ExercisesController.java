@@ -55,11 +55,11 @@ public class ExercisesController {
         List<Ejercicio> list = ejercicioRepository.findAll();
 
         if (categoria != null){
-            list.retainAll(ejercicioRepository.findAllByCategoria(categoria));
+            list.retainAll(ejercicioRepository.findAllByCategoria(categoria.getId()));
             model.addAttribute("categoria", categoria);
         }
         if (musculo != null){
-            list.retainAll(ejercicioRepository.findAllByMusculo(musculo));
+            list.retainAll(ejercicioRepository.findAllByMusculo(musculo.getId()));
             model.addAttribute("musculo", musculo);
         }
         if (nombre != null && !nombre.isBlank()){

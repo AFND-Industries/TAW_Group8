@@ -26,7 +26,7 @@
 <jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h2 class="text-center"><%=user != null ? "Editar" : "Registro de un nuevo"%> usuario</h2>
-    <form class="row g-3 was-validated" method="post"
+    <form class="row g-3" method="post"
           action="<%=user != null ? "/admin/users/edit" : "/admin/users/register"%>">
         <input type="hidden" value="<%=user != null ? user.getId() : ""%>" name="id"/>
         <div class="col-md-6 mb-3">

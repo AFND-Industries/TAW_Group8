@@ -63,7 +63,7 @@ public class ClienteController {
         Map<Sesionentrenamiento, List<Object>> sesionesEjercicios = new LinkedHashMap<>();
         modelo.addAttribute("usuario", user);
         modelo.addAttribute("rutina", rutina);
-        List<Sesionentrenamiento> sesionesEntrenamiento = sesionentrenamientoRepository.findSesionesByRutina(rutina);
+        List<Sesionentrenamiento> sesionesEntrenamiento = sesionentrenamientoRepository.findSesionesByRutina(rutina.getId());
         for (Sesionentrenamiento s : sesionesEntrenamiento) {
             List<Object> combinado = new ArrayList<>();
             List<Ejerciciosesion> ejercicos = ejerciciosesionRepository.findEjerciciosBySesion(s);

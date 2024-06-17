@@ -28,7 +28,7 @@
 <jsp:include page="../../components/header.jsp"/>
 <div class="container">
     <h2 class="text-center"><%=categoria.getId() != null ? "Editar" : "Crear una nueva"%> categoria</h2>
-    <form:form action="/admin/categories/edit" modelAttribute="categoria" cssClass="row g-3 was-validated" method="post">
+    <form:form action="/admin/categories/edit" modelAttribute="categoria" cssClass="row g-3" method="post">
         <form:hidden path="id" />
         <div class="col-md-6">
             <label for="nombreInput" class="form-label">Nombre</label>
@@ -109,7 +109,7 @@
     function createItem(itemname){
         const actualId = i;
         const x = document.createElement("i")
-        x.classList.add("bi","bi-x-lg")
+        x.classList.add("bi","bi-x-lg","ms-1")
         x.attributeStyleMap.set("cursor", "pointer")
         x.onclick = () => deleteItem(actualId);
         const input = document.createElement("input");

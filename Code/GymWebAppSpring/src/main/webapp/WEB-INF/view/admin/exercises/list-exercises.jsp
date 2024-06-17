@@ -114,7 +114,7 @@
                         <div class="d-flex justify-content-around mt-4">
                             <a href="/admin/exercises/view?id=<%=ejercicio.getId()%>" class="icon-btn"><i class="bi bi-book me-1"></i></a>
                             <a href="/admin/exercises/edit?id=<%=ejercicio.getId()%>" class="icon-btn"><i class="bi bi-pencil-square me-1"></i></a>
-                            <a href="/admin/exercises/delete?id=<%=ejercicio.getId()%>" class="icon-btn"><i class="bi bi-trash3 me-1"></i></a>
+                            <a href="/admin/exercises/delete?id=<%=ejercicio.getId()%>" class="icon-btn text-danger"><i class="bi bi-trash3 me-1"></i></a>
                         </div>
                     </div>
                 </div>

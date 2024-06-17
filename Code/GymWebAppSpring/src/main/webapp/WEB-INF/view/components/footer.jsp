@@ -33,7 +33,7 @@
             <a href="" class="me-4 text-reset">
                 <i class="bi bi-linkedin"></i>
             </a>
-            <a href="" class="me-4 text-reset">
+            <a href="https://github.com/AFND-Industries" class="me-4 text-reset">
                 <i class="bi bi-github"></i>
             </a>
         </div>
@@ -70,7 +70,7 @@
                         <a href="#!" class="text-reset">Angular</a>
                     </p>
                     <p>
-                        <a href="#!" class="text-reset">React</a>
+                        <a href="https://infochange.me" class="text-reset">React</a>
                     </p>
                     <p>
                         <a href="#!" class="text-reset">Vue</a>
@@ -85,7 +85,7 @@
                 <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
                     <!-- Links -->
                     <h6 class="text-uppercase fw-bold mb-4">
-                        Enlaces utiles
+                        Enlaces útiles
                     </h6>
                     <p>
                         <a href="/login" class="text-reset">Iniciar Sesion</a>
@@ -123,8 +123,8 @@
 
     <!-- Copyright -->
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2024 Copyright:
-        <a class="text-reset fw-bold" href="https://afndindustries.com/">AFNDindustries.com</a>
+        © 2024 Copyright
+        <a class="text-reset fw-bold" href="https://afnd-industries.github.io/">AFND Industries</a>
     </div>
     <!-- Copyright -->
 </footer>

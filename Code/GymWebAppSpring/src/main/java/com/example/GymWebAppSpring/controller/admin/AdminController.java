@@ -48,10 +48,13 @@ public class AdminController {
         if(!isAdmin(session))
             return "redirect:/login";
 
+        if(!user.getTipo().getNombre().equals("Cliente"))
+            return "redirect:/admin/users/";
+
         Tipousuario entrenador = tipoUsuarioRepository.findByName("Entrenador");
 
         model.addAttribute("user",user);
-        model.addAttribute("trainers", usuarioRepository.findUsuarioByTipoUsuario(entrenador));
+        model.addAttribute("trainers", usuarioRepository.findUsuarioByTipoUsuario(entrenador.getId()));
         model.addAttribute("sTrainers", entrenadorAsignadoRepository.findEntrenadoresByClientID(user));
         return "admin/users/assign-trainer";
     }
@@ -64,6 +67,9 @@ public class AdminController {
     ){
         if(!isAdmin(session))
             return "redirect:/login";
+
+        if(!user.getTipo().getNombre().equals("Cliente"))
+            return "redirect:/admin/users/";
 
         entrenadorAsignadoRepository.deleteAll(entrenadorAsignadoRepository.findByCliente(user));
         if(trainers == null)
