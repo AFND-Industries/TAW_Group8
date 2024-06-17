@@ -3,10 +3,8 @@
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="java.nio.charset.StandardCharsets" %>
-<%@ page import="java.net.URLEncoder" %>
 <%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
+<%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
 <%--
   Created by IntelliJ IDEA.
   User: elgam
@@ -27,16 +25,16 @@
     boolean sesionExists = oldSesion.getId() != -100;
 
     SesionArgument sesion = rutina.getSesiones().get(sesionPos);
-    List<Ejercicio> ejercicios = new ArrayList<>();
+    List<EjercicioDTO> ejercicios = new ArrayList<>();
     if (!sesion.getEjercicios().isEmpty())
-        ejercicios = (List<Ejercicio>) request.getAttribute("ejercicios");
+        ejercicios = (List<EjercicioDTO>) request.getAttribute("ejercicios");
 
     List<String> errorList = (List<String>) request.getAttribute("errorList");
 %>
 
 <%!
-    public Ejercicio getEjercicioByEjercicioSesion(EjercicioArgument ejercicioArgument, List<Ejercicio> ejercicios) {
-        Ejercicio ej = null;
+    public EjercicioDTO getEjercicioByEjercicioSesion(EjercicioArgument ejercicioArgument, List<EjercicioDTO> ejercicios) {
+        EjercicioDTO ej = null;
 
         int i = 0;
         while (i < ejercicios.size() && ej == null) {
@@ -145,7 +143,7 @@
         List<EjercicioArgument> ejerciciosArguments = sesion.getEjercicios();
         for (int i = 0; i < ejerciciosArguments.size(); i++) {
             EjercicioArgument ejercicioSesion = ejerciciosArguments.get(i);
-            Ejercicio ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
+            EjercicioDTO ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
     %>
     <div class="row">
         <div class="col-9 d-flex align-items-center" style="cursor: pointer"

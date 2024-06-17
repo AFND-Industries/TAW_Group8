@@ -1,11 +1,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
-<%@ page import="java.util.Objects" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
 <%@ page import="com.example.GymWebAppSpring.iu.FiltroArgument" %>
-<%@ page import="com.google.gson.Gson" %><%--
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.DificultadDTO" %>
+<%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -15,9 +13,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
-    List<Dificultad> dificultades = (List<Dificultad>) request.getAttribute("dificultades");
-    Rutina rutinaChanged = (Rutina) request.getAttribute("rutinaChanged");
+    List<RutinaDTO> rutinas = (List<RutinaDTO>) request.getAttribute("rutinas");
+    List<DificultadDTO> dificultades = (List<DificultadDTO>) request.getAttribute("dificultades");
+    RutinaDTO rutinaChanged = (RutinaDTO) request.getAttribute("rutinaChanged");
     Integer changeMode = (Integer) request.getAttribute("changeMode");
 
     FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
@@ -113,7 +111,7 @@
                             <div class="col-9 d-flex align-items-center">
                                 <form:select path="dificultad" class="form-select" id="dificultad">
                                     <form:option value="-1">No seleccionado</form:option>
-                                    <%for(Dificultad dificultad : dificultades) {%>
+                                    <%for(DificultadDTO dificultad : dificultades) {%>
                                     <form:option value="<%=dificultad.getId()%>"><%=dificultad.getNombre()%></form:option>
                                     <%}%>
                                 </form:select>
@@ -178,7 +176,7 @@
                 </div>
         <%}
 
-            for (Rutina rutina : rutinas) {
+            for (RutinaDTO rutina : rutinas) {
         %>
             <div class="row">
                 <a class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"

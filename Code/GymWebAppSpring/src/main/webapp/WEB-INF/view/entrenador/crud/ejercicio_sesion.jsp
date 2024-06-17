@@ -1,10 +1,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %>
-<%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %><%--
+<%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
+<%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -19,7 +19,7 @@
 
     Integer sesionPos = (Integer) session.getAttribute("sesionPos");
     Integer ejercicioPos = (Integer) request.getAttribute("ejercicioPos");
-    Ejercicio ejercicioBase = (Ejercicio) request.getAttribute("ejercicioBase");
+    EjercicioDTO ejercicioBase = (EjercicioDTO) request.getAttribute("ejercicioBase");
     List<String> tiposBase = new Gson().fromJson(ejercicioBase.getCategoria().getTiposBase(), ArrayList.class);
 
     Object readOnlyObject = request.getAttribute("readOnly");

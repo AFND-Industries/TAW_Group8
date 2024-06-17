@@ -1,10 +1,6 @@
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
-<%@ page import="java.net.URLEncoder" %>
-<%@ page import="java.nio.charset.StandardCharsets" %><%--
+<%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
+<%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -14,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Ejercicio> ejerciciosBase = (List<Ejercicio>) request.getAttribute("ejerciciosBase");
+    List<EjercicioDTO> ejerciciosBase = (List<EjercicioDTO>) request.getAttribute("ejerciciosBase");
 %>
 
 <html>
@@ -40,7 +36,7 @@
         </div>
     </div>
     <%
-        for (Ejercicio ejercicioBase : ejerciciosBase) {
+        for (EjercicioDTO ejercicioBase : ejerciciosBase) {
     %>
     <div class="row">
         <div class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"

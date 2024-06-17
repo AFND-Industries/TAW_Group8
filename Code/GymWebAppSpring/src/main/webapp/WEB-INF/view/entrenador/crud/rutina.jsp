@@ -1,15 +1,7 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Dificultad" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="java.net.URLEncoder" %>
-<%@ page import="java.nio.charset.StandardCharsets" %>
-<%@ page import="javax.script.ScriptEngineManager" %>
-<%@ page import="javax.script.ScriptEngine" %>
-<%@ page import="java.io.UnsupportedEncodingException" %>
-<%@ page import="java.util.*" %><%--
+<%@ page import="java.util.*" %>
+<%@ page import="com.example.GymWebAppSpring.dto.DificultadDTO" %><%--
   Created by IntelliJ IDEA.
   User: elgam
   Date: 22/04/2024
@@ -21,7 +13,7 @@
 
 <%
     RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
-    List<Dificultad> dificultades = (List<Dificultad>) request.getAttribute("dificultades");
+    List<DificultadDTO> dificultades = (List<DificultadDTO>) request.getAttribute("dificultades");
 
     Object readOnlyObject = request.getAttribute("readOnly");
     boolean rutinaExists = rutina.getId() >= 0;
@@ -88,7 +80,7 @@
             <div class="col-6">
                 <span class="h4 text-secondary">Dificultad</span><br/>
                 <select id="dificultad" name="dificultad" class="form-select mt-2" id="dificultad" <%=readOnly ? "disabled" : ""%>>
-                    <%for(Dificultad dificultad : dificultades) {%>
+                    <%for(DificultadDTO dificultad : dificultades) {%>
                     <option <%=Objects.equals(rutina.getDificultad(), dificultad.getId()) ? "selected" : ""%>
                             value="<%=dificultad.getId()%>"><%=dificultad.getNombre()%></option>
                     <%}%>
