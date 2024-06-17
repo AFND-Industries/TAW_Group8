@@ -29,7 +29,7 @@ public class ClienteController {
     protected RutinaUsuarioRepository rutinaUsuarioRepository;
 
     @Autowired
-    protected SesionentrenamientoRepository sesionentrenamientoRepository;
+    protected SesionEntrenamientoRepository sesionentrenamientoRepository;
 
     @Autowired
     protected EjercicioSesionRepository ejerciciosesionRepository;
