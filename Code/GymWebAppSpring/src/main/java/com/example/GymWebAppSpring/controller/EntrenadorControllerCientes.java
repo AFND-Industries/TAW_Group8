@@ -8,12 +8,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -53,7 +51,7 @@ public class EntrenadorControllerCientes {
     private InformacionEjercicioRepository informacionEjercicioRepository;
 
     @Autowired
-    private SesionentrenamientoRepository sesionentrenamientoRepository;
+    private SesionEntrenamientoRepository sesionentrenamientoRepository;
 
     @Autowired
     private DificultadRepository dificultadRepository;

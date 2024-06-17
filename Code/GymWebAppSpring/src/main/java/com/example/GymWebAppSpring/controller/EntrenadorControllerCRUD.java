@@ -42,7 +42,7 @@ public class EntrenadorControllerCRUD {
     protected DificultadRepository dificultadRepository;
 
     @Autowired
-    protected SesionentrenamientoRepository sesionentrenamientoRepository;
+    protected SesionEntrenamientoRepository sesionentrenamientoRepository;
 
     @Autowired
     protected EjercicioSesionRepository ejercicioSesionRepository;
