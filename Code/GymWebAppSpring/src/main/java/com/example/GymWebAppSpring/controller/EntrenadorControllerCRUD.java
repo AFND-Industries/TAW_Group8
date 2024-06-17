@@ -24,17 +24,10 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/entrenador/rutinas")
 public class EntrenadorControllerCRUD {
-    // preguntar como hacer un post o si puedo hacerlo con javascript o que
-    // preguntar como hacer cosas como restricciones de que no deje crear si algun cmapo esta vacio o cosas asi
-    // si hacerlas con javascript o que
-
     // cambiar la bd tiposbase muchos mas caracteres, la descripcion igual
-    // meter el campo DIA en sesion y que se ordene por eso
-
-    // FILTROS DE BUSQUEDA (FACIL)
-    // JAVASCRIPT COMPROBAR CAMPOS VALIDOS LO TIPICO DE FORMULARIO
     // RECUPERAR LO QUE ESTABAS HACIENDO SESION
     // PONER PARA VOLVER UN MODAL PQ SE PIERDEN LOS CAMBIOS SABE
+    
     @Autowired
     protected RutinaRepository rutinaRepository;
 
