@@ -1,4 +1,4 @@
-package com.example.GymWebAppSpring.controller;
+package com.example.GymWebAppSpring.controller.rest;
 
 import com.example.GymWebAppSpring.dto.RutinaDTO;
 import com.example.GymWebAppSpring.service.RutinaService;
