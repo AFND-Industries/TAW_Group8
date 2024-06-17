@@ -1,12 +1,14 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.RutinaclienteDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "rutinacliente")
-public class Rutinacliente {
+public class Rutinacliente implements DTO<RutinaclienteDTO> {
     @EmbeddedId
     private RutinaclienteId id;
 
@@ -55,4 +57,12 @@ public class Rutinacliente {
         this.fechaInicio = fechaInicio;
     }
 
+    @Override
+    public RutinaclienteDTO toDTO() {
+        RutinaclienteDTO rutinaclienteDTO = new RutinaclienteDTO();
+        rutinaclienteDTO.setUsuario(usuario.toDTO());
+        rutinaclienteDTO.setRutina(rutina.toDTO());
+        rutinaclienteDTO.setFechaInicio(fechaInicio);
+        return rutinaclienteDTO;
+    }
 }

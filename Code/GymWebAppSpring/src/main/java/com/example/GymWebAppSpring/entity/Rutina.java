@@ -1,12 +1,14 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.RutinaDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "rutina")
-public class Rutina {
+public class Rutina  implements DTO<RutinaDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -77,4 +79,15 @@ public class Rutina {
         this.entrenador = entrenador;
     }
 
+    @Override
+    public RutinaDTO toDTO() {
+        RutinaDTO rutinaDTO = new RutinaDTO();
+        rutinaDTO.setId(id);
+        rutinaDTO.setNombre(nombre);
+        rutinaDTO.setDescripcion(descripcion);
+        rutinaDTO.setDificultad(dificultad.toDTO());
+        rutinaDTO.setFechaCreacion(fechaCreacion);
+        rutinaDTO.setEntrenador(entrenador.toDTO());
+        return rutinaDTO;
+    }
 }

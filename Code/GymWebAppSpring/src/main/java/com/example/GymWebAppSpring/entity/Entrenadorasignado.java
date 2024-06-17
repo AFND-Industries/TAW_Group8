@@ -1,10 +1,12 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.EntrenadorasignadoDTO;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "entrenadorasignado")
-public class Entrenadorasignado {
+public class Entrenadorasignado implements DTO<EntrenadorasignadoDTO> {
     @EmbeddedId
     private EntrenadorasignadoId id;
 
@@ -42,4 +44,11 @@ public class Entrenadorasignado {
         this.cliente = cliente;
     }
 
+    @Override
+    public EntrenadorasignadoDTO toDTO() {
+        EntrenadorasignadoDTO entrenadorasignadoDTO = new EntrenadorasignadoDTO();
+        entrenadorasignadoDTO.setEntrenador(entrenador.toDTO());
+        entrenadorasignadoDTO.setCliente(cliente.toDTO());
+        return entrenadorasignadoDTO;
+    }
 }

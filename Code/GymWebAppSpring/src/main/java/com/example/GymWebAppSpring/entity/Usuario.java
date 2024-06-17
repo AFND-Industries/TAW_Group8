@@ -1,12 +1,14 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.UsuarioDTO;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class Usuario implements DTO<UsuarioDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -99,4 +101,17 @@ public class Usuario {
         this.tipo = tipo;
     }
 
+    @Override
+    public UsuarioDTO toDTO() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setId(id);
+        usuarioDTO.setNombre(nombre);
+        usuarioDTO.setApellidos(apellidos);
+        usuarioDTO.setGenero(genero);
+        usuarioDTO.setEdad(edad);
+        usuarioDTO.setDni(dni);
+        usuarioDTO.setClave(clave);
+        usuarioDTO.setTipo(tipo.toDTO());
+        return usuarioDTO;
+    }
 }

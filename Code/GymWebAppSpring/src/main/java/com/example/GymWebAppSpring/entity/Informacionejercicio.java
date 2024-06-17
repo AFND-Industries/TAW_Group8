@@ -1,10 +1,12 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.InformacionejercicioDTO;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "informacionejercicio")
-public class Informacionejercicio {
+public class Informacionejercicio implements DTO<InformacionejercicioDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -53,4 +55,12 @@ public class Informacionejercicio {
         this.informacionsesion = informacionsesion;
     }
 
+    @Override
+    public InformacionejercicioDTO toDTO() {
+        InformacionejercicioDTO informacionejercicioDTO = new InformacionejercicioDTO();
+        informacionejercicioDTO.setEvaluacion(evaluacion);
+        informacionejercicioDTO.setEjerciciosesion(ejerciciosesion.toDTO());
+        informacionejercicioDTO.setInformacionsesion(informacionsesion.toDTO());
+        return informacionejercicioDTO;
+    }
 }

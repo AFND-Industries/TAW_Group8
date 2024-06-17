@@ -1,12 +1,14 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "ejerciciosesion")
-public class Ejerciciosesion {
+public class Ejerciciosesion implements DTO<EjerciciosesionDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -67,4 +69,14 @@ public class Ejerciciosesion {
         this.ejercicio = ejercicio;
     }
 
+    @Override
+    public EjerciciosesionDTO toDTO() {
+        EjerciciosesionDTO ejerciciosesionDTO = new EjerciciosesionDTO();
+        ejerciciosesionDTO.setId(this.id);
+        ejerciciosesionDTO.setOrden(this.orden);
+        ejerciciosesionDTO.setEspecificaciones(this.especificaciones);
+        ejerciciosesionDTO.setSesionentrenamiento(this.sesionentrenamiento.toDTO());
+        ejerciciosesionDTO.setEjercicio(this.ejercicio.toDTO());
+        return ejerciciosesionDTO;
+    }
 }

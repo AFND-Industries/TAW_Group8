@@ -1,5 +1,7 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.EntrenadorasignadoIdDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.hibernate.Hibernate;
@@ -7,7 +9,7 @@ import org.hibernate.Hibernate;
 import java.util.Objects;
 
 @Embeddable
-public class EntrenadorasignadoId implements java.io.Serializable {
+public class EntrenadorasignadoId implements java.io.Serializable, DTO<EntrenadorasignadoIdDTO> {
     private static final long serialVersionUID = 2201934405635535458L;
     @Column(name = "ENTRENADOR", nullable = false)
     private Integer entrenador;
@@ -45,4 +47,11 @@ public class EntrenadorasignadoId implements java.io.Serializable {
         return Objects.hash(cliente, entrenador);
     }
 
+    @Override
+    public EntrenadorasignadoIdDTO toDTO() {
+EntrenadorasignadoIdDTO entrenadorasignadoIdDTO = new EntrenadorasignadoIdDTO();
+        entrenadorasignadoIdDTO.setCliente(cliente);
+        entrenadorasignadoIdDTO.setEntrenador(entrenador);
+        return entrenadorasignadoIdDTO;
+    }
 }

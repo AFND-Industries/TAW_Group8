@@ -1,10 +1,12 @@
 package com.example.GymWebAppSpring.entity;
 
+import com.example.GymWebAppSpring.dto.DTO;
+import com.example.GymWebAppSpring.dto.DificultadDTO;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dificultad")
-public class Dificultad {
+public class Dificultad implements DTO<DificultadDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -40,4 +42,12 @@ public class Dificultad {
         this.logo = logo;
     }
 
+    @Override
+    public DificultadDTO toDTO() {
+        DificultadDTO dificultadDTO = new DificultadDTO();
+        dificultadDTO.setId(this.id);
+        dificultadDTO.setNombre(this.nombre);
+        dificultadDTO.setLogo(this.logo);
+        return dificultadDTO;
+    }
 }
