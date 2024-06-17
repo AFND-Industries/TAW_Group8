@@ -1,6 +1,6 @@
 package com.example.GymWebAppSpring.util;
 
-import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.dto.UsuarioDTO;
 import jakarta.servlet.http.HttpSession;
 
 public class AuthUtils {
@@ -19,7 +19,7 @@ public class AuthUtils {
      * @return True si el usuario está loggeado y es administrador, False en caso contrario
      */
     public static boolean isAdmin(HttpSession session){
-        Usuario user = (Usuario) session.getAttribute("user");
+        UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         return user != null && user.getTipo().getNombre().equals("Administrador");
     }
 
@@ -31,7 +31,7 @@ public class AuthUtils {
      */
 
     public static boolean isClient(HttpSession session){
-        Usuario user = (Usuario) session.getAttribute("user");
+        UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         return user != null && user.getTipo().getNombre().equals("Cliente");
     }
 
@@ -41,7 +41,7 @@ public class AuthUtils {
      * @return True si el usuario está loggeado y es entrenador, False en caso contrario
      */
     public static boolean isTrainer(HttpSession session){
-        Usuario user = (Usuario) session.getAttribute("user");
+        UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         return user != null && (user.getTipo().getNombre().equals("Entrenador") || user.getTipo().getNombre().equals("Entrenador de Fuerza"));
     }
 
@@ -51,7 +51,7 @@ public class AuthUtils {
      * @return True si el usuario está loggeado y es entrenador, False en caso contrario
      */
     public static boolean isStrengthTrainer(HttpSession session){
-        Usuario user = (Usuario) session.getAttribute("user");
+        UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         return user != null && user.getTipo().getNombre().equals("Entrenador de Fuerza");
     }
 
@@ -60,7 +60,7 @@ public class AuthUtils {
      * @param session Sesión HTTP activa
      * @return Devuelve la entidad del usuario o un valor null si no está loggeado
      */
-    public static Usuario getUser(HttpSession session){
-        return (Usuario) session.getAttribute("user");
+    public static UsuarioDTO getUser(HttpSession session){
+        return (UsuarioDTO) session.getAttribute("user");
     }
 }

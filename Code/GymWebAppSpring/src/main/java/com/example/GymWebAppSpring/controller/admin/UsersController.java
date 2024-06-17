@@ -105,7 +105,7 @@ public class UsersController {
             usuario.setClave(HashUtils.hashString(password));
         usuario.setTipo(tipoUsuarioRepository.findById(tipo).get());
         usuarioRepository.save(usuario);
-        return "redirect:/admin/users";
+        return "redirect:/admin/users/";
     }
     /* ------------------------- End Edit Functions*/
 
@@ -128,7 +128,7 @@ public class UsersController {
             return "redirect:/login";
 
         usuarioRepository.delete(usuario);
-        return "redirect:/admin/users";
+        return "redirect:/admin/users/";
     }
     /* ------------------------- End Delete Functions */
 
@@ -170,7 +170,7 @@ public class UsersController {
             model.addAttribute("edadFilter", edad);
         }
         if(tipo != null){
-            users.retainAll(usuarioRepository.findUsuarioByTipoUsuario(tipo));
+            users.retainAll(usuarioRepository.findUsuarioByTipoUsuario(tipo.getId()));
             model.addAttribute("tipoFilter", tipo);
         }
 

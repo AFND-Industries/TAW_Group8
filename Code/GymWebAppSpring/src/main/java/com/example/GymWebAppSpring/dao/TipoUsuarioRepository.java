@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TipoUsuarioRepository extends JpaRepository<Tipousuario, Integer>{
     @Query("SELECT t FROM Tipousuario t WHERE t.nombre like :name")
-    public Tipousuario findByName(String name);
+    Tipousuario findByName(String name);
 }

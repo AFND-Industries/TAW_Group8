@@ -113,15 +113,8 @@
             <td>
                 <a href="/admin/users/view?id=<%=usuario.getId()%>" class="me-3"><i class="bi bi-book me-1"></i></a>
                 <a href="/admin/users/edit?id=<%=usuario.getId()%>" class="me-3"><i class="bi bi-pencil-square me-1"></i></a>
-                <a href="/admin/users/delete?id=<%=usuario.getId()%>" class="me-3"><i class="bi bi-trash3 me-1"></i></a>
-                <%
-                    if (usuario.getTipo().getNombre().equals("Cliente")) {
-                %>
-                <a href="/admin/assign?id=<%=usuario.getId()%>" class="me-3"><i class="bi bi-person-check me-1"></i></a>
-
-                <%
-                    }
-                %>
+                <a href="<%=usuario.getTipo().getNombre().equals("Cliente") ? ("/admin/assign?id=" + usuario.getId()) : ""%>" class="me-3"><i class="bi bi-person-check me-1 <%=!usuario.getTipo().getNombre().equals("Cliente") ? "text-secondary" : "" %>"></i></a>
+                <a href="/admin/users/delete?id=<%=usuario.getId()%>" class="me-3 text-danger"><i class="bi bi-trash3 me-1"></i></a>
             </td>
         </tr>
         <%

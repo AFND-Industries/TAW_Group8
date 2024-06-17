@@ -1,7 +1,7 @@
 package com.example.GymWebAppSpring.controller.admin;
 
-import com.example.GymWebAppSpring.dao.UsuarioRepository;
-import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.dto.UsuarioDTO;
+import com.example.GymWebAppSpring.service.UsuarioService;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import com.example.GymWebAppSpring.util.HashUtils;
 import jakarta.servlet.http.HttpSession;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SessionController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
     /* ------------------------- Auth Functions */
     @GetMapping("/login")
@@ -27,7 +27,7 @@ public class SessionController {
     @PostMapping("/login")
     public String login(@RequestParam("dni") String dni, @RequestParam("clave") String password, Model model, HttpSession session) {
         String passDigest = HashUtils.hashString(password);
-        Usuario usuario = usuarioRepository.findUsuarioByDniAndClave(dni,passDigest);
+        UsuarioDTO usuario = usuarioService.findUsuarioByDniAndClave(dni,passDigest);
         if (usuario != null){
             session.setAttribute("user",usuario);
             if (AuthUtils.isTrainer(session))

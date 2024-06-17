@@ -86,7 +86,7 @@
                         <div class="d-flex justify-content-around mt-4">
                             <a href="/admin/categories/view?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-book me-1"></i></a>
                             <a href="/admin/categories/edit?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-pencil-square me-1"></i></a>
-                            <a href="/admin/categories/delete?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-trash3 me-1"></i></a>
+                            <a href="/admin/categories/delete?id=<%=categoria.getId()%>" class="icon-btn"><i class="bi bi-trash3 me-1 text-danger"></i></a>
                         </div>
                     </div>
                 </div>
