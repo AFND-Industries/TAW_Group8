@@ -42,7 +42,17 @@ public class AuthUtils {
      */
     public static boolean isTrainer(HttpSession session){
         Usuario user = (Usuario) session.getAttribute("user");
-        return user != null && user.getTipo().getNombre().equals("Entrenador");
+        return user != null && (user.getTipo().getNombre().equals("Entrenador") || user.getTipo().getNombre().equals("Entrenador de Fuerza"));
+    }
+
+    /**
+     * Devuelve un booleano si un usuario es entrenador de fuerza
+     * @param session Sesión HTTP activa
+     * @return True si el usuario está loggeado y es entrenador, False en caso contrario
+     */
+    public static boolean isStrengthTrainer(HttpSession session){
+        Usuario user = (Usuario) session.getAttribute("user");
+        return user != null && user.getTipo().getNombre().equals("Entrenador de Fuerza");
     }
 
     /**

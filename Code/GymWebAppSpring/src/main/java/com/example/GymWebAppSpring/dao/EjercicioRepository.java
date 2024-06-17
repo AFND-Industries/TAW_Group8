@@ -18,7 +18,7 @@ public interface EjercicioRepository extends JpaRepository<Ejercicio, Integer> {
     @Query("SELECT e FROM Ejercicio e WHERE e.id IN :ids")
     List<Ejercicio> findEjercicioByIds(@Param("ids") List<Integer> lista);
 
-    @Query("select e from Ejercicio e where e.categoria.id = 1") // Categoria 1 es Fuerza
+    @Query("select e from Ejercicio e where e.categoria.id = 1")
     List<Ejercicio> findAllEjerciciosFuerza();
 
     @Query("SELECT e FROM Ejercicio e WHERE e.categoria = :categoria")

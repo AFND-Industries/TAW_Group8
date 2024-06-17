@@ -495,7 +495,8 @@ public class EntrenadorControllerCRUD {
         if (dia != null) sesion.setDia(dia);
         if (descripcion != null) sesion.setDescripcion(descripcion);
 
-        List<Ejercicio> ejerciciosBase = ejercicioRepository.findAll();
+        List<Ejercicio> ejerciciosBase = AuthUtils.isStrengthTrainer(session) // Si es de fuerza solo fuerza, si no todos
+                ? ejercicioRepository.findAllEjerciciosFuerza() : ejercicioRepository.findAll();
 
         model.addAttribute("ejerciciosBase", ejerciciosBase);
 
