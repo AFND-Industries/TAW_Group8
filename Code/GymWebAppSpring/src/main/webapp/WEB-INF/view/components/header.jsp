@@ -18,12 +18,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Inicio</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Contacto</a>
-                    </li>
                 </ul>
             </div>
             <div class="btn-group dropstart ms-auto">
@@ -44,8 +38,8 @@
                     <li><a class="dropdown-item" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2" style="font-size: 16px"></i>Panel de control</a></li>
                     <hr class="dropdown-divider">
                     <li><a class="dropdown-item" href="/admin/users/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Usuarios</a></li>
-                    <li><a class="dropdown-item" href="/admin/exercises/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Ejercicios</a></li>
-                    <li><a class="dropdown-item" href="/admin/categories/"><i class="bi bi-person-lines-fill me-2" style="font-size: 16px"></i>Categorías</a></li>
+                    <li><a class="dropdown-item" href="/admin/exercises/"><i class="bi bi-lightning-fill me-2" style="font-size: 16px"></i>Ejercicios</a></li>
+                    <li><a class="dropdown-item" href="/admin/categories/"><i class="bi bi-inboxes-fill me-2" style="font-size: 16px"></i>Categorías</a></li>
                     <%
                         } else if (user.getTipo().getNombre().equals("Entrenador")){
                     %>

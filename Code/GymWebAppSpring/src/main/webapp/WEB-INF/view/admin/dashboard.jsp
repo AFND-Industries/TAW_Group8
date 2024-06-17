@@ -56,7 +56,7 @@
             <a href="/admin/exercises/">
                 <div class="card card-btn">
                     <div class="card-body d-flex justify-content-center align-items-center  p-5">
-                        <i class="bi bi-list-nested me-2 fs-4"></i> <span class="fs-4">Ejercicios</span>
+                        <i class="bi bi-lightning-fill me-2 fs-4"></i> <span class="fs-4">Ejercicios</span>
                     </div>
                 </div>
             </a>
@@ -65,7 +65,7 @@
             <a href="/admin/categories/">
                 <div class="card card-btn">
                     <div class="card-body d-flex justify-content-center align-items-center p-5">
-                        <i class="bi bi-person-lines-fill me-2 fs-4"></i> <span class="fs-4">Categorías</span>
+                        <i class="bi bi-inboxes-fill me-2 fs-4"></i> <span class="fs-4">Categorías</span>
                     </div>
                 </div>
             </a>
