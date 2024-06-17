@@ -1,7 +1,6 @@
 package com.example.GymWebAppSpring.iu;
 
-import com.example.GymWebAppSpring.entity.Rutina;
-import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
+import com.example.GymWebAppSpring.dto.RutinaDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ public class RutinaArgument {
         this.sesiones = new ArrayList<>();
     }
 
-    public RutinaArgument(Rutina rutina, List<SesionArgument> sesiones) {
+    public RutinaArgument(RutinaDTO rutina, List<SesionArgument> sesiones) {
         this.id = rutina.getId();
         this.nombre = rutina.getNombre();
         this.descripcion = rutina.getDescripcion();

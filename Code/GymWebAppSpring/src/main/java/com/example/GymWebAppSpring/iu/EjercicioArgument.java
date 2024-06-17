@@ -1,6 +1,6 @@
 package com.example.GymWebAppSpring.iu;
 
-import com.example.GymWebAppSpring.entity.Ejerciciosesion;
+import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -15,7 +15,7 @@ public class EjercicioArgument {
         this.especificaciones = new JsonObject();
     }
 
-    public EjercicioArgument(Ejerciciosesion e) {
+    public EjercicioArgument(EjerciciosesionDTO e) {
         this.id = e.getId();
         this.ejercicio = e.getEjercicio().getId();
 

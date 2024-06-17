@@ -1,8 +1,7 @@
 package com.example.GymWebAppSpring.iu;
 
-import com.example.GymWebAppSpring.entity.Ejercicio;
-import com.example.GymWebAppSpring.entity.Ejerciciosesion;
-import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
+import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
+import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +21,13 @@ public class SesionArgument {
         this.ejercicios = new ArrayList<>();
     }
 
-    public SesionArgument(Sesionentrenamiento s, List<Ejerciciosesion> ee) {
+    public SesionArgument(SesionentrenamientoDTO s, List<EjerciciosesionDTO> ee) {
         this.id = s.getId();
         this.nombre = s.getNombre();
         this.dia = s.getDia().toString();
         this.descripcion = s.getDescripcion();
         this.ejercicios = new ArrayList<>();
-        for (Ejerciciosesion e : ee)
+        for (EjerciciosesionDTO e : ee)
             ejercicios.add(new EjercicioArgument(e));
     }
 

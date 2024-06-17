@@ -1,9 +1,12 @@
 package com.example.GymWebAppSpring.controller;
 
-import com.example.GymWebAppSpring.dao.*;
+import com.example.GymWebAppSpring.dao.DificultadRepository;
+import com.example.GymWebAppSpring.dto.EjercicioDTO;
+import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
 import com.example.GymWebAppSpring.dto.RutinaDTO;
 import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
-import com.example.GymWebAppSpring.entity.*;
+import com.example.GymWebAppSpring.entity.Dificultad;
+import com.example.GymWebAppSpring.entity.Usuario;
 import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
@@ -116,7 +119,7 @@ public class EntrenadorControllerCRUD {
         List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findSesionesByRutina(r.getId());;
         List<SesionArgument> sesiones = new ArrayList<>();
         for (SesionentrenamientoDTO s : ss) {
-            List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s.getId());
+            List<EjerciciosesionDTO> ee = ejercicioSesionService.findEjerciciosBySesion(s.getId());
             sesiones.add(new SesionArgument(s, ee));
         }
         RutinaArgument rutina = new RutinaArgument(r, sesiones);
@@ -149,11 +152,11 @@ public class EntrenadorControllerCRUD {
         if (session.getAttribute("cache") != null) {
             rutina = (RutinaArgument) session.getAttribute("cache");
         } else {
-            Rutina r = rutinaRepository.findById(id).orElse(null);
-            List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
+            RutinaDTO r = rutinaService.findById(id);
+            List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findSesionesByRutina(r.getId());;
             List<SesionArgument> sesiones = new ArrayList<>();
-            for (Sesionentrenamiento s : ss) {
-                List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s);
+            for (SesionentrenamientoDTO s : ss) {
+                List<EjerciciosesionDTO> ee = ejercicioSesionService.findEjerciciosBySesion(s.getId());
                 sesiones.add(new SesionArgument(s, ee));
             }
             rutina = new RutinaArgument(r, sesiones);
@@ -196,10 +199,10 @@ public class EntrenadorControllerCRUD {
 
         // RUTINA
         // CREAR O MODIFICAR DATOS RUTINA
-        Rutina r = rutinaRepository.findById(rutina.getId()).orElse(null);
+        RutinaDTO r = rutinaService.findById(rutina.getId());
 
         if (r == null) {
-            r = new Rutina();
+            r = new RutinaDTO();
 
             r.setEntrenador(AuthUtils.getUser(session));
             r.setFechaCreacion(LocalDate.now());
@@ -209,7 +212,7 @@ public class EntrenadorControllerCRUD {
         r.setDificultad(dificultadRepository.findById(rutina.getDificultad()).orElse(null)); // no va a ser null, pero habria que controlarlo
         r.setDescripcion(rutina.getDescripcion()); // problema description too long
 
-        rutinaRepository.save(r);
+        rutinaService.save(r);
 
         // SESION
         List<SesionArgument> sesiones = rutina.getSesiones();
@@ -219,24 +222,27 @@ public class EntrenadorControllerCRUD {
         for (SesionArgument sesion : sesiones)
             sesionesId.add(sesion.getId());
 
-        List<Sesionentrenamiento> sesionesRutina = sesionentrenamientoRepository.findSesionesByRutina(r);
-        for (Sesionentrenamiento sesion : sesionesRutina) {
+        List<SesionentrenamientoDTO> sesionesRutina = sesionEntrenamientoService.findSesionesByRutina(r.getId());
+        for (SesionentrenamientoDTO sesion : sesionesRutina) {
             if (!sesionesId.contains(sesion.getId())) {
                 // SI LA SESION TENIA EJERCICIOS
-                List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
-                ejercicioSesionRepository.deleteAll(ejercicios);
+                List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findEjerciciosBySesion(sesion.getId());
+                List<Integer> ids = new ArrayList<>();
+                for (EjerciciosesionDTO ejercicio : ejercicios)
+                    ids.add(ejercicio.getId());
+                ejercicioSesionService.deleteAll(ids);
 
-                sesionentrenamientoRepository.delete(sesion);
+                sesionEntrenamientoService.delete(sesion.getId());
             }
         }
 
         // CREAR O EDITAR SESIONES
         for (int i = 0; i < sesiones.size(); i++) {
             SesionArgument sesion = sesiones.get(i);
-            Sesionentrenamiento s = sesionentrenamientoRepository.findById(sesion.getId()).orElse(null);
+            SesionentrenamientoDTO s = sesionEntrenamientoService.findById(sesion.getId());
 
             if (s == null) {
-                s = new Sesionentrenamiento();
+                s = new SesionentrenamientoDTO();
 
                 s.setRutina(r);
             }
@@ -245,7 +251,7 @@ public class EntrenadorControllerCRUD {
             s.setDia(Integer.parseInt(sesion.getDia()));
             s.setDescripcion(sesion.getDescripcion());
 
-            sesionentrenamientoRepository.save(s);
+            sesionEntrenamientoService.save(s);
 
             // EJERCICIOS
             List<EjercicioArgument> ejercicios = sesion.getEjercicios();
@@ -255,29 +261,29 @@ public class EntrenadorControllerCRUD {
             for (EjercicioArgument ejercicio : ejercicios)
                 ejerciciosId.add(ejercicio.getId());
 
-            List<Ejerciciosesion> ejerciciossesion = ejercicioSesionRepository.findEjerciciosBySesion(s);
-            for (Ejerciciosesion ejerciciosesion : ejerciciossesion) {
+            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findEjerciciosBySesion(s.getId());
+            for (EjerciciosesionDTO ejerciciosesion : ejerciciossesion) {
                 if (!ejerciciosId.contains(ejerciciosesion.getId()))
-                    ejercicioSesionRepository.delete(ejerciciosesion);
+                    ejercicioSesionService.delete(ejerciciosesion.getId());
             }
 
             // CREAR O EDITAR EJERCICIOS
             for (int j = 0; j < ejercicios.size(); j++) {
                 EjercicioArgument ejercicio = ejercicios.get(j);
-                Ejerciciosesion es = ejercicioSesionRepository.findById(ejercicio.getId()).orElse(null);
+                EjerciciosesionDTO es = ejercicioSesionService.findById(ejercicio.getId());
 
                 if (es == null) {
-                    es = new Ejerciciosesion();
+                    es = new EjerciciosesionDTO();
 
                     es.setSesionentrenamiento(s);
                 }
 
-                es.setEjercicio(ejercicioRepository.findById(ejercicio.getEjercicio()).orElse(null));
+                es.setEjercicio(ejercicioService.findById(ejercicio.getEjercicio()));
                 es.setEspecificaciones(new Gson().toJson(ejercicio.getEspecificaciones()));
                 es.setOrden(j + 1);
                 es.setSesionentrenamiento(s);
 
-                ejercicioSesionRepository.save(es);
+                ejercicioSesionService.save(es);
             }
         }
 
@@ -286,14 +292,20 @@ public class EntrenadorControllerCRUD {
 
     @GetMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
-        Rutina rutina = rutinaRepository.findById(id).orElse(null); // no deberia ser nunca null pero se puede probar
-        List<Sesionentrenamiento> sesiones = sesionentrenamientoRepository.findSesionesByRutina(rutina);
-        for (Sesionentrenamiento sesion : sesiones) {
-            List<Ejerciciosesion> ejerciciossesion = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
-            ejercicioSesionRepository.deleteAll(ejerciciossesion);
+        RutinaDTO rutina = rutinaService.findById(id); // no deberia ser nunca null pero se puede probar
+        List<SesionentrenamientoDTO> sesiones = sesionEntrenamientoService.findSesionesByRutina(rutina.getId());
+        for (SesionentrenamientoDTO sesion : sesiones) {
+            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findEjerciciosBySesion(sesion.getId());
+            List<Integer> ids = new ArrayList<>();
+            for (EjerciciosesionDTO ejercicio : ejerciciossesion)
+                ids.add(ejercicio.getId());
+            ejercicioSesionService.deleteAll(ids);
         }
-        sesionentrenamientoRepository.deleteAll(sesiones);
-        rutinaRepository.delete(rutina);
+        List<Integer> ids = new ArrayList<>();
+        for (SesionentrenamientoDTO sesion : sesiones)
+            ids.add(sesion.getId());
+        sesionEntrenamientoService.deleteAll(ids);
+        rutinaService.delete(rutina.getId());
 
         return "redirect:/entrenador/rutinas";
     }
@@ -333,7 +345,7 @@ public class EntrenadorControllerCRUD {
         List<Integer> ids = new ArrayList<>();
         for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
             ids.add(ejerciciosesion.getEjercicio());
-        List<Ejercicio> ejercicios = ejercicioRepository.findAll(); //////////////////////////////////////////////////////////////////////////////////
+        List<EjercicioDTO> ejercicios = ejercicioService.findAll(); //////////////////////////////////////////////////////////////////////////////////
 
         model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("readOnly", true);
@@ -387,7 +399,7 @@ public class EntrenadorControllerCRUD {
         List<Integer> ids = new ArrayList<>();
         for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
             ids.add(ejerciciosesion.getEjercicio());
-        List<Ejercicio> ejercicios = ejercicioRepository.findAll(); //////////////////////////////////////////////////////////////
+        List<EjercicioDTO> ejercicios = ejercicioService.findAll(); //////////////////////////////////////////////////////////////
 
         model.addAttribute("ejercicios", ejercicios);
 
@@ -494,8 +506,8 @@ public class EntrenadorControllerCRUD {
         if (dia != null) sesion.setDia(dia);
         if (descripcion != null) sesion.setDescripcion(descripcion);
 
-        List<Ejercicio> ejerciciosBase = AuthUtils.isStrengthTrainer(session) // Si es de fuerza solo fuerza, si no todos
-                ? ejercicioRepository.findAllEjerciciosFuerza() : ejercicioRepository.findAll();
+        List<EjercicioDTO> ejerciciosBase = AuthUtils.isStrengthTrainer(session) // Si es de fuerza solo fuerza, si no todos
+                ? ejercicioService.findAllEjerciciosFuerza() : ejercicioService.findAll();
 
         model.addAttribute("ejerciciosBase", ejerciciosBase);
 
@@ -505,8 +517,8 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/crear/ejercicio/ver")
     public String doVerEjercicio(@RequestParam("id") Integer id,
                                  Model model, HttpSession session) {
-        Ejerciciosesion ejerciciosesion = ejercicioSesionRepository.findById(id).orElse(null);
-        Ejercicio ejercicioBase = ejerciciosesion.getEjercicio();
+        EjerciciosesionDTO ejerciciosesion = ejercicioSesionService.findById(id);
+        EjercicioDTO ejercicioBase = ejerciciosesion.getEjercicio();
 
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         List<SesionArgument> sesiones = rutina.getSesiones();
@@ -541,7 +553,7 @@ public class EntrenadorControllerCRUD {
         if (sesion.getEjercicios().isEmpty() || sesion.getEjercicios().getLast().getId() >= -1)
             sesion.getEjercicios().add(new EjercicioArgument());
 
-        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+        EjercicioDTO ejercicioBase = ejercicioService.findById(ejbase);
         model.addAttribute("ejercicioPos", -1);
         model.addAttribute("ejercicioBase", ejercicioBase);
 
@@ -564,7 +576,7 @@ public class EntrenadorControllerCRUD {
         if (descripcion != null) sesion.setDescripcion(descripcion);
 
         int ejbase = sesion.getEjercicios().get(ejPos).getEjercicio();
-        Ejercicio ejercicioBase = ejercicioRepository.findById(ejbase).orElse(null);
+        EjercicioDTO ejercicioBase = ejercicioService.findById(ejbase);
         model.addAttribute("ejercicioBase", ejercicioBase);
         model.addAttribute("ejercicioPos", ejPos);
 

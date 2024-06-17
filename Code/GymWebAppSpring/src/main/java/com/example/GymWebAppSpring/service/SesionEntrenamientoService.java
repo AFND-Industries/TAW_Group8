@@ -45,4 +45,8 @@ public class SesionEntrenamientoService extends DTOService<SesionentrenamientoDT
     public void delete(Integer sesionentrenamientoId) {
         this.sesionEntrenamientoRepository.deleteById(sesionentrenamientoId);
     }
+
+    public void deleteAll(List<Integer> sesiones) {
+        this.sesionEntrenamientoRepository.deleteAllById(sesiones);
+    }
 }
