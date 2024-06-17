@@ -159,12 +159,8 @@
                                 </div>
                             </div>
                             <div class="row justify-content-center my-2">
-                                <div class="col d-flex justify-content-end">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="backExec()">
-                                        Ejercicio anterior
-                                    </button>
-                                </div>
-                                <div class="col d-flex justify-content-start">
+
+                                <div class="col-2 d-flex justify-content-start">
                                     <button type="button" class="btn btn-primary" onclick="handleSummit()">
                                         Siguiente ejercicio
                                     </button>
@@ -221,9 +217,6 @@
 
     }
 
-    function backExec() {
-        window.location.href = "/client/rutina/sesion/ejercicio?sesionEntrenamiento=<%=sesionEntrenamiento.getId()%>&ejercicioIndex=<%=ejercicioIndex-1%>";
-    }
 </script>
 
 
