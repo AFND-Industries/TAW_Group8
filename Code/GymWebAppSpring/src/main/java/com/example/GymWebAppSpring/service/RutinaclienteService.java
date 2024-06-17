@@ -1,11 +1,11 @@
 package com.example.GymWebAppSpring.service;
 
-import com.example.GymWebAppSpring.dao.RutinaClienteIDRepository;
 import com.example.GymWebAppSpring.dao.RutinaClienteReporsitory;
 import com.example.GymWebAppSpring.dao.RutinaRepository;
 import com.example.GymWebAppSpring.dao.UsuarioRepository;
 import com.example.GymWebAppSpring.dto.RutinaclienteDTO;
 import com.example.GymWebAppSpring.entity.Rutinacliente;
+import com.example.GymWebAppSpring.entity.RutinaclienteId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,24 +23,34 @@ public class RutinaclienteService extends DTOService<RutinaclienteDTO, Rutinacli
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private RutinaClienteIDRepository rutinaClienteIDRepository;
-
     public List<RutinaclienteDTO> findAll() {
         return entidadesADTO(rutinaclienteRepository.findAll());
     }
 
-    public RutinaclienteDTO findById(Integer id) {
+    public RutinaclienteDTO findById(Integer RutinaId, Integer UsuarioId) {
+        RutinaclienteId id = new RutinaclienteId();
+        id.setRutinaId(RutinaId);
+        id.setUsuarioId(UsuarioId);
         Rutinacliente rutinacliente = rutinaclienteRepository.findById(id).orElse(null);
         return rutinacliente != null ? rutinacliente.toDTO() : null;
     }
 
     public void save(RutinaclienteDTO rutinaclienteDTO) {
-        Rutinacliente rutinacliente = rutinaclienteRepository.findById(rutinaClienteIDRepository.findById(rutinaclienteDTO.getId().getRutinaId()).orElse(null)).orElse(new Rutinacliente());
+        RutinaclienteId id = new RutinaclienteId();
+        id.setRutinaId(rutinaclienteDTO.getId().getRutinaId());
+        id.setUsuarioId(rutinaclienteDTO.getId().getUsuarioId());
+        Rutinacliente rutinacliente = rutinaclienteRepository.findById(id).orElse(new Rutinacliente());
         rutinacliente.setRutina(rutinaRepository.findById(rutinaclienteDTO.getRutina().getId()).orElse(null));
         rutinacliente.setFechaInicio(rutinaclienteDTO.getFechaInicio());
         rutinacliente.setUsuario(usuarioRepository.findById(rutinaclienteDTO.getUsuario().getId()).orElse(null));
         rutinaclienteRepository.save(rutinacliente);
+    }
+
+    public void delete(Integer RutinaId, Integer UsuarioId) {
+        RutinaclienteId id = new RutinaclienteId();
+        id.setRutinaId(RutinaId);
+        id.setUsuarioId(UsuarioId);
+        rutinaclienteRepository.deleteById(id);
     }
 
 
