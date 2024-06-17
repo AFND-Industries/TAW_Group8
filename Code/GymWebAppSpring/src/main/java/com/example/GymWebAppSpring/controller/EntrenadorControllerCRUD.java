@@ -1,20 +1,11 @@
 package com.example.GymWebAppSpring.controller;
 
-import com.example.GymWebAppSpring.dao.DificultadRepository;
-import com.example.GymWebAppSpring.dto.EjercicioDTO;
-import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
-import com.example.GymWebAppSpring.dto.RutinaDTO;
-import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
-import com.example.GymWebAppSpring.entity.Dificultad;
-import com.example.GymWebAppSpring.entity.Usuario;
+import com.example.GymWebAppSpring.dto.*;
 import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
-import com.example.GymWebAppSpring.service.EjercicioService;
-import com.example.GymWebAppSpring.service.EjercicioSesionService;
-import com.example.GymWebAppSpring.service.RutinaService;
-import com.example.GymWebAppSpring.service.SesionEntrenamientoService;
+import com.example.GymWebAppSpring.service.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
 import com.google.gson.Gson;
@@ -41,7 +32,7 @@ public class EntrenadorControllerCRUD {
     protected RutinaService rutinaService;
 
     @Autowired
-    protected DificultadRepository dificultadRepository;
+    protected DificultadService dificultadService;
 
     @Autowired
     protected SesionEntrenamientoService sesionEntrenamientoService;
@@ -64,11 +55,11 @@ public class EntrenadorControllerCRUD {
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
 
-        Usuario entrenador = AuthUtils.getUser(session);
+        UsuarioDTO entrenador = AuthUtils.getUser(session);
         List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorId(entrenador.getId());
 
         model.addAttribute("rutinas", rutinas);
-        model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("dificultades", dificultadService.findAll());
         model.addAttribute("filtro", new FiltroArgument());
         if (changed != null) model.addAttribute("rutinaChanged", rutinaService.findById(changed));
         if (mode != null) model.addAttribute("changeMode", mode);
@@ -96,8 +87,8 @@ public class EntrenadorControllerCRUD {
         Integer sesionMode = filtro.getSesionMode();
         Integer dificultadid = filtro.getDificultad();
 
-        Usuario entrenador = AuthUtils.getUser(session);
-        Dificultad dificultad = dificultadRepository.findById(dificultadid).orElse(null);
+        UsuarioDTO entrenador = AuthUtils.getUser(session);
+        DificultadDTO dificultad = dificultadService.findById(dificultadid);
 
         Integer limiteBajo = sesionMode == 3 || sesionMode == -1 ? 0 : sesionNum;
         Integer limiteAlto = sesionMode == 2 || sesionMode == -1 ? 7 : sesionNum;
@@ -106,7 +97,7 @@ public class EntrenadorControllerCRUD {
                 entrenador.getId(), nombre, limiteBajo, limiteAlto, dificultad.getId());
 
         model.addAttribute("rutinas", rutinas);
-        model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("dificultades", dificultadService.findAll());
         model.addAttribute("filtro", filtro);
 
         return "/entrenador/crud/rutinas";
@@ -127,7 +118,7 @@ public class EntrenadorControllerCRUD {
         model.addAttribute("readOnly", true);
         session.setAttribute("cache", rutina);
 
-        model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("dificultades", dificultadService.findAll());
 
         return "/entrenador/crud/rutina";
     }
@@ -139,7 +130,7 @@ public class EntrenadorControllerCRUD {
 
         session.setAttribute("cache", rutina);
 
-        model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("dificultades", dificultadService.findAll());
 
         return "/entrenador/crud/rutina";
     }
@@ -164,7 +155,7 @@ public class EntrenadorControllerCRUD {
 
         session.setAttribute("cache", rutina);
 
-        model.addAttribute("dificultades", dificultadRepository.findAll());
+        model.addAttribute("dificultades", dificultadService.findAll());
 
         return "/entrenador/crud/rutina";
     }
@@ -209,7 +200,7 @@ public class EntrenadorControllerCRUD {
         }
 
         r.setNombre(rutina.getNombre());
-        r.setDificultad(dificultadRepository.findById(rutina.getDificultad()).orElse(null)); // no va a ser null, pero habria que controlarlo
+        r.setDificultad(dificultadService.findById(rutina.getDificultad())); // no va a ser null, pero habria que controlarlo
         r.setDescripcion(rutina.getDescripcion()); // problema description too long
 
         rutinaService.save(r);
