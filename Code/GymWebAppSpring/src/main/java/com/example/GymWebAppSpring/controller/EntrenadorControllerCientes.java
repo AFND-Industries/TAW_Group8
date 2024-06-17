@@ -239,6 +239,7 @@ public class EntrenadorControllerCientes {
         Gson gson = new Gson();
         List<Integer> porcentaje = new ArrayList<>();
         List<Integer> sesionesEjercicios = new ArrayList<>();
+        List<Informacionejercicio> informacionEjercicios = new ArrayList<>();
         int i = 0;
         int total = 0;
 
@@ -255,15 +256,18 @@ public class EntrenadorControllerCientes {
                     String string = ejercicio.getEjercicio().getCategoria().getTiposBase();
                     String tipoCantidad = gson.fromJson(string, JsonArray.class).get(0).getAsString();
                     total += Integer.parseInt(gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class).get(tipoCantidad).getAsString());
-                    Informacionejercicio info = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejercicio, informacionSesion );
+                    Informacionejercicio info = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejercicio, informacionSesion);
+
+
                     if (info != null) {
+                        informacionEjercicios.add(info);
                         sesionesEjercicios.add(Integer.parseInt(gson.fromJson(info.getEvaluacion(), JsonObject.class).get(tipoCantidad).getAsString()));
                         i += Integer.parseInt(gson.fromJson(info.getEvaluacion(), JsonObject.class).get(tipoCantidad).getAsString());
                     } else {
                         sesionesEjercicios.add(0);
                     }
                 }
-                porcentaje.add((i * 100) / total);
+                porcentaje.add(Math.min(((i * 100) / total), 100));
                 i = 0;
                 total = 0;
             }
@@ -272,7 +276,6 @@ public class EntrenadorControllerCientes {
         session.setAttribute("rutina", rutina);
         model.addAttribute("sesiones", sesiones);
         model.addAttribute("porcentaje", porcentaje);
-        session.setAttribute("sesionesEjercicios", sesionesEjercicios);
 
         return "/entrenador/clientes/ver_rutina_cliente";
     }
@@ -286,10 +289,17 @@ public class EntrenadorControllerCientes {
         Usuario cliente = (Usuario) session.getAttribute("cliente");
         List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion);
         Informacionsesion informacionSesion = informacionSesionRepository.findByUsuarioAndSesion(cliente, sesion);
+        List<Informacionejercicio> infos = new ArrayList<>();
+
+        for (Ejerciciosesion ejerciciosesion : ejercicios) {
+            Informacionejercicio informacionEjercicio = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejerciciosesion, informacionSesion);
+            infos.add(informacionEjercicio);
+        }
 
         model.addAttribute("sesion", sesion);
         model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("informacionSesion", informacionSesion);
+        model.addAttribute("informacionEjercicios", infos);
 
 
         return "/entrenador/clientes/ver_sesion_cliente";
@@ -303,7 +313,7 @@ public class EntrenadorControllerCientes {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
-        Informacionejercicio informacionEjercicio = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejercicio,informacionSesion);
+        Informacionejercicio informacionEjercicio = informacionEjercicioRepository.findByEjerciciosesionAndInformacionsesion(ejercicio, informacionSesion);
 
         model.addAttribute("ejercicio", ejercicio.getEjercicio());
         model.addAttribute("informacionEjercicio", informacionEjercicio);
