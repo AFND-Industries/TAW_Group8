@@ -56,8 +56,9 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
-<jsp:include page="../components/header.jsp"/>
+
 <body>
+<jsp:include page="../components/header.jsp"/>
 <button class=" mx-3 my-1 btn btn-dark"
         onclick="location.href='/client/rutina?rutinaElegida=<%=sesionEntrenamiento.getRutina().getId()%>'">
     <i class="bi bi-arrow-left"></i> Volver

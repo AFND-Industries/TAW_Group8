@@ -17,7 +17,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Mi espacio personal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -45,16 +45,10 @@
             <%
             } else {
             %>
-
             <div class="list-group my-2">
-                <%--                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">--%>
-                <%--                    The current link item--%>
-                <%--                </a>--%>
                 <form method="get" action="client/rutina">
                     <%
                         for (Rutina r : rutinas) {
-
-
                     %>
                     <button type="submit"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
@@ -62,19 +56,12 @@
 
                         <span><%=r.getNombre()%></span>
                         <span>Fecha Creacion: <%=r.getFechaCreacion()%></span>
-
                     </button>
-
                     <%
                         }
                     %>
                 </form>
-                <%--                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>--%>
-                <%--                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--%>
-                <%--                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link--%>
-                <%--                        item</a>--%>
             </div>
-
             <%
                 }
             %>
@@ -98,7 +85,5 @@
         </div>
     </div>
 </div>
-
-
 </body>
 </html>

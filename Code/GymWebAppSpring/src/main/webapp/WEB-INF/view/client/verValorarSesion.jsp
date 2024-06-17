@@ -30,8 +30,9 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
 </head>
-<jsp:include page="../components/header.jsp"/>
+
 <body style="height: 80vh;  background-color: #f8f9fa">
+<jsp:include page="../components/header.jsp"/>
 <div class="container-flex">
     <div class="row justify-content-center align-items-center mt-5">
         <div class="col-md-6 mt-5">
