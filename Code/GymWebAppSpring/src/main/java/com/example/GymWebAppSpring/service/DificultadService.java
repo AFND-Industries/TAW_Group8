@@ -30,8 +30,8 @@ public class DificultadService extends DTOService<DificultadDTO, Dificultad>{
         dificultadRepository.save(dificultad);
     }
 
-    public void delete(DificultadDTO dificultadDTO){
-        dificultadRepository.deleteById(dificultadDTO.getId());
+    public void delete(Integer id){
+        dificultadRepository.deleteById(id);
     }
 
 }

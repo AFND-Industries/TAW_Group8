@@ -9,12 +9,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EntrenadorAsignadoRepository extends JpaRepository<Entrenadorasignado, EntrenadorasignadoId> {
-    @Query("SELECT e.cliente FROM Entrenadorasignado e WHERE e.entrenador = :entrenador")
-    public List<Usuario> findClientsByEntrenadorID(Usuario entrenador);
+    @Query("SELECT e.cliente FROM Entrenadorasignado e WHERE e.entrenador.id = :id")
+    List<Usuario> findClientsByEntrenadorID(Integer id);
 
-    @Query("SELECT e.entrenador FROM Entrenadorasignado e WHERE e.cliente = :cliente")
-    public List<Usuario> findEntrenadoresByClientID(Usuario cliente);
+    @Query("SELECT e.entrenador FROM Entrenadorasignado e WHERE e.cliente.id = :id")
+    List<Usuario> findEntrenadoresByClientID(Integer id);
 
-    @Query("SELECT e FROM Entrenadorasignado e WHERE e.cliente = :cliente")
-    public List<Entrenadorasignado> findByCliente(Usuario cliente);
+    @Query("SELECT e FROM Entrenadorasignado e WHERE e.cliente.id = :cliente")
+    List<Entrenadorasignado> findByCliente(Integer id);
 }

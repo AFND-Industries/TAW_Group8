@@ -1,4 +1,5 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 22/04/2024
@@ -7,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Usuario user = (Usuario) session.getAttribute("user");
+    UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
 %>
 <header>
     <nav class="mb-3 navbar navbar-expand-lg d-flex align-items-center  border-bottom border-2 border-dark  border-opacity-50 " style="background-color: #e8c547">

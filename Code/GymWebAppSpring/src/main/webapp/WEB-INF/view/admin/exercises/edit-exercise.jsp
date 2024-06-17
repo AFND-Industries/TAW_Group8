@@ -1,5 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
+<%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
 <%--
   Created by IntelliJ IDEA.
   ejercicio: tonib
@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html lang="es">
 <%
-    Ejercicio ejercicio = (Ejercicio) request.getAttribute("ejercicio");
+    EjercicioDTO ejercicio = (EjercicioDTO) request.getAttribute("ejercicio");
 %>
 <head>
     <title><%=ejercicio.getId() != null ? "Editar" : "Nuevo"%> ejercicio</title>

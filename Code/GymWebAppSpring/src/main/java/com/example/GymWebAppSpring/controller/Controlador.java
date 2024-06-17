@@ -34,6 +34,7 @@ public class Controlador {
         return "/entrenador/inicio";
     }
     // TODO: preguntar a profesor como podríamos implementar una pantalla de error
+
     @GetMapping("/error")
     public String error(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "code", required = false) Integer code,

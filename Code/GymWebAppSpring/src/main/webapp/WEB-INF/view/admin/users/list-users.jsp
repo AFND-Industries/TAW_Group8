@@ -1,6 +1,7 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Tipousuario" %><%--
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.TipousuarioDTO" %>
+<%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 22/04/2024
@@ -9,12 +10,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("users");
-    List<Tipousuario> tipos = (List<Tipousuario>) request.getAttribute("tipos");
+    List<UsuarioDTO> usuarios = (List<UsuarioDTO>) request.getAttribute("users");
+    List<TipousuarioDTO> tipos = (List<TipousuarioDTO>) request.getAttribute("tipos");
     String _dni = (String) request.getAttribute("dniFilter");
     String _apellidos = (String) request.getAttribute("apellidosFilter");
     Integer _edad = (Integer) request.getAttribute("edadFilter");
-    Tipousuario _tipo = (Tipousuario) request.getAttribute("tipoFilter");
+    TipousuarioDTO _tipo = (TipousuarioDTO) request.getAttribute("tipoFilter");
 %>
 <html lang="es">
 <head>
@@ -39,7 +40,7 @@
         <select class="form-select ms-2" name="tipo">
             <option disabled <%=_tipo == null ? "selected" : ""%>>Tipo de usuario</option>
             <%
-                for (Tipousuario tipo : tipos) {
+                for (TipousuarioDTO tipo : tipos) {
             %>
             <option value="<%=tipo.getId()%>" <%=tipo != null && tipo.equals(_tipo) ? "selected" : ""%>><%=tipo.getNombre()%>
             </option>
@@ -97,7 +98,7 @@
             }
         %>
         <%
-            for (Usuario usuario : usuarios) {
+            for (UsuarioDTO usuario : usuarios) {
         %>
         <tr>
             <td><%= usuario.getNombre() %>

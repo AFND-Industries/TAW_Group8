@@ -1,5 +1,6 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 29/04/2024
@@ -8,9 +9,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Usuario usuario = (Usuario) request.getAttribute("user");
-    List<Usuario> entrenadores = (List<Usuario>) request.getAttribute("trainers");
-    List<Usuario> selected = (List<Usuario>) request.getAttribute("sTrainers");
+    UsuarioDTO usuario = (UsuarioDTO) request.getAttribute("user");
+    List<UsuarioDTO> entrenadores = (List<UsuarioDTO>) request.getAttribute("trainers");
+    List<UsuarioDTO> selected = (List<UsuarioDTO>) request.getAttribute("sTrainers");
 %>
 <html lang="es">
 <head>
@@ -32,7 +33,7 @@
             <div class="card p-2 mb-2">
                 <div class="row g-3 overflow-auto m-1" style="max-height: 340px">
                     <%
-                        for (Usuario entrenador : entrenadores){
+                        for (UsuarioDTO entrenador : entrenadores){
                     %>
                     <div class="col-md-6 col-12">
                         <div class="card d-flex justify-content-center align-items-center">

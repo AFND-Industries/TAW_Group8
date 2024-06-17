@@ -36,7 +36,7 @@ public class TipoUsuarioService extends DTOService<TipousuarioDTO, Tipousuario> 
         tipoUsuarioRepository.save(tipousuario);
     }
 
-    public void delete(TipousuarioDTO tipousuarioDTO){
-        tipoUsuarioRepository.deleteById(tipousuarioDTO.getId());
+    public void delete(Integer id){
+        tipoUsuarioRepository.deleteById(id);
     }
 }

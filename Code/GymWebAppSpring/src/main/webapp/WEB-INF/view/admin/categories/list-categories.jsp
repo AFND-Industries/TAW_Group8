@@ -1,6 +1,5 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Categoria" %>
+<%@ page import="com.example.GymWebAppSpring.dto.CategoriaDTO" %>
 <%--
   Created by IntelliJ IDEA.
   User: tonib
@@ -10,10 +9,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Categoria> categorias = (List<Categoria>) request.getAttribute("categorias");
+    List<CategoriaDTO> categorias = (List<CategoriaDTO>) request.getAttribute("categorias");
 
     String _nombre = (String) request.getAttribute("nombre");
-    Categoria _categoria = (Categoria) request.getAttribute("categoria");
+    CategoriaDTO _categoria = (CategoriaDTO) request.getAttribute("categoria");
 %>
 <html lang="es">
 <head>
@@ -75,7 +74,7 @@
     </div>
     <div class="row g-3">
         <%
-            for (Categoria categoria : categorias){
+            for (CategoriaDTO categoria : categorias){
         %>
 
             <div class="col-md-3 col-sm-6 col-12 h-100">

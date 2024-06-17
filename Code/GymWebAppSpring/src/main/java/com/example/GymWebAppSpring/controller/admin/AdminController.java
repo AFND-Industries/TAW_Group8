@@ -1,11 +1,13 @@
 package com.example.GymWebAppSpring.controller.admin;
 
-import com.example.GymWebAppSpring.dao.EjercicioRepository;
-import com.example.GymWebAppSpring.dao.EntrenadorAsignadoRepository;
-import com.example.GymWebAppSpring.dao.TipoUsuarioRepository;
-import com.example.GymWebAppSpring.dao.UsuarioRepository;
-import com.example.GymWebAppSpring.entity.*;
-import com.example.GymWebAppSpring.util.HashUtils;
+
+import com.example.GymWebAppSpring.dto.EntrenadorasignadoDTO;
+import com.example.GymWebAppSpring.dto.EntrenadorasignadoIdDTO;
+import com.example.GymWebAppSpring.dto.TipousuarioDTO;
+import com.example.GymWebAppSpring.dto.UsuarioDTO;
+import com.example.GymWebAppSpring.service.EntrenadorAsignadoService;
+import com.example.GymWebAppSpring.service.TipoUsuarioService;
+import com.example.GymWebAppSpring.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.example.GymWebAppSpring.util.AuthUtils.isAdmin;
@@ -26,13 +27,13 @@ import static com.example.GymWebAppSpring.util.AuthUtils.isAdmin;
 public class AdminController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
     @Autowired
-    private TipoUsuarioRepository tipoUsuarioRepository;
+    private TipoUsuarioService tipoUsuarioService;
 
     @Autowired
-    private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
+    private EntrenadorAsignadoService entrenadorAsignadoService;
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session){
@@ -44,51 +45,53 @@ public class AdminController {
 
     /* ------------------------- Assign Functions */
     @GetMapping("/assign")
-    public String asignarEntrenadorPage(@RequestParam("id") Usuario user, Model model, HttpSession session){
+    public String asignarEntrenadorPage(@RequestParam("id") Integer id, Model model, HttpSession session){
+        UsuarioDTO user = usuarioService.findById(id);
         if(!isAdmin(session))
             return "redirect:/login";
 
         if(!user.getTipo().getNombre().equals("Cliente"))
             return "redirect:/admin/users/";
 
-        Tipousuario entrenador = tipoUsuarioRepository.findByName("Entrenador");
+        TipousuarioDTO entrenador = tipoUsuarioService.findByName("Entrenador");
 
         model.addAttribute("user",user);
-        model.addAttribute("trainers", usuarioRepository.findUsuarioByTipoUsuario(entrenador.getId()));
-        model.addAttribute("sTrainers", entrenadorAsignadoRepository.findEntrenadoresByClientID(user));
+        model.addAttribute("trainers", usuarioService.findUsuarioByTipoUsuario(entrenador));
+        model.addAttribute("sTrainers", entrenadorAsignadoService.findEntrenadoresByClientID(user));
         return "admin/users/assign-trainer";
     }
 
     @PostMapping("/assign")
     public String asignarEntrenador(
-            @RequestParam("user") Usuario user,
-            @RequestParam(value = "trainers", required = false) List<Usuario> trainers,
+            @RequestParam("user") Integer usuario,
+            @RequestParam(value = "trainers", required = false) List<UsuarioDTO> trainers,
             HttpSession session
     ){
+        UsuarioDTO user = usuarioService.findById(usuario);
         if(!isAdmin(session))
             return "redirect:/login";
 
         if(!user.getTipo().getNombre().equals("Cliente"))
             return "redirect:/admin/users/";
 
-        entrenadorAsignadoRepository.deleteAll(entrenadorAsignadoRepository.findByCliente(user));
+        entrenadorAsignadoService.deleteAll(entrenadorAsignadoService.findByCliente(user).stream().map(EntrenadorasignadoDTO::getId).toList());
         if(trainers == null)
             return "redirect:/admin/users/";
 
-        List<Entrenadorasignado> entrenadorasignados = new ArrayList<>();
+        List<EntrenadorasignadoDTO> entrenadorasignados = new ArrayList<>();
 
-        for(Usuario trainer : trainers){
-            Entrenadorasignado asignado = new Entrenadorasignado();
+        for(UsuarioDTO trainer : trainers){
+            EntrenadorasignadoDTO asignado = new EntrenadorasignadoDTO();
             asignado.setEntrenador(trainer);
             asignado.setCliente(user);
-            EntrenadorasignadoId id = new EntrenadorasignadoId();
+            EntrenadorasignadoIdDTO id = new EntrenadorasignadoIdDTO();
             id.setEntrenador(trainer.getId());
             id.setCliente(user.getId());
             asignado.setId(id);
             entrenadorasignados.add(asignado);
         }
 
-        entrenadorAsignadoRepository.saveAll(entrenadorasignados);
+        entrenadorAsignadoService.saveAll(entrenadorasignados);
 
         return "redirect:/admin/users/";
     }

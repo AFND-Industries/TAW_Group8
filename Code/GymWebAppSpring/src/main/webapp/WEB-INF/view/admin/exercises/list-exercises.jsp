@@ -1,7 +1,7 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Ejercicio" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Categoria" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Musculo" %><%--
+<%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.CategoriaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.MusculoDTO" %><%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 07/05/2024
@@ -10,13 +10,13 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Ejercicio> ejercicios = (List<Ejercicio>) request.getAttribute("ejercicios");
-    List<Categoria> categorias = (List<Categoria>) request.getAttribute("categorias");
-    List<Musculo> musculos = (List<Musculo>) request.getAttribute("musculos");
+    List<EjercicioDTO> ejercicios = (List<EjercicioDTO>) request.getAttribute("ejercicios");
+    List<CategoriaDTO> categorias = (List<CategoriaDTO>) request.getAttribute("categorias");
+    List<MusculoDTO> musculos = (List<MusculoDTO>) request.getAttribute("musculos");
 
     String _nombre = (String) request.getAttribute("nombre");
-    Categoria _categoria = (Categoria) request.getAttribute("categoria");
-    Musculo _musculo = (Musculo) request.getAttribute("musculo");
+    CategoriaDTO _categoria = (CategoriaDTO) request.getAttribute("categoria");
+    MusculoDTO _musculo = (MusculoDTO) request.getAttribute("musculo");
 %>
 <html lang="es">
 <head>
@@ -51,7 +51,7 @@
         <select class="form-select ms-2" name="categoria">
             <option disabled <%=_categoria == null ? "selected" : ""%>>Categoría</option>
             <%
-                for (Categoria categoria : categorias) {
+                for (CategoriaDTO categoria : categorias) {
             %>
             <option value="<%=categoria.getId()%>" <%=categoria != null && categoria.equals(_categoria) ? "selected" : ""%>>
                 <%=categoria.getNombre()%>
@@ -63,7 +63,7 @@
         <select class="form-select ms-2" name="musculo">
             <option disabled <%=_musculo == null ? "selected" : ""%>>Músculo</option>
             <%
-                for (Musculo musculo : musculos) {
+                for (MusculoDTO musculo : musculos) {
             %>
             <option value="<%=musculo.getId()%>" <%=musculo != null && musculo.equals(_categoria) ? "selected" : ""%>>
                 <%=musculo.getNombre()%>
@@ -102,7 +102,7 @@
     </div>
     <div class="row g-3">
         <%
-            for (Ejercicio ejercicio : ejercicios){
+            for (EjercicioDTO ejercicio : ejercicios){
         %>
 
             <div class="col-md-3 col-sm-6 col-12 h-100">

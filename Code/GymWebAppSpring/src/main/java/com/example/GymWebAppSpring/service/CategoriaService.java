@@ -32,8 +32,8 @@ public class CategoriaService extends DTOService<CategoriaDTO, Categoria>{
         categoriaRepository.save(categoria);
     }
 
-    public void delete(CategoriaDTO categoriaDTO){
-        categoriaRepository.deleteById(categoriaDTO.getId());
+    public void delete(Integer id){
+        categoriaRepository.deleteById(id);
     }
 
 }

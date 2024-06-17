@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/rutinas")
+@RequestMapping("/api/v1/rutinas")
 public class RutinaControllerRest {
 
     @Autowired

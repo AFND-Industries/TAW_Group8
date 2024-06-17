@@ -14,8 +14,8 @@ public class MusculoService extends DTOService<MusculoDTO, Musculo> {
     @Autowired
     private MusculoRepository musculoRepository;
 
-    public List<MusculoDTO> entidadesADTO(List<Musculo> entidades) {
-        return super.entidadesADTO(entidades);
+    public List<MusculoDTO> findAll() {
+        return entidadesADTO(musculoRepository.findAll());
     }
 
     public MusculoDTO findById(Integer id) {
@@ -31,7 +31,7 @@ public class MusculoService extends DTOService<MusculoDTO, Musculo> {
         musculoRepository.save(musculo);
     }
 
-    public void delete(MusculoDTO musculoDTO) {
-        musculoRepository.deleteById(musculoDTO.getId());
+    public void delete(Integer id) {
+        musculoRepository.deleteById(id);
     }
 }

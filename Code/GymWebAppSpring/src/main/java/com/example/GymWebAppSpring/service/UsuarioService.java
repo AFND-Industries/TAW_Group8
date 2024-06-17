@@ -64,8 +64,8 @@ public class UsuarioService extends DTOService<UsuarioDTO, Usuario>{
         usuarioRepository.save(usuario);
     }
 
-    public void delete(UsuarioDTO categoriaDTO){
-        usuarioRepository.deleteById(categoriaDTO.getId());
+    public void delete(Integer id){
+        usuarioRepository.deleteById(id);
     }
 
 }

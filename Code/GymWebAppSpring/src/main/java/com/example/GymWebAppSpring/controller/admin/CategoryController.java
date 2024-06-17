@@ -1,10 +1,8 @@
 package com.example.GymWebAppSpring.controller.admin;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
-import com.example.GymWebAppSpring.dao.CategoriaRepository;
-import com.example.GymWebAppSpring.entity.Categoria;
+import com.example.GymWebAppSpring.dto.CategoriaDTO;
+import com.example.GymWebAppSpring.service.CategoriaService;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
@@ -22,14 +20,14 @@ import static com.example.GymWebAppSpring.util.AuthUtils.isAdmin;
 public class CategoryController {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    private CategoriaService categoriaService;
 
     @GetMapping("/")
     public String listCategories(Model model, HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
 
-        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("categorias", categoriaService.findAll());
 
         return "admin/categories/list-categories";
     }
@@ -43,7 +41,7 @@ public class CategoryController {
     }
 
     @GetMapping("/view")
-    public String viewCategorie(@RequestParam("id")Categoria categoria, Model model, HttpSession session) throws ParseException {
+    public String viewCategorie(@RequestParam("id") CategoriaDTO categoria, Model model, HttpSession session) throws ParseException {
         if (!isAdmin(session))
             return "redirect:/login";
 
@@ -60,13 +58,13 @@ public class CategoryController {
         if (!isAdmin(session))
             return "redirect:/login";
 
-        model.addAttribute("categoria", new Categoria());
+        model.addAttribute("categoria", new CategoriaDTO());
 
         return "admin/categories/edit-category";
     }
 
     @GetMapping("/edit")
-    public String editCategoryPage(@RequestParam("id") Categoria categoria,Model model, HttpSession session) throws ParseException {
+    public String editCategoryPage(@RequestParam("id") CategoriaDTO categoria,Model model, HttpSession session) throws ParseException {
         if (!isAdmin(session))
             return "redirect:/login";
 
@@ -79,7 +77,7 @@ public class CategoryController {
     }
 
     @PostMapping("/edit")
-    public String editCategory(@ModelAttribute Categoria categoria,
+    public String editCategory(@ModelAttribute CategoriaDTO categoria,
                                @RequestParam(value = "tipos", required = false) List<String> tipos,
                                HttpSession session){
         if (!isAdmin(session))
@@ -90,17 +88,17 @@ public class CategoryController {
 
         categoria.setTiposBase(array.toString());
 
-        categoriaRepository.save(categoria);
+        categoriaService.save(categoria);
 
         return "redirect:/admin/categories/";
     }
 
     @GetMapping("/delete")
-    public String deleteCategory(@RequestParam("id") Categoria categoria,HttpSession session){
+    public String deleteCategory(@RequestParam("id") Integer id,HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
 
-        categoriaRepository.delete(categoria);
+        categoriaService.delete(id);
 
         return "redirect:/admin/categories/";
     }

@@ -1,6 +1,6 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Tipousuario" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.TipousuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 20/04/2024
@@ -9,8 +9,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-    Usuario user = (Usuario) request.getAttribute("user");
-    List<Tipousuario> tiposUsuario = (List<Tipousuario>) request.getAttribute("tiposUsuario");
+    UsuarioDTO user = (UsuarioDTO) request.getAttribute("user");
+    List<TipousuarioDTO> tiposUsuario = (List<TipousuarioDTO>) request.getAttribute("tiposUsuario");
 %>
 <html lang="es">
 <head>
@@ -101,7 +101,7 @@
             <select class="form-select" id="tipoUsuarioInput" name="tipoUsuario" required>
                 <option selected disabled value="">Selecciona...</option>
                 <%
-                    for (Tipousuario tipo : tiposUsuario) {
+                    for (TipousuarioDTO tipo : tiposUsuario) {
                 %>
                 <option value="<%=tipo.getId()%>" <%=user != null && user.getTipo().equals(tipo) ? "selected" : ""%>><%=tipo.getNombre()%>
                 </option>

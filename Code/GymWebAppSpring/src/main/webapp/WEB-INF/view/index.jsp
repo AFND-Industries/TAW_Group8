@@ -1,5 +1,3 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>

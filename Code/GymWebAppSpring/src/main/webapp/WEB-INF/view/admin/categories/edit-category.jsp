@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Categoria" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.GymWebAppSpring.dto.CategoriaDTO" %>
 <%--
   Created by IntelliJ IDEA.
   author: tonib
@@ -12,7 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html lang="es">
 <%
-    Categoria categoria = (Categoria) request.getAttribute("categoria");
+    CategoriaDTO categoria = (CategoriaDTO) request.getAttribute("categoria");
     List<String> tipos = (List<String>) (request.getAttribute("tipos") != null ? request.getAttribute("tipos") : new ArrayList<>()) ;
 %>
 <head>

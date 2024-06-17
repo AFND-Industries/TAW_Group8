@@ -1,4 +1,4 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %><%--
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: tonib
   Date: 15/05/2024
@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Usuario user = (Usuario) request.getAttribute("user");
+    UsuarioDTO user = (UsuarioDTO) request.getAttribute("user");
 %>
 <html>
 <head>

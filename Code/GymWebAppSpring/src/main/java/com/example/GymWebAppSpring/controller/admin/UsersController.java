@@ -1,9 +1,10 @@
 package com.example.GymWebAppSpring.controller.admin;
 
-import com.example.GymWebAppSpring.dao.TipoUsuarioRepository;
-import com.example.GymWebAppSpring.dao.UsuarioRepository;
-import com.example.GymWebAppSpring.entity.Tipousuario;
-import com.example.GymWebAppSpring.entity.Usuario;
+
+import com.example.GymWebAppSpring.dto.TipousuarioDTO;
+import com.example.GymWebAppSpring.dto.UsuarioDTO;
+import com.example.GymWebAppSpring.service.TipoUsuarioService;
+import com.example.GymWebAppSpring.service.UsuarioService;
 import com.example.GymWebAppSpring.util.HashUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ import static com.example.GymWebAppSpring.util.AuthUtils.isAdmin;
 public class UsersController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
     @Autowired
-    private TipoUsuarioRepository tipoUsuarioRepository;
+    private TipoUsuarioService tipoUsuarioService;
 
     /* ------------------------- Register Functions */
     @GetMapping("/register")
@@ -35,7 +36,7 @@ public class UsersController {
             return "redirect:/login";
 
 
-        model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
+        model.addAttribute("tiposUsuario",tipoUsuarioService.findAll());
         return "admin/users/edit-user";
     }
 
@@ -55,35 +56,37 @@ public class UsersController {
         if (!isAdmin(session))
             return "redirect:/login";
 
-        Usuario usuario = new Usuario();
+        UsuarioDTO usuario = new UsuarioDTO();
         usuario.setDni(dni);
         usuario.setNombre(nombre);
         usuario.setEdad(edad);
         usuario.setGenero(genero);
         usuario.setApellidos(apellido);
         usuario.setClave(HashUtils.hashString(password));
-        usuario.setTipo(tipoUsuarioRepository.findById(tipo).get());
+        usuario.setTipo(tipoUsuarioService.findById(tipo));
 
-        usuarioRepository.save(usuario);
+        usuarioService.save(usuario);
         return "redirect:/";
     }
     /* ------------------------- End Register Functions */
 
     /* ------------------------- Edit Functions */
     @GetMapping("/edit")
-    public String editPage(@RequestParam("id") Usuario user, Model model, HttpSession session){
+    public String editPage(@RequestParam("id") Integer id, Model model, HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
 
+        UsuarioDTO user = usuarioService.findById(id);
+
         model.addAttribute("user",user);
         model.addAttribute("editable",true);
-        model.addAttribute("tiposUsuario",tipoUsuarioRepository.findAll());
+        model.addAttribute("tiposUsuario",tipoUsuarioService.findAll());
         return "admin/users/edit-user";
     }
 
     @PostMapping("/edit")
     public String doEdit(
-            @RequestParam("id") Usuario usuario,
+            @RequestParam("id") Integer id,
             @RequestParam("dni") String dni,
             @RequestParam("nombre") String nombre,
             @RequestParam("apellidos") String apellido,
@@ -96,6 +99,7 @@ public class UsersController {
         if (!isAdmin(session))
             return "redirect:/login";
 
+        UsuarioDTO usuario = usuarioService.findById(id);
         usuario.setDni(dni);
         usuario.setNombre(nombre);
         usuario.setEdad(edad);
@@ -103,18 +107,19 @@ public class UsersController {
         usuario.setApellidos(apellido);
         if(password != null && !password.isBlank())
             usuario.setClave(HashUtils.hashString(password));
-        usuario.setTipo(tipoUsuarioRepository.findById(tipo).get());
-        usuarioRepository.save(usuario);
+        usuario.setTipo(tipoUsuarioService.findById(tipo));
+        usuarioService.save(usuario);
         return "redirect:/admin/users/";
     }
     /* ------------------------- End Edit Functions*/
 
     /* ------------------------- Read Functions */
     @GetMapping("/view")
-    public String view(@RequestParam("id") Usuario usuario, Model model, HttpSession session){
+    public String view(@RequestParam("id") Integer id, Model model, HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
 
+        UsuarioDTO usuario = usuarioService.findById(id);
         model.addAttribute("user",usuario);
 
         return "admin/users/view-user";
@@ -123,11 +128,11 @@ public class UsersController {
 
     /* ------------------------- Delete Functions */
     @GetMapping("/delete")
-    public String delete(@RequestParam("id") Usuario usuario, HttpSession session){
+    public String delete(@RequestParam("id") Integer id, HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
 
-        usuarioRepository.delete(usuario);
+        usuarioService.delete(id);
         return "redirect:/admin/users/";
     }
     /* ------------------------- End Delete Functions */
@@ -138,8 +143,8 @@ public class UsersController {
         if (!isAdmin(session))
             return "redirect:/login";
 
-        model.addAttribute("users",usuarioRepository.findAll());
-        model.addAttribute("tipos", tipoUsuarioRepository.findAll());
+        model.addAttribute("users",usuarioService.findAll());
+        model.addAttribute("tipos", tipoUsuarioService.findAll());
         return "admin/users/list-users";
     }
 
@@ -148,34 +153,35 @@ public class UsersController {
             @RequestParam(value = "dni", required = false) String dni,
             @RequestParam(value = "apellidos", required = false) String apellidos,
             @RequestParam(value = "edad", required = false) Integer edad,
-            @RequestParam(value = "tipo", required = false) Tipousuario tipo,
+            @RequestParam(value = "tipo", required = false) Integer tipo,
             Model model,
             HttpSession session
     ){
         if(!isAdmin(session))
             return "redirect:/login";
 
-        List<Usuario> users = usuarioRepository.findAll();
+        List<UsuarioDTO> users = usuarioService.findAll();
+        TipousuarioDTO tipousuario = tipoUsuarioService.findById(tipo);
 
         if(dni != null && !dni.isBlank()){
-            users.retainAll(usuarioRepository.findUsuarioByDNI(dni));
+            users.retainAll(usuarioService.findUsuarioByDNI(dni));
             model.addAttribute("dniFilter", dni);
         }
         if(apellidos != null && !apellidos.isBlank()){
-            users.retainAll(usuarioRepository.findUsuarioByApellidos(apellidos));
+            users.retainAll(usuarioService.findUsuarioByApellidos(apellidos));
             model.addAttribute("apellidosFilter", apellidos);
         }
         if(edad != null){
-            users.retainAll(usuarioRepository.findUsuarioByEdad(edad));
+            users.retainAll(usuarioService.findUsuarioByEdad(edad));
             model.addAttribute("edadFilter", edad);
         }
         if(tipo != null){
-            users.retainAll(usuarioRepository.findUsuarioByTipoUsuario(tipo.getId()));
+            users.retainAll(usuarioService.findUsuarioByTipoUsuario(tipousuario));
             model.addAttribute("tipoFilter", tipo);
         }
 
         model.addAttribute("users",users);
-        model.addAttribute("tipos", tipoUsuarioRepository.findAll());
+        model.addAttribute("tipos", tipoUsuarioService.findAll());
         return "admin/users/list-users";
     }
     /* ------------------------- End List Functions */
