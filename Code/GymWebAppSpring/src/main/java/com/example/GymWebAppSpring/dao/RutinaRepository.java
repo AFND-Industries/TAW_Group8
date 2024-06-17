@@ -10,18 +10,18 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface RutinaRepository extends JpaRepository<Rutina, Integer> {
-    @Query("select r from Rutina r where r.entrenador = :entrenador")
-    public List<Rutina> findRutinaByEntrenadorId(@Param("entrenador") Usuario entrenador);
+    @Query("select r from Rutina r where r.entrenador.id = :entrenadorId")
+    public List<Rutina> findRutinaByEntrenadorId(@Param("entrenadorId") Integer entrenadorId);
 
 
-    @Query("SELECT r FROM Rutina r WHERE r.entrenador = :entrenador " +
+    @Query("SELECT r FROM Rutina r WHERE r.entrenador.id = :entrenadorId " +
             "AND UPPER(r.nombre) LIKE CONCAT('%',UPPER(:nombre),'%') " +
-            "AND (r.dificultad = :dificultad OR :dificultad IS NULL) " +
+            "AND (r.dificultad.id = :dificultadId OR :dificultadId IS NULL) " +
             "AND (SELECT COUNT(s) FROM Sesionentrenamiento s WHERE s.rutina = r) >= :limiteBajo " +
             "AND (SELECT COUNT(s) FROM Sesionentrenamiento s WHERE s.rutina = r) <= :limiteAlto")
-    public List<Rutina> findRutinaByEntrenadorWithFilter(@Param("entrenador") Usuario entrenador,
+    public List<Rutina> findRutinaByEntrenadorWithFilter(@Param("entrenadorId") Integer entrenadorId,
                                                          @Param("nombre") String nombre,
                                                          @Param("limiteBajo") Integer limiteBajo,
                                                          @Param("limiteAlto") Integer limiteAlto,
-                                                         @Param("dificultad") Dificultad dificultad);
+                                                         @Param("dificultadId") Integer dificultadId);
 }
