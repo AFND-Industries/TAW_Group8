@@ -99,12 +99,18 @@ public class ClienteController {
 
         if (!AuthUtils.isClient(session))
             return "redirect:/";
-
         List<Ejerciciosesion> ejercicios = ejerciciosesionRepository.findEjerciciosBySesion(sesionEntrenamiento);
         if (ejercicioIndex >= ejercicios.size())
             return "redirect:/client/rutina/sesion/valorarEntrenamiento?sesionEntrenamiento=" + sesionEntrenamiento.getId();
-        if(ejercicioIndex < 0)
+        if (ejercicioIndex < 0)
             ejercicioIndex = 0;
+        if (ejercicioIndex == 0) {
+            List<Informacionejercicio> informacionEjercicios = informacionEjercicioRepository.findBySesionentrenamiento(sesionEntrenamiento);
+            if (informacionEjercicios != null && !informacionEjercicios.isEmpty()) {
+                int lastExer = informacionEjercicios.indexOf(informacionEjercicios.getFirst());
+                ejercicioIndex = lastExer + 1;
+            }
+        }
         Gson gson = new Gson();
         Ejerciciosesion ejercicioSesion = ejercicios.get(ejercicioIndex);
         HashMap<String, String> especificaciones = gson.fromJson(ejercicioSesion.getEspecificaciones(), HashMap.class);
@@ -113,22 +119,12 @@ public class ClienteController {
             resultados.put(key, "0");
         }
 
-        EjercicioSesionArgument ejercicioSesionArgument = new EjercicioSesionArgument();
-
-        ejercicioSesionArgument.setEjercicio(ejercicioSesion.getEjercicio());
-        ejercicioSesionArgument.setId(ejercicioSesion.getId());
-        ejercicioSesionArgument.setEspecificaciones(especificaciones);
-        ejercicioSesionArgument.setResultados(resultados);
-        ejercicioSesionArgument.setSesionEntrenamiento(sesionEntrenamiento);
-
-
         session.removeAttribute("sesionEntrenamiento");
         session.setAttribute("sesionEntrenamiento", sesionEntrenamiento);
 
         modelo.addAttribute("sesionEntrenamiento", sesionEntrenamiento);
         modelo.addAttribute("ejercicioSesion", ejercicios.get(ejercicioIndex));
         modelo.addAttribute("ejercicioIndex", ejercicioIndex);
-        modelo.addAttribute("ejercicioSesionArgument", ejercicioSesionArgument);
         return "client/verEjercicio";
     }
 
