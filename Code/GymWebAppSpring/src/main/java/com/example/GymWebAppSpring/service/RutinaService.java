@@ -38,12 +38,12 @@ delete
         return this.entidadesADTO(lista);
     }
 
-    public List<RutinaDTO> findByEntrenadorId(Integer entrenadorId) {
+    public List<RutinaDTO> findRutinaByEntrenadorId(Integer entrenadorId) {
         List<Rutina> lista = this.rutinaRepository.findRutinaByEntrenadorId(entrenadorId);
         return this.entidadesADTO(lista);
     }
 
-    public List<RutinaDTO> findByEntrenadorId(Integer entrenadorId, String nombre, Integer limiteBajo,
+    public List<RutinaDTO> findRutinaByEntrenadorWithFilter(Integer entrenadorId, String nombre, Integer limiteBajo,
                                               Integer limiteAlto, Integer dificultadId) {
         List<Rutina> lista = this.rutinaRepository.findRutinaByEntrenadorWithFilter(
                 entrenadorId, nombre, limiteBajo, limiteAlto, dificultadId);
