@@ -1,11 +1,17 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.*;
+import com.example.GymWebAppSpring.dto.RutinaDTO;
+import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
 import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
+import com.example.GymWebAppSpring.service.EjercicioService;
+import com.example.GymWebAppSpring.service.EjercicioSesionService;
+import com.example.GymWebAppSpring.service.RutinaService;
+import com.example.GymWebAppSpring.service.SesionEntrenamientoService;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
 import com.google.gson.Gson;
@@ -27,21 +33,21 @@ public class EntrenadorControllerCRUD {
     // cambiar la bd tiposbase muchos mas caracteres, la descripcion igual
     // RECUPERAR LO QUE ESTABAS HACIENDO SESION
     // PONER PARA VOLVER UN MODAL PQ SE PIERDEN LOS CAMBIOS SABE
-    
+
     @Autowired
-    protected RutinaRepository rutinaRepository;
+    protected RutinaService rutinaService;
 
     @Autowired
     protected DificultadRepository dificultadRepository;
 
     @Autowired
-    protected SesionEntrenamientoRepository sesionentrenamientoRepository;
+    protected SesionEntrenamientoService sesionEntrenamientoService;
 
     @Autowired
-    protected EjercicioSesionRepository ejercicioSesionRepository;
+    protected EjercicioSesionService ejercicioSesionService;
 
     @Autowired
-    protected EjercicioRepository ejercicioRepository;
+    protected EjercicioService ejercicioService;
 
     @GetMapping("")
     public String doRutinas(@RequestParam(value = "changed", required = false) Integer changed,
@@ -56,12 +62,12 @@ public class EntrenadorControllerCRUD {
         session.removeAttribute("oldSesion");
 
         Usuario entrenador = AuthUtils.getUser(session);
-        List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorId(entrenador);
+        List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorId(entrenador.getId());
 
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadRepository.findAll());
         model.addAttribute("filtro", new FiltroArgument());
-        if (changed != null) model.addAttribute("rutinaChanged", rutinaRepository.findById(changed).orElse(null));
+        if (changed != null) model.addAttribute("rutinaChanged", rutinaService.findById(changed));
         if (mode != null) model.addAttribute("changeMode", mode);
 
         return "/entrenador/crud/rutinas";
@@ -93,8 +99,8 @@ public class EntrenadorControllerCRUD {
         Integer limiteBajo = sesionMode == 3 || sesionMode == -1 ? 0 : sesionNum;
         Integer limiteAlto = sesionMode == 2 || sesionMode == -1 ? 7 : sesionNum;
 
-        List<Rutina> rutinas = rutinaRepository.findRutinaByEntrenadorWithFilter(
-                entrenador, nombre, limiteBajo, limiteAlto,dificultad);
+        List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorWithFilter(
+                entrenador.getId(), nombre, limiteBajo, limiteAlto, dificultad.getId());
 
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadRepository.findAll());
@@ -106,11 +112,11 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/ver")
     public String doVerRutina(@RequestParam("id") Integer id,
                               Model model, HttpSession session) {
-        Rutina r = rutinaRepository.findById(id).orElse(null);
-        List<Sesionentrenamiento> ss = sesionentrenamientoRepository.findSesionesByRutina(r);;
+        RutinaDTO r = rutinaService.findById(id);
+        List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findSesionesByRutina(r.getId());;
         List<SesionArgument> sesiones = new ArrayList<>();
-        for (Sesionentrenamiento s : ss) {
-            List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s);
+        for (SesionentrenamientoDTO s : ss) {
+            List<Ejerciciosesion> ee = ejercicioSesionRepository.findEjerciciosBySesion(s.getId());
             sesiones.add(new SesionArgument(s, ee));
         }
         RutinaArgument rutina = new RutinaArgument(r, sesiones);
