@@ -94,6 +94,7 @@
                 <th>Nombre</th>
                 <th>Dia de inicio</th>
                 <th>Sesiones</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -116,7 +117,7 @@
                 </td>
                 <td>
                     <div class="my-3" data-bs-toggle="modal" data-bs-target="#delete-modal" style="cursor: pointer;">
-                        <i class="bi bi-trash delete-icon"
+                        <i class="bi bi-trash delete-icon text-danger"
                            data-rutina-nombre="<%= rutina.getNombre() %>"
                            data-rutina-id="<%= rutina.getId() %>"
                            data-fecha-rutina="<%= fechasInicio.get(rutina) %>"

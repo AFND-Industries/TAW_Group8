@@ -7,7 +7,7 @@
     Sesionentrenamiento sesion = (Sesionentrenamiento) request.getAttribute("sesion");
     Informacionsesion info = (Informacionsesion) request.getAttribute("informacionSesion");
     Usuario cliente = (Usuario) session.getAttribute("cliente");
-    List<Integer> sesionesTotales = (List<Integer>) session.getAttribute("sesionesEjercicios");
+    List<Informacionejercicio> informacionejercicios = (List<Informacionejercicio>) request.getAttribute("informacionEjercicios");
     Rutina rutina = (Rutina) session.getAttribute("rutina");
 %>
 <html>
@@ -35,57 +35,74 @@
         </h1>
     </div>
 
-    <div class="row mb-3">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Ejercicio</th>
-                <th>Series</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <%
-                int j = 0;
-                for (Ejerciciosesion ejercicio : ejercicios) { %>
-            <tr>
-                <td>
-                    <div class="my-2" style="font-size: 18px">
-                        <%= ejercicio.getEjercicio().getNombre() %>
+    <%
+        int j = 0;
+        for (Ejerciciosesion ejercicio : ejercicios) { %>
+    <div class="card mb-3">
+        <div class="row my-2 mx-3">
+            <div class="col-2">
+                <div class="my-2">
+                    <img class="img-fluid" src="<%= ejercicio.getEjercicio().getLogo()%>">
+                </div>
+            </div>
+            <div class="col-9 me-3 d-flex justify-content-center flex-column">
+                <div class="row">
+                    <div class="col my-2" style="font-size: 18px">
+                        <strong>Nombre: </strong><%= ejercicio.getEjercicio().getNombre() %>
                     </div>
-                </td>
-                <td>
-                    <div class="my-2" style="font-size: 18px">
-                        <%
-                            String[] parametros = null;
-                            if (ejercicio.getEspecificaciones() != null) {
-                                Gson gson = new Gson();
-                                JsonArray jsonArray = gson.fromJson(ejercicio.getEjercicio().getCategoria().getTiposBase(), JsonArray.class);
-                                parametros = new String[jsonArray.size()];
-                                String tipoCantidad = jsonArray.get(0).getAsString();
-                                JsonObject jsonObject = gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class);
-                                for (int i = 0; i < jsonArray.size(); i++) {
-                                    parametros[i] = jsonObject.get(jsonArray.get(i).getAsString()).getAsString();
-                                }
+                </div>
 
+
+                <%
+                    System.out.println(j);
+                    String[] parametros = null;
+                    String[] nombres = null;
+                    String[] hechos = null;
+                    if (ejercicio.getEspecificaciones() != null) {
+                        Gson gson = new Gson();
+                        JsonArray jsonArray = gson.fromJson(ejercicio.getEjercicio().getCategoria().getTiposBase(), JsonArray.class);
+                        System.out.println(jsonArray);
+                        JsonObject jsonObjectHechos = gson.fromJson(informacionejercicios.get(j).getEvaluacion(), JsonObject.class);
+                        System.out.println(jsonObjectHechos);
+                        hechos = new String[jsonArray.size()];
+                        parametros = new String[jsonArray.size()];
+                        nombres = new String[jsonArray.size()];
+                        String tipoCantidad = jsonArray.get(0).getAsString();
+                        JsonObject jsonObject = gson.fromJson(ejercicio.getEspecificaciones(), JsonObject.class);
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            hechos[i] = jsonObjectHechos.get(jsonArray.get(i).getAsString()).getAsString();
+                            parametros[i] = jsonObject.get(jsonArray.get(i).getAsString()).getAsString();
+                            nombres[i] = jsonArray.get(i).getAsString();
+                        }
+
+                    }
+
+                %>
+                <div class="row">
+                    <%
+                        if (parametros != null) {
+                            for (int i = 0; i < parametros.length; i++) {
+                    %>
+                    <div class=" col my-2" style="font-size: 18px">
+                        <span class="me-2"><strong><%=  nombres[i] %>: </strong> <%= hechos[i]%> / <%= parametros[i] %></span>
+                    </div>
+                    <%
                             }
+                        }
+                    %>
 
-                        %>
-                        <%= sesionesTotales.get(j) %> / <%= parametros[0] %>
-                    </div>
-                </td>
-                <td>
-                    
-                </td>
-            </tr>
-            <%
-                    j++;
-                }
-            %>
-            </tbody>
-        </table>
+                </div>
+
+            </div>
+        </div>
     </div>
-    <div class="row mb-3">
+    <%
+            j++;
+        }
+    %>
+
+
+    <div class="row my-3">
         <h4>Comentarios</h4>
     </div>
     <div class="row my-3">

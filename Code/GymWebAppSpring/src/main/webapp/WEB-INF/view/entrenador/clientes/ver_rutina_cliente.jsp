@@ -47,7 +47,7 @@
             <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Progreso</th>
+                <th>Rendimiento</th>
                 <th></th>
             </tr>
             </thead>
