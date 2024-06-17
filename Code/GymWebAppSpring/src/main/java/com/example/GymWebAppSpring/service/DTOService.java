@@ -1,6 +1,6 @@
 package com.example.GymWebAppSpring.service;
 
-import libroswebapp.dto.DTO;
+import com.example.GymWebAppSpring.dto.DTO;
 
 import java.util.ArrayList;
 import java.util.List;
