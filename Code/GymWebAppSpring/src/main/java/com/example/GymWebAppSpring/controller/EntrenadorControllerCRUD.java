@@ -1,10 +1,7 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dto.*;
-import com.example.GymWebAppSpring.iu.EjercicioArgument;
-import com.example.GymWebAppSpring.iu.FiltroArgument;
-import com.example.GymWebAppSpring.iu.RutinaArgument;
-import com.example.GymWebAppSpring.iu.SesionArgument;
+import com.example.GymWebAppSpring.iu.*;
 import com.example.GymWebAppSpring.service.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
