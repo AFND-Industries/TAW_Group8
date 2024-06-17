@@ -82,8 +82,9 @@
     </style>
 
 </head>
-<jsp:include page="../components/header.jsp"/>
+
 <body>
+<jsp:include page="../components/header.jsp"/>
 <div class="container-fluid">
     <div class="row d-flex justify-content-center align-items-center ">
         <div class="col-8 flex-column mx-5 h-50">

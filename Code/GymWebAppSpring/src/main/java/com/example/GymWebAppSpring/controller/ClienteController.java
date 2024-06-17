@@ -2,7 +2,6 @@ package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dao.*;
 import com.example.GymWebAppSpring.entity.*;
-import com.example.GymWebAppSpring.iu.EjercicioSesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpSession;
