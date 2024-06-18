@@ -15,6 +15,6 @@ public interface EntrenadorAsignadoRepository extends JpaRepository<Entrenadoras
     @Query("SELECT e.entrenador FROM Entrenadorasignado e WHERE e.cliente.id = :id")
     List<Usuario> findEntrenadoresByClientID(Integer id);
 
-    @Query("SELECT e FROM Entrenadorasignado e WHERE e.cliente.id = :cliente")
+    @Query("SELECT e FROM Entrenadorasignado e WHERE e.cliente.id = :id")
     List<Entrenadorasignado> findByCliente(Integer id);
 }
