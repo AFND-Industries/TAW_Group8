@@ -1,10 +1,6 @@
 package com.example.GymWebAppSpring.dao;
 
-import com.example.GymWebAppSpring.dto.MusculoDTO;
-import com.example.GymWebAppSpring.entity.Categoria;
 import com.example.GymWebAppSpring.entity.Ejercicio;
-import com.example.GymWebAppSpring.entity.Musculo;
-import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,9 +11,6 @@ public interface EjercicioRepository extends JpaRepository<Ejercicio, Integer> {
 
     @Query("select e from Ejercicio e, Ejerciciosesion es, Sesionentrenamiento s where es.ejercicio = e and es.sesionentrenamiento = s and s.id = :sesionId")
     List<Ejercicio> findEjercicioBySesion(@Param("sesionId") Integer sesionId);
-
-    @Query("SELECT e FROM Ejercicio e WHERE e.id IN :ids")
-    List<Ejercicio> findEjercicioByIds(@Param("ids") List<Integer> lista);
 
     @Query("select e from Ejercicio e where e.categoria.id = 1")
     List<Ejercicio> findAllEjerciciosFuerza();

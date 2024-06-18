@@ -107,7 +107,8 @@ public class EntrenadorControllerCRUD {
         List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findByRutina(r.getId());;
         List<SesionArgument> sesiones = new ArrayList<>();
         for (SesionentrenamientoDTO s : ss) {
-            List<EjerciciosesionDTO> ee = ejercicioSesionService.findBySesion(s.getId());
+            int sesionId = s.getId();
+            List<EjerciciosesionDTO> ee = ejercicioSesionService.findBySesion(sesionId);
             sesiones.add(new SesionArgument(s, ee));
         }
         RutinaArgument rutina = new RutinaArgument(r, sesiones);
@@ -333,7 +334,7 @@ public class EntrenadorControllerCRUD {
         List<Integer> ids = new ArrayList<>();
         for (EjercicioArgument ejerciciosesion : sesion.getEjercicios())
             ids.add(ejerciciosesion.getEjercicio());
-        List<EjercicioDTO> ejercicios = ejercicioService.findAll(); //////////////////////////////////////////////////////////////////////////////////
+        List<EjercicioDTO> ejercicios = ejercicioService.findEjercicioByIds(ids); /////////////////////////////////////////
 
         model.addAttribute("ejercicios", ejercicios);
         model.addAttribute("readOnly", true);

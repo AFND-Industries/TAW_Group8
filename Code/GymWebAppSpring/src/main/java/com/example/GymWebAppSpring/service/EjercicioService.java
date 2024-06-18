@@ -37,7 +37,7 @@ public class EjercicioService extends DTOService<EjercicioDTO, Ejercicio>{
     }
 
     public List<EjercicioDTO> findEjercicioByIds(List<Integer> list) {
-        List<Ejercicio> lista = this.ejercicioRepository.findEjercicioByIds(list);
+        List<Ejercicio> lista = this.ejercicioRepository.findAllById(list);
         return this.entidadesADTO(lista);
     }
 
