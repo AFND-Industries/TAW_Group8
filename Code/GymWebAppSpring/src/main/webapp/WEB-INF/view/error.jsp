@@ -13,7 +13,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Error page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -27,9 +27,9 @@
 <div class="container text-center">
     <h1 class="text-danger">¡Ups! Ha ocurrido un error</h1>
     <h3 class="text-danger">Código de error <%=code == null ? "desconocido" : code%></h3>
-    <p class="text-danger">
+    <code class="text-danger">
         <%=error%>
-    </p>
+    </code>
 </div>
 
 <!-- Bootstrap Javascript Dependencies -->
