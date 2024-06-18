@@ -12,7 +12,6 @@
     List<CategoriaDTO> categorias = (List<CategoriaDTO>) request.getAttribute("categorias");
 
     String _nombre = (String) request.getAttribute("nombre");
-    CategoriaDTO _categoria = (CategoriaDTO) request.getAttribute("categoria");
 %>
 <html lang="es">
 <head>
@@ -73,6 +72,17 @@
         </div>
     </div>
     <div class="row g-3">
+        <%
+            if (categorias.isEmpty()){
+        %>
+            <div class="col">
+                <div class="card text-center py-2">
+                    <span class="fw-bold">¡Ups! No se ha encontrado nignuna categoría</span>
+                </div>
+            </div>
+        <%
+            }
+        %>
         <%
             for (CategoriaDTO categoria : categorias){
         %>

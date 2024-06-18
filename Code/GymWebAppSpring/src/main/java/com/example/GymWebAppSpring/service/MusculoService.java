@@ -19,7 +19,7 @@ public class MusculoService extends DTOService<MusculoDTO, Musculo> {
     }
 
     public MusculoDTO findById(Integer id) {
-        Musculo musculo = musculoRepository.findById(id).orElse(null);
+        Musculo musculo = musculoRepository.findById(id == null ? -1 : id).orElse(null);
         return musculo != null ? musculo.toDTO() : null;
     }
 

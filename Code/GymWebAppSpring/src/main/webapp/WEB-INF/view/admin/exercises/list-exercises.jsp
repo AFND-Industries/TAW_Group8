@@ -102,6 +102,17 @@
     </div>
     <div class="row g-3">
         <%
+            if (ejercicios.isEmpty()){
+        %>
+        <div class="col">
+            <div class="card text-center py-2">
+                <span class="fw-bold">¡Ups! No se ha encontrado nignun ejercicio</span>
+            </div>
+        </div>
+        <%
+            }
+        %>
+        <%
             for (EjercicioDTO ejercicio : ejercicios){
         %>
 

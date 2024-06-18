@@ -66,7 +66,7 @@ public class UsersController {
         usuario.setTipo(tipoUsuarioService.findById(tipo));
 
         usuarioService.save(usuario);
-        return "redirect:/";
+        return "redirect:/admin/users/";
     }
     /* ------------------------- End Register Functions */
 
@@ -177,7 +177,7 @@ public class UsersController {
         }
         if(tipo != null){
             users.retainAll(usuarioService.findUsuarioByTipoUsuario(tipousuario));
-            model.addAttribute("tipoFilter", tipo);
+            model.addAttribute("tipoFilter", tipousuario);
         }
 
         model.addAttribute("users",users);

@@ -33,17 +33,24 @@ public class CategoryController {
     }
 
     @PostMapping("/")
-    public String categoriaFilter(HttpSession session){
+    public String categoriaFilter(@RequestParam("nombre") String nombre, HttpSession session, Model model){
         if (!isAdmin(session))
                 return "redirect:/login";
+
+        model.addAttribute("categorias", categoriaService.findByNombre(nombre));
+        model.addAttribute("nombre", nombre);
 
         return "admin/categories/list-categories";
     }
 
     @GetMapping("/view")
-    public String viewCategorie(@RequestParam("id") CategoriaDTO categoria, Model model, HttpSession session) throws ParseException {
+    public String viewCategorie(@RequestParam("id") Integer id, Model model, HttpSession session) throws ParseException {
         if (!isAdmin(session))
             return "redirect:/login";
+
+        CategoriaDTO categoria = categoriaService.findById(id);
+
+        if (categoria == null) return "redirect:/admin/categories/";
 
         JSONParser tipos = new JSONParser(categoria.getTiposBase());
 
@@ -64,9 +71,13 @@ public class CategoryController {
     }
 
     @GetMapping("/edit")
-    public String editCategoryPage(@RequestParam("id") CategoriaDTO categoria,Model model, HttpSession session) throws ParseException {
+    public String editCategoryPage(@RequestParam("id") Integer id,Model model, HttpSession session) throws ParseException {
         if (!isAdmin(session))
             return "redirect:/login";
+
+        CategoriaDTO categoria = categoriaService.findById(id);
+
+        if (categoria == null) return "redirect:/admin/categories/";
 
         JSONParser tipos = new JSONParser(categoria.getTiposBase());
 

@@ -51,7 +51,7 @@
         <div class="col-md-4 col-12">
             <div class="card py-1">
                 <span class="text-secondary">Género</span>
-                <span class="fw-bold fs-3"><%=user != null && user.getGenero() == 'm' ? "Masculino" : "Femenino"%></span>
+                <span class="fw-bold fs-3"><%=user != null && user.getGenero() == 'm' ? "Masculino" : "Femenino"%><i class="bi bi-gender-<%=user != null && user.getGenero() == 'm' ? "male" : "female"%> ms-2"></i></span>
             </div>
         </div>
         <div class="col-md-4 col-12">

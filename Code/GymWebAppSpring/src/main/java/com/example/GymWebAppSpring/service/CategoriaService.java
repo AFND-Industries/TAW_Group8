@@ -23,6 +23,10 @@ public class CategoriaService extends DTOService<CategoriaDTO, Categoria>{
         return categoria != null ? categoria.toDTO() : null;
     }
 
+    public List<CategoriaDTO> findByNombre(String nombre){
+        return entidadesADTO(categoriaRepository.findByNombre(nombre));
+    }
+
     public void save(CategoriaDTO categoriaDTO){
         Integer id = categoriaDTO.getId();
         Categoria categoria = categoriaRepository.findById(id == null ? -1 : id).orElse(new Categoria());

@@ -64,31 +64,41 @@ public class AdminController {
     @PostMapping("/assign")
     public String asignarEntrenador(
             @RequestParam("user") Integer usuario,
-            @RequestParam(value = "trainers", required = false) List<UsuarioDTO> trainers,
+            @RequestParam(value = "trainers", required = false) List<Integer> trainers,
             HttpSession session
     ){
         UsuarioDTO user = usuarioService.findById(usuario);
         if(!isAdmin(session))
             return "redirect:/login";
 
-        if(!user.getTipo().getNombre().equals("Cliente"))
+        if(user == null || !user.getTipo().getNombre().equals("Cliente"))
             return "redirect:/admin/users/";
 
-        entrenadorAsignadoService.deleteAll(entrenadorAsignadoService.findByCliente(user).stream().map(EntrenadorasignadoDTO::getId).toList());
-        if(trainers == null)
+        entrenadorAsignadoService.deleteAll(entrenadorAsignadoService.findByCliente(user).stream().map((u) -> {
+            EntrenadorasignadoIdDTO id = new EntrenadorasignadoIdDTO(){{
+                setCliente(u.getCliente().getId());
+                setEntrenador(u.getEntrenador().getId());
+            }};
+
+            return id;
+        }).toList());
+        if(trainers == null || trainers.isEmpty())
             return "redirect:/admin/users/";
 
         List<EntrenadorasignadoDTO> entrenadorasignados = new ArrayList<>();
 
-        for(UsuarioDTO trainer : trainers){
-            EntrenadorasignadoDTO asignado = new EntrenadorasignadoDTO();
-            asignado.setEntrenador(trainer);
-            asignado.setCliente(user);
-            EntrenadorasignadoIdDTO id = new EntrenadorasignadoIdDTO();
-            id.setEntrenador(trainer.getId());
-            id.setCliente(user.getId());
-            asignado.setId(id);
-            entrenadorasignados.add(asignado);
+        for(Integer trainerID : trainers){
+            UsuarioDTO trainer = usuarioService.findById(trainerID == null ? -1 : trainerID);
+            if (trainer != null && trainer.getTipo().getNombre().contains("Entrenador")){
+                EntrenadorasignadoDTO asignado = new EntrenadorasignadoDTO();
+                asignado.setEntrenador(trainer);
+                asignado.setCliente(user);
+                EntrenadorasignadoIdDTO id = new EntrenadorasignadoIdDTO();
+                id.setEntrenador(trainerID);
+                id.setCliente(user.getId());
+                asignado.setId(id);
+                entrenadorasignados.add(asignado);
+            }
         }
 
         entrenadorAsignadoService.saveAll(entrenadorasignados);

@@ -3,6 +3,7 @@ package com.example.GymWebAppSpring.controller.admin;
 import com.example.GymWebAppSpring.dto.CategoriaDTO;
 import com.example.GymWebAppSpring.dto.EjercicioDTO;
 import com.example.GymWebAppSpring.dto.MusculoDTO;
+import com.example.GymWebAppSpring.dto.TipofuerzaDTO;
 import com.example.GymWebAppSpring.service.CategoriaService;
 import com.example.GymWebAppSpring.service.EjercicioService;
 import com.example.GymWebAppSpring.service.MusculoService;
@@ -53,6 +54,7 @@ public class ExercisesController {
             Model model, HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
+
         CategoriaDTO categoria = categoriaService.findById(_categoria);
         MusculoDTO musculo = musculoService.findById(_musculo);
         List<EjercicioDTO> list = ejercicioService.findAll();
@@ -104,9 +106,37 @@ public class ExercisesController {
     }
 
     @PostMapping("/edit")
-    public String editExercise(@ModelAttribute EjercicioDTO ejercicio, HttpSession session){
+    public String editExercise(@RequestParam(value = "id", required = false) Integer id,
+                               @RequestParam("nombre") String nombre,
+                               @RequestParam("descripcion") String descripcion,
+                               @RequestParam("equipamiento") String equipamiento,
+                               @RequestParam("musculo") Integer musculoID,
+                               @RequestParam("musculoSecundario") Integer musculoSecundarioID,
+                               @RequestParam("categoria") Integer categoriaID,
+                               @RequestParam("tipofuerza") Integer tipofuerzaID,
+                               @RequestParam("video") String video,
+                               @RequestParam("logo") String logo,
+                               HttpSession session){
         if (!isAdmin(session))
             return "redirect:/login";
+
+        EjercicioDTO ejercicio = ejercicioService.findById(id == null ? -1 : id);
+        MusculoDTO musculo = musculoService.findById(musculoID == null ? -1 : musculoID);
+        MusculoDTO musculo2 = musculoService.findById(musculoSecundarioID == null ? -1 : musculoSecundarioID);
+        CategoriaDTO categoria = categoriaService.findById(categoriaID == null ? -1 : categoriaID);
+        TipofuerzaDTO tipofuerza = tipoFuerzaService.findById(tipofuerzaID == null ? -1 : tipofuerzaID);
+
+        ejercicio = ejercicio == null ? new EjercicioDTO() : ejercicio;
+
+        ejercicio.setCategoria(categoria);
+        ejercicio.setMusculo(musculo);
+        ejercicio.setMusculoSecundario(musculo2);
+        ejercicio.setTipofuerza(tipofuerza);
+        ejercicio.setNombre(nombre);
+        ejercicio.setDescripcion(descripcion);
+        ejercicio.setEquipamiento(equipamiento);
+        ejercicio.setVideo(video);
+        ejercicio.setLogo(logo);
 
         ejercicioService.save(ejercicio);
 
