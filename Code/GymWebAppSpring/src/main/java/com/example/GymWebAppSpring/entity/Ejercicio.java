@@ -132,7 +132,7 @@ public class Ejercicio implements DTO<EjercicioDTO> {
         ejercicioDTO.setMusculo(this.musculo.toDTO());
         ejercicioDTO.setEquipamiento(this.equipamiento);
         ejercicioDTO.setTipofuerza(this.tipofuerza.toDTO());
-        ejercicioDTO.setMusculoSecundario(this.musculoSecundario.toDTO());
+        ejercicioDTO.setMusculoSecundario(this.musculoSecundario != null ? this.musculoSecundario.toDTO() : null);
         ejercicioDTO.setVideo(this.video);
         ejercicioDTO.setLogo(this.logo);
         ejercicioDTO.setCategoria(this.categoria.toDTO());
