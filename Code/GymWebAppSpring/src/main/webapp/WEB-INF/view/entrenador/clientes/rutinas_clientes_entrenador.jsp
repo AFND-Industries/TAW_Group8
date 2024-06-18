@@ -5,7 +5,9 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.time.LocalDate" %>
-<%@ page import="java.util.Map" %><%--
+<%@ page import="java.util.Map" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 23/04/2024
@@ -14,10 +16,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
-    Usuario usuario = (Usuario) session.getAttribute("cliente");
+    List<RutinaDTO> rutinas = (List<RutinaDTO>) request.getAttribute("rutinas");
+    UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("cliente");
     int[] sesiones = (int[]) request.getAttribute("numSesiones");
-    Map<Rutina, LocalDate> fechasInicio = (Map<Rutina, LocalDate>) request.getAttribute("fechas");
+    Map<RutinaDTO, LocalDate> fechasInicio = (Map<RutinaDTO, LocalDate>) request.getAttribute("fechas");
 %>
 <html>
 <head>
@@ -99,7 +101,7 @@
             </thead>
             <tbody>
             <% int i = 0;
-                for (Rutina rutina : rutinas) { %>
+                for (RutinaDTO rutina : rutinas) { %>
             <tr>
                 <td><a class="btn" style="font-size: 18px; border: transparent"
                        href="/entrenador/clientes/rutinas/verRutina?idRutina=<%= rutina.getId() %>">

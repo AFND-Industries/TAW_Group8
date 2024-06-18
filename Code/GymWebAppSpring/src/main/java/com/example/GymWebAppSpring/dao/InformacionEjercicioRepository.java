@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface InformacionEjercicioRepository extends JpaRepository<Informacionejercicio, Integer> {
 
-    @Query("SELECT ie FROM Informacionejercicio ie WHERE ie.informacionsesion = :info AND ie.ejerciciosesion = :ejercicio")
-    public Informacionejercicio findByEjerciciosesionAndInformacionsesion(@Param("ejercicio") Ejerciciosesion ejercicio, @Param("info") Informacionsesion info);
+    @Query("SELECT ie FROM Informacionejercicio ie WHERE ie.informacionsesion.id = :info AND ie.ejerciciosesion.id = :ejercicio")
+    public Informacionejercicio findByEjerciciosesionAndInformacionsesion(@Param("ejercicio") Integer ejercicio, @Param("info") Integer info);
 
     @Query("SELECT ie FROM Informacionejercicio ie , Sesionentrenamiento se WHERE ie.ejerciciosesion.sesionentrenamiento = se AND se = :sesion")
     public List<Informacionejercicio> findBySesionentrenamiento(Sesionentrenamiento sesion);

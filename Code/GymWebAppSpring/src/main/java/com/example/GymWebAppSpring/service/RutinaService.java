@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RutinaService extends DTOService<RutinaDTO, Rutina>{
+public class RutinaService extends DTOService<RutinaDTO, Rutina> {
 
     @Autowired
     protected RutinaRepository rutinaRepository;
@@ -37,9 +37,14 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina>{
     }
 
     public List<RutinaDTO> findRutinaByEntrenadorWithFilter(Integer entrenadorId, String nombre, Integer limiteBajo,
-                                              Integer limiteAlto, Integer dificultadId) {
+                                                            Integer limiteAlto, Integer dificultadId) {
         List<Rutina> lista = this.rutinaRepository.findRutinaByEntrenadorWithFilter(
                 entrenadorId, nombre, limiteBajo, limiteAlto, dificultadId);
+        return this.entidadesADTO(lista);
+    }
+
+    public List<RutinaDTO> findRutinaByUsuarioID(Integer usuarioId) {
+        List<Rutina> lista = this.rutinaRepository.findRutinaByUsuarioID(usuarioId);
         return this.entidadesADTO(lista);
     }
 

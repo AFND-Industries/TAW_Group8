@@ -13,10 +13,11 @@ import java.util.List;
 
 public interface RutinaClienteReporsitory extends JpaRepository<Rutinacliente, RutinaclienteId> {
 
-    @Query("SELECT r.fechaInicio FROM Rutinacliente r WHERE r.rutina= :rutina AND r.usuario= :usuario")
-    public LocalDate findFechaInicioByRutinaAndUsuario(@Param("rutina") Rutina rutina, @Param("usuario") Usuario usuario);
+    @Query("SELECT r.fechaInicio FROM Rutinacliente r WHERE r.rutina.id= :rutina AND r.usuario.id= :usuario")
+    public LocalDate findFechaInicioByRutinaAndUsuario(@Param("rutina") Integer rutina, @Param("usuario") Integer usuario);
 
-    @Query("SELECT r FROM Rutinacliente r WHERE r.usuario= :usuario")
-    public List<Rutinacliente> findByUsuario(@Param("usuario") Usuario usuario);
+    @Query("SELECT r FROM Rutinacliente r WHERE r.usuario.id= :usuario")
+    public List<Rutinacliente> findByUsuario(@Param("usuario") Integer usuario);
+
 
 }

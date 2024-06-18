@@ -32,6 +32,10 @@ public class InformacionsesionService extends DTOService<InformacionsesionDTO, I
         return informacionsesion != null ? informacionsesion.toDTO() : null;
     }
 
+    public InformacionsesionDTO findByUsuarioAndSesion(Integer usuarioId, Integer sesionId) {
+        return (informacionSesionRepository.findByUsuarioAndSesion(usuarioId, sesionId).toDTO());
+    }
+
     public void save(InformacionsesionDTO informacionsesionDTO) {
         Informacionsesion informacionsesion = informacionSesionRepository.findById(informacionsesionDTO.getId()).orElse(new Informacionsesion());
         informacionsesion.setFechaFin(informacionsesionDTO.getFechaFin());

@@ -1,7 +1,10 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 29/04/2024
@@ -10,9 +13,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Rutina rutina = (Rutina) session.getAttribute("rutina");
-    List<Sesionentrenamiento> sesiones = (List<Sesionentrenamiento>) request.getAttribute("sesiones");
-    Usuario cliente = (Usuario) session.getAttribute("cliente");
+    RutinaDTO rutina = (RutinaDTO) session.getAttribute("rutina");
+    List<SesionentrenamientoDTO> sesiones = (List<SesionentrenamientoDTO>) request.getAttribute("sesiones");
+    UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
     List<Integer> porcentaje = (List<Integer>) request.getAttribute("porcentaje");
 %>
 <html>
@@ -54,7 +57,7 @@
             <tbody>
             <%
                 int i = 0;
-                for (Sesionentrenamiento sesion : sesiones) { %>
+                for (SesionentrenamientoDTO sesion : sesiones) { %>
             <tr>
                 <td>
                     <div class="my-2" style="font-size: 18px">
@@ -99,7 +102,7 @@
 %>
 <div class="mt-5 text-center">
     <h5>
-        No hay sesiones agragadas a esta rutina
+        No hay sesiones agregadas a esta rutina
     </h5>
     <a class="btn btn-primary mt-4" href="/entrenador/clientes/rutinas?id=<%=cliente.getId()%>">
         Volver atras

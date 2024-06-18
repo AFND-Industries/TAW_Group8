@@ -14,7 +14,10 @@
 <%@ page import="com.example.GymWebAppSpring.util.LocalDateAdapter" %>
 <%@ page import="org.apache.commons.lang3.StringEscapeUtils" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaclienteDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %><%--
   Created by IntelliJ IDEA.
   User: alero
   Date: 24/04/2024
@@ -23,15 +26,15 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Rutinacliente> rutinasClienteObject = (List<Rutinacliente>) request.getAttribute("rutinasCliente");
-    List<Rutina> rutinasCliente = new ArrayList<>();
-    for (Rutinacliente rutinacliente : rutinasClienteObject) {
+    List<RutinaclienteDTO> rutinasClienteObject = (List<RutinaclienteDTO>) request.getAttribute("rutinasCliente");
+    List<RutinaDTO> rutinasCliente = new ArrayList<>();
+    for (RutinaclienteDTO rutinacliente : rutinasClienteObject) {
         rutinasCliente.add(rutinacliente.getRutina());
     }
-    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinasEntrenador");
-    Usuario cliente = (Usuario) session.getAttribute("cliente");
+    List<RutinaDTO> rutinas = (List<RutinaDTO>) request.getAttribute("rutinasEntrenador");
+    UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
     FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
-    Map<Rutina, List<Sesionentrenamiento>> mapSesiones = (Map<Rutina, List<Sesionentrenamiento>>) request.getAttribute("mapSesiones");
+    Map<RutinaDTO, List<SesionentrenamientoDTO>> mapSesiones = (Map<RutinaDTO, List<SesionentrenamientoDTO>>) request.getAttribute("mapSesiones");
     if (filtro == null) {
         filtro = new FiltroArgument();
     }
@@ -429,12 +432,12 @@
         <%
             for
             (
-                    Rutina rutina : rutinas
+                    RutinaDTO rutina : rutinas
             ) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
                 Gson gson = gsonBuilder.create();
-                List<Sesionentrenamiento> sesiones = mapSesiones.get(rutina);
+                List<SesionentrenamientoDTO> sesiones = mapSesiones.get(rutina);
                 sesiones.forEach(s -> s.setRutina(null));
                 String sesionesString = StringEscapeUtils.escapeHtml4(gson.toJson(sesiones));
         %>
@@ -451,7 +454,7 @@
                     <div class="col d-flex  align-items-center">
                         <%
                             String fechaInicio = "";
-                            for (Rutinacliente rutinacliente : rutinasClienteObject) {
+                            for (RutinaclienteDTO rutinacliente : rutinasClienteObject) {
                                 if (rutina.equals(rutinacliente.getRutina())) {
                                     fechaInicio = rutinacliente.getFechaInicio().toString();
                                     break;

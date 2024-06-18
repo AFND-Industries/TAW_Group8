@@ -1,14 +1,15 @@
 <%@ page import="com.google.gson.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.*" %>
+<%@ page import="com.example.GymWebAppSpring.dto.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Ejerciciosesion> ejercicios = (List<Ejerciciosesion>) request.getAttribute("ejercicios");
-    Sesionentrenamiento sesion = (Sesionentrenamiento) request.getAttribute("sesion");
-    Informacionsesion info = (Informacionsesion) request.getAttribute("informacionSesion");
-    Usuario cliente = (Usuario) session.getAttribute("cliente");
-    List<Informacionejercicio> informacionejercicios = (List<Informacionejercicio>) request.getAttribute("informacionEjercicios");
-    Rutina rutina = (Rutina) session.getAttribute("rutina");
+    List<EjerciciosesionDTO> ejercicios = (List<EjerciciosesionDTO>) request.getAttribute("ejercicios");
+    SesionentrenamientoDTO sesion = (SesionentrenamientoDTO) request.getAttribute("sesion");
+    InformacionsesionDTO info = (InformacionsesionDTO) request.getAttribute("informacionSesion");
+    UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
+    List<InformacionejercicioDTO> informacionejercicios = (List<InformacionejercicioDTO>) request.getAttribute("informacionEjercicios");
+    RutinaDTO rutina = (RutinaDTO) session.getAttribute("rutina");
 %>
 <html>
 <head>
@@ -37,7 +38,7 @@
 
     <%
         int j = 0;
-        for (Ejerciciosesion ejercicio : ejercicios) { %>
+        for (EjerciciosesionDTO ejercicio : ejercicios) { %>
     <div class="card mb-3">
         <div class="row my-2 mx-3">
             <div class="col-2">
@@ -54,16 +55,13 @@
 
 
                 <%
-                    System.out.println(j);
                     String[] parametros = null;
                     String[] nombres = null;
                     String[] hechos = null;
                     if (ejercicio.getEspecificaciones() != null) {
                         Gson gson = new Gson();
                         JsonArray jsonArray = gson.fromJson(ejercicio.getEjercicio().getCategoria().getTiposBase(), JsonArray.class);
-                        System.out.println(jsonArray);
                         JsonObject jsonObjectHechos = gson.fromJson(informacionejercicios.get(j).getEvaluacion(), JsonObject.class);
-                        System.out.println(jsonObjectHechos);
                         hechos = new String[jsonArray.size()];
                         parametros = new String[jsonArray.size()];
                         nombres = new String[jsonArray.size()];

@@ -24,4 +24,7 @@ public interface RutinaRepository extends JpaRepository<Rutina, Integer> {
                                                          @Param("limiteBajo") Integer limiteBajo,
                                                          @Param("limiteAlto") Integer limiteAlto,
                                                          @Param("dificultadId") Integer dificultadId);
+
+    @Query("SELECT r from Rutina r, Rutinacliente rc where r=rc.rutina and rc.usuario.id= :id")
+    public List<Rutina> findRutinaByUsuarioID(@Param("id") int id);
 }
