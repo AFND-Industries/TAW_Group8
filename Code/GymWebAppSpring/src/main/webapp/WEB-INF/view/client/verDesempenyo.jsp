@@ -1,7 +1,5 @@
-<%@ page import="java.util.List" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="com.example.GymWebAppSpring.entity.*" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.example.GymWebAppSpring.dto.*" %><%--
   Created by IntelliJ IDEA.

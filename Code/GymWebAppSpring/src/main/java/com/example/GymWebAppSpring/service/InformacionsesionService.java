@@ -33,11 +33,18 @@ public class InformacionsesionService extends DTOService<InformacionsesionDTO, I
     }
 
     public InformacionsesionDTO findByUsuarioAndSesion(Integer usuarioId, Integer sesionId) {
-        return (informacionSesionRepository.findByUsuarioAndSesion(usuarioId, sesionId).toDTO());
+        Informacionsesion informacionsesion = informacionSesionRepository.findByUsuarioAndSesion(usuarioId, sesionId);
+        return (informacionsesion != null) ? informacionsesion.toDTO() : null;
     }
 
     public void save(InformacionsesionDTO informacionsesionDTO) {
-        Informacionsesion informacionsesion = informacionSesionRepository.findById(informacionsesionDTO.getId()).orElse(new Informacionsesion());
+        Informacionsesion informacionsesion;
+        if (informacionsesionDTO.getId() == null) {
+            informacionsesion = new Informacionsesion();
+        } else {
+            informacionsesion = informacionSesionRepository.findById(informacionsesionDTO.getId()).orElse(new Informacionsesion());
+        }
+
         informacionsesion.setFechaFin(informacionsesionDTO.getFechaFin());
         informacionsesion.setComentario(informacionsesionDTO.getComentario());
         informacionsesion.setValoracion(informacionsesionDTO.getValoracion());

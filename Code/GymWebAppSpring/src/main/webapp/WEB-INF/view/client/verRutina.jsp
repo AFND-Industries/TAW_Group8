@@ -5,6 +5,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
 <%@ page import="org.apache.commons.lang3.tuple.Triple" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%--
   Created by IntelliJ IDEA.
@@ -15,7 +16,7 @@
 --%>
 <%
     DayOfWeek diaSemanaActual = LocalDate.now().getDayOfWeek();
-    Rutina rutina = (Rutina) request.getAttribute("rutina");
+    RutinaDTO rutina = (RutinaDTO) request.getAttribute("rutina");
     List<Triple<SesionentrenamientoDTO, Integer, Integer>> sesionesEjercicios = (List<Triple<SesionentrenamientoDTO, Integer, Integer>>) request.getAttribute("sesionesEjercicios");
 %>
 <html>

@@ -36,7 +36,12 @@ public class InformacionejercicioService extends DTOService<Informacionejercicio
     }
 
     public void save(InformacionejercicioDTO informacionejercicioDTO) {
-        Informacionejercicio informacionejercicio = informacionejercicioRepository.findById(informacionejercicioDTO.getId()).orElse(new Informacionejercicio());
+        Informacionejercicio informacionejercicio;
+        if (informacionejercicioDTO.getId() == null) {
+            informacionejercicio = new Informacionejercicio();
+        } else {
+            informacionejercicio = informacionejercicioRepository.findById(informacionejercicioDTO.getId()).orElse(new Informacionejercicio());
+        }
         informacionejercicio.setEvaluacion(informacionejercicioDTO.getEvaluacion());
         informacionejercicio.setEjerciciosesion(ejercicioSesionRepository.findById(informacionejercicioDTO.getEjerciciosesion().getId()).orElse(null));
         informacionejercicio.setInformacionsesion(informacionSesionRepository.findById(informacionejercicioDTO.getInformacionsesion().getId()).orElse(null));

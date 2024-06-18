@@ -58,6 +58,7 @@ public class Informacionejercicio implements DTO<InformacionejercicioDTO> {
     @Override
     public InformacionejercicioDTO toDTO() {
         InformacionejercicioDTO informacionejercicioDTO = new InformacionejercicioDTO();
+        informacionejercicioDTO.setId(id);
         informacionejercicioDTO.setEvaluacion(evaluacion);
         informacionejercicioDTO.setEjerciciosesion(ejerciciosesion.toDTO());
         informacionejercicioDTO.setInformacionsesion(informacionsesion.toDTO());

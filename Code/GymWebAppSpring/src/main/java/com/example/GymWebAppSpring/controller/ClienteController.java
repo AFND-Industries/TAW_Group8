@@ -7,6 +7,7 @@ import com.example.GymWebAppSpring.util.AuthUtils;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.Triple;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +22,15 @@ import java.util.*;
 @RequestMapping("/client")
 public class ClienteController {
 
+    @Autowired
     protected InformacionejercicioService informacionejercicioService;
-
+    @Autowired
     protected InformacionsesionService informacionsesionService;
-
+    @Autowired
     protected RutinaclienteService rutinaclienteService;
-
+    @Autowired
     protected EjerciciosesionService ejerciciosesionService;
-
+    @Autowired
     protected SesionEntrenamientoService sesionEntrenamientoService;
 
 
@@ -46,11 +48,11 @@ public class ClienteController {
     }
 
     @GetMapping("/rutina")
-    public String doVerRutina(@RequestParam("rutinaElegida") RutinaDTO rutina, HttpSession session, Model modelo) {
+    public String doVerRutina(@RequestParam("rutinaElegida") Integer rutinaId, HttpSession session, Model modelo) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
-
-
+        UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
+        RutinaDTO rutina = rutinaclienteService.findById(rutinaId, user.getId()).getRutina();
         List<Triple<SesionentrenamientoDTO, Integer, Integer>> sesionesEjercicios = new ArrayList<>();
         List<SesionentrenamientoDTO> sesionesEntrenamiento = sesionEntrenamientoService.findByRutina(rutina.getId());
 
@@ -72,13 +74,14 @@ public class ClienteController {
     }
 
     @GetMapping("rutina/sesion/ejercicio")
-    public String doVerEjercicio(@RequestParam("sesionEntrenamiento") SesionentrenamientoDTO sesionEntrenamiento,
+    public String doVerEjercicio(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
                                  @RequestParam(value = "ejercicioIndex", required = false, defaultValue = "0") Integer ejercicioIndex,
                                  HttpSession session, Model modelo) {
 
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         ejercicioIndex = (ejercicioIndex < 0) ? 0 : ejercicioIndex;
 
         List<EjerciciosesionDTO> ejercicios = ejerciciosesionService.findBySesion(sesionEntrenamiento.getId());
@@ -106,13 +109,14 @@ public class ClienteController {
     }
 
     @PostMapping("rutina/sesion/ejercicio/guardar")
-    public String doGuardarEjercicio(@RequestParam("sesionEntrenamiento") SesionentrenamientoDTO sesionEntrenamiento,
+    public String doGuardarEjercicio(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
                                      @RequestParam("resultados") String resultados,
                                      @RequestParam("ejercicioIndex") Integer ejercicioIndex,
                                      HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
 
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId());
@@ -129,7 +133,7 @@ public class ClienteController {
         if (informacionEjercicioLista.size() <= ejercicioIndex) {
             informacionEjercicio = new InformacionejercicioDTO();
             informacionEjercicio.setEjerciciosesion(ejerciciosesionService.findBySesion(sesionEntrenamiento.getId()).get(ejercicioIndex));
-            informacionEjercicio.setInformacionsesion(informacionSesion);
+            informacionEjercicio.setInformacionsesion(informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId()));
         } else {
             informacionEjercicio = informacionEjercicioLista.get(ejercicioIndex);
         }
@@ -143,14 +147,16 @@ public class ClienteController {
     }
 
     @PostMapping("rutina/sesion/ejercicio/modificar")
-    public String doModificarEjercicio(@RequestParam("sesionEntrenamiento") SesionentrenamientoDTO sesionEntrenamiento,
+    public String doModificarEjercicio(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
                                        @RequestParam("resultados") String resultados,
-                                       @RequestParam(value = "ejercicioSesion") EjerciciosesionDTO ejerciciosesion,
+                                       @RequestParam(value = "ejercicioSesion") Integer ejerciciosesionId,
                                        HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
+        EjerciciosesionDTO ejerciciosesion = ejerciciosesionService.findById(ejerciciosesionId);
 
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId());
         InformacionejercicioDTO informacionEjercicio = informacionejercicioService.findByEjerciciosesionAndInformacionsesion(ejerciciosesion.getId(), informacionSesion.getId());
@@ -163,11 +169,13 @@ public class ClienteController {
 
 
     @GetMapping("rutina/sesion/valorarEntrenamiento")
-    public String doValorarEntrenamiento(@RequestParam("sesionEntrenamiento") SesionentrenamientoDTO sesionEntrenamiento,
-                                         @RequestParam(value = "informacionSesion", required = false) InformacionsesionDTO informacionSesionModif,
+    public String doValorarEntrenamiento(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
+                                         @RequestParam(value = "informacionSesion", required = false) Integer informacionSesionModifId,
                                          HttpSession session, Model modelo) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
+        InformacionsesionDTO informacionSesionModif = informacionSesionModifId != null ? informacionsesionService.findById(informacionSesionModifId) : null;
 
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         InformacionsesionDTO informacionSesion;
@@ -189,12 +197,13 @@ public class ClienteController {
     }
 
     @PostMapping("rutina/sesion/valorarEntrenamiento/guardar")
-    public String doGuardarValoracionSesion(@RequestParam("sesionEntrenamiento") SesionentrenamientoDTO sesionEntrenamiento,
+    public String doGuardarValoracionSesion(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
                                             @RequestParam("comentario") String comentario,
                                             @RequestParam("rating") String rating,
                                             HttpSession session) {
-
-
+        if (!AuthUtils.isClient(session))
+            return "redirect:/";
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId());
         if (informacionSesion == null)
@@ -210,11 +219,12 @@ public class ClienteController {
     }
 
     @GetMapping("/rutina/sesion/desempenyo")
-    public String doDesempenyo(@RequestParam("sesionEntrenamiento") SesionentrenamientoDTO sesionEntrenamiento,
+    public String doDesempenyo(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
                                HttpSession session, Model modelo) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("user");
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionEntrenamiento.getId());
         if (informacionSesion == null)
@@ -233,9 +243,11 @@ public class ClienteController {
     }
 
     @PostMapping("/rutina/sesion/desempenyo/borrar")
-    public String doBorrarDesempenyo(@RequestParam("sesionEntrenamiento") Sesionentrenamiento sesionEntrenamiento, HttpSession session) {
+    public String doBorrarDesempenyo(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
+                                     HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
 
         UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("user");
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionEntrenamiento.getId());
