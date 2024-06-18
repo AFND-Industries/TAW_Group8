@@ -1,7 +1,10 @@
 <%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaclienteDTO" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
@@ -11,9 +14,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Usuario cliente = (Usuario) request.getAttribute("usuario");
-    List<Rutina> rutinas = (List<Rutina>) request.getAttribute("rutinas");
-//    List<Rutinacliente>
+    UsuarioDTO cliente = (UsuarioDTO) request.getAttribute("usuario");
+    List<RutinaclienteDTO> rutinas = (List<RutinaclienteDTO>) request.getAttribute("rutinas");
 %>
 <html>
 <head>
@@ -48,7 +50,8 @@
             <div class="list-group my-2">
                 <form method="get" action="client/rutina">
                     <%
-                        for (Rutina r : rutinas) {
+                        for (RutinaclienteDTO rutinacliente : rutinas) {
+                            RutinaDTO r = rutinacliente.getRutina();
                     %>
                     <button type="submit"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"

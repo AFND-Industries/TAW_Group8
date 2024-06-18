@@ -66,4 +66,6 @@ public class RutinaclienteService extends DTOService<RutinaclienteDTO, Rutinacli
     }
 
 
+
+
 }

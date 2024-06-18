@@ -23,7 +23,7 @@ public class SesionEntrenamientoService extends DTOService<SesionentrenamientoDT
         return this.entidadesADTO(lista);
     }
 
-    public List<SesionentrenamientoDTO> findSesionesByRutina(Integer rutinaId) {
+    public List<SesionentrenamientoDTO> findByRutina(Integer rutinaId) {
         List<Sesionentrenamiento> lista = this.sesionEntrenamientoRepository.findSesionesByRutina(rutinaId);
         return this.entidadesADTO(lista);
     }

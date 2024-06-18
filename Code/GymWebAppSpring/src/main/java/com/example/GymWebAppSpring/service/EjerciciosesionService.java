@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EjercicioSesionService extends DTOService<EjerciciosesionDTO, Ejerciciosesion>{
+public class EjerciciosesionService extends DTOService<EjerciciosesionDTO, Ejerciciosesion>{
 
     @Autowired
     protected EjercicioSesionRepository ejercicioSesionRepository;
@@ -27,7 +27,7 @@ public class EjercicioSesionService extends DTOService<EjerciciosesionDTO, Ejerc
         return this.entidadesADTO(lista);
     }
 
-    public List<EjerciciosesionDTO> findEjerciciosBySesion(Integer sesionId) {
+    public List<EjerciciosesionDTO> findBySesion(Integer sesionId) {
         List<Ejerciciosesion> lista = this.ejercicioSesionRepository.findEjerciciosBySesion(sesionId);
         return this.entidadesADTO(lista);
     }

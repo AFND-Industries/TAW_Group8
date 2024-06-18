@@ -47,4 +47,14 @@ public class InformacionejercicioService extends DTOService<Informacionejercicio
         informacionejercicioRepository.deleteById(informacionejercicioDTO.getId());
     }
 
+    public  void deleteAll(List<InformacionejercicioDTO> informacionejercicioDTOList){
+        for (InformacionejercicioDTO informacionejercicioDTO : informacionejercicioDTOList) {
+            informacionejercicioRepository.deleteById(informacionejercicioDTO.getId());
+        }
+    }
+
+    public List<InformacionejercicioDTO> findBySesionentrenamiento(Integer sesionentrenamientoId) {
+        return this.entidadesADTO(informacionejercicioRepository.findBySesionentrenamiento(sesionentrenamientoId));
+    }
+
 }

@@ -35,7 +35,7 @@ public class EntrenadorControllerCRUD {
     protected SesionEntrenamientoService sesionEntrenamientoService;
 
     @Autowired
-    protected EjercicioSesionService ejercicioSesionService;
+    protected EjerciciosesionService ejercicioSesionService;
 
     @Autowired
     protected EjercicioService ejercicioService;
@@ -104,10 +104,10 @@ public class EntrenadorControllerCRUD {
     public String doVerRutina(@RequestParam("id") Integer id,
                               Model model, HttpSession session) {
         RutinaDTO r = rutinaService.findById(id);
-        List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findSesionesByRutina(r.getId());;
+        List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findByRutina(r.getId());;
         List<SesionArgument> sesiones = new ArrayList<>();
         for (SesionentrenamientoDTO s : ss) {
-            List<EjerciciosesionDTO> ee = ejercicioSesionService.findEjerciciosBySesion(s.getId());
+            List<EjerciciosesionDTO> ee = ejercicioSesionService.findBySesion(s.getId());
             sesiones.add(new SesionArgument(s, ee));
         }
         RutinaArgument rutina = new RutinaArgument(r, sesiones);
@@ -141,10 +141,10 @@ public class EntrenadorControllerCRUD {
             rutina = (RutinaArgument) session.getAttribute("cache");
         } else {
             RutinaDTO r = rutinaService.findById(id);
-            List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findSesionesByRutina(r.getId());;
+            List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findByRutina(r.getId());;
             List<SesionArgument> sesiones = new ArrayList<>();
             for (SesionentrenamientoDTO s : ss) {
-                List<EjerciciosesionDTO> ee = ejercicioSesionService.findEjerciciosBySesion(s.getId());
+                List<EjerciciosesionDTO> ee = ejercicioSesionService.findBySesion(s.getId());
                 sesiones.add(new SesionArgument(s, ee));
             }
             rutina = new RutinaArgument(r, sesiones);
@@ -210,11 +210,11 @@ public class EntrenadorControllerCRUD {
         for (SesionArgument sesion : sesiones)
             sesionesId.add(sesion.getId());
 
-        List<SesionentrenamientoDTO> sesionesRutina = sesionEntrenamientoService.findSesionesByRutina(r.getId());
+        List<SesionentrenamientoDTO> sesionesRutina = sesionEntrenamientoService.findByRutina(r.getId());
         for (SesionentrenamientoDTO sesion : sesionesRutina) {
             if (!sesionesId.contains(sesion.getId())) {
                 // SI LA SESION TENIA EJERCICIOS
-                List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findEjerciciosBySesion(sesion.getId());
+                List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findBySesion(sesion.getId());
                 List<Integer> ids = new ArrayList<>();
                 for (EjerciciosesionDTO ejercicio : ejercicios)
                     ids.add(ejercicio.getId());
@@ -249,7 +249,7 @@ public class EntrenadorControllerCRUD {
             for (EjercicioArgument ejercicio : ejercicios)
                 ejerciciosId.add(ejercicio.getId());
 
-            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findEjerciciosBySesion(s.getId());
+            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findBySesion(s.getId());
             for (EjerciciosesionDTO ejerciciosesion : ejerciciossesion) {
                 if (!ejerciciosId.contains(ejerciciosesion.getId()))
                     ejercicioSesionService.delete(ejerciciosesion.getId());
@@ -281,9 +281,9 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         RutinaDTO rutina = rutinaService.findById(id); // no deberia ser nunca null pero se puede probar
-        List<SesionentrenamientoDTO> sesiones = sesionEntrenamientoService.findSesionesByRutina(rutina.getId());
+        List<SesionentrenamientoDTO> sesiones = sesionEntrenamientoService.findByRutina(rutina.getId());
         for (SesionentrenamientoDTO sesion : sesiones) {
-            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findEjerciciosBySesion(sesion.getId());
+            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findBySesion(sesion.getId());
             List<Integer> ids = new ArrayList<>();
             for (EjerciciosesionDTO ejercicio : ejerciciossesion)
                 ids.add(ejercicio.getId());

@@ -2,9 +2,10 @@
 <%@ page import="java.time.DayOfWeek" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="com.example.GymWebAppSpring.entity.*" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="java.util.Locale" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
+<%@ page import="org.apache.commons.lang3.tuple.Triple" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%--
   Created by IntelliJ IDEA.
   User: anton
@@ -14,13 +15,13 @@
 --%>
 <%
     DayOfWeek diaSemanaActual = LocalDate.now().getDayOfWeek();
-    Usuario cliente = (Usuario) request.getAttribute("usuario");
     Rutina rutina = (Rutina) request.getAttribute("rutina");
-    Map<Sesionentrenamiento, List<Object>> sesionesEjercicios = (Map<Sesionentrenamiento, List<Object>>) request.getAttribute("sesionesEjercicios");
+    List<Triple<SesionentrenamientoDTO, Integer, Integer>> sesionesEjercicios = (List<Triple<SesionentrenamientoDTO, Integer, Integer>>) request.getAttribute("sesionesEjercicios");
 %>
 <html>
 <head>
-    <title>Mi: <%=rutina.getNombre()%></title>
+    <title>Mi: <%=rutina.getNombre()%>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -56,14 +57,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <% for (Map.Entry<Sesionentrenamiento, List<Object>> entrada : sesionesEjercicios.entrySet()) { %>
+                    <% for (Triple<SesionentrenamientoDTO, Integer, Integer> datos : sesionesEjercicios) { %>
                     <%
-                        boolean esHoy = diaSemanaActual.getValue() == entrada.getKey().getDia();
-                        DayOfWeek diaSemana = DayOfWeek.of(entrada.getKey().getDia());
-                        String nombreDia = diaSemana.getDisplayName(java.time.format.TextStyle.FULL, new Locale("es", "ES"));
-                        int numEjercicios = ((List<Ejerciciosesion>) entrada.getValue().get(0)).size();
-                        int numEjerciciosCompletados = (Integer) entrada.getValue().get(1);
-                        boolean hayEjercicios = !((List<Ejerciciosesion>) entrada.getValue().get(0)).isEmpty();
+                        SesionentrenamientoDTO sesionEntrenamiento = datos.getLeft();
+                        int numEjercicios = datos.getMiddle();
+                        int numEjerciciosCompletados = datos.getRight();
+
+                        boolean esHoy = diaSemanaActual.getValue() == sesionEntrenamiento.getDia();
+
+                        DayOfWeek diaSemana = DayOfWeek.of(sesionEntrenamiento.getDia());
+                        String nombreDia = diaSemana.getDisplayName(java.time.format.TextStyle.FULL, Locale.of("es", "ES"));
+
+                        boolean hayEjercicios = numEjercicios != 0;
 
                     %>
                     <tr class="<%= esHoy ? "table-primary" : "" %>">
@@ -73,24 +78,24 @@
 
                             %>
                             <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>"
-                                    value="<%= entrada.getKey().getId()%>"
+                                    value="<%= sesionEntrenamiento.getId()%>"
                                     name="sesionEntrenamiento" <%=!hayEjercicios ? "disabled" : ""%>>Comenzar
-                                <%= entrada.getKey().getNombre() %>
+                                <%= sesionEntrenamiento.getNombre() %>
                             </button>
                             <%
                             } else if (numEjerciciosCompletados >= numEjercicios) {
                             %>
                             <button type="submit" class="<%="btn btn-danger"  %>"
-                                    value="<%= entrada.getKey().getId()%>" name="sesionEntrenamiento" disabled>
-                                <%= entrada.getKey().getNombre() %>  Completada!
+                                    value="<%=sesionEntrenamiento.getId()%>" name="sesionEntrenamiento" disabled>
+                                <%= sesionEntrenamiento.getNombre() %>  Completada!
                             </button>
                             <%
                             } else {
                             %>
                             <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-success"  %>"
-                                    value="<%= entrada.getKey().getId()%>" name="sesionEntrenamiento"
+                                    value="<%= sesionEntrenamiento.getId()%>" name="sesionEntrenamiento"
                                     <%=!hayEjercicios ? "disabled" : ""%>>Continuar
-                                <%= entrada.getKey().getNombre() %>
+                                <%= sesionEntrenamiento.getNombre() %>
                             </button>
                             <%
                                 }
@@ -102,7 +107,7 @@
                         </td>
                         <td>
                             <button type="button" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>"
-                                    value="<%= entrada.getKey().getId()%>"
+                                    value="<%= sesionEntrenamiento.getId()%>"
                                     name="sesionEntrenamiento"
                                     onclick="goRendimiento()"
                                     <%=!hayEjercicios || numEjerciciosCompletados <= 0 || numEjerciciosCompletados > numEjercicios ? "disabled" : ""%>>
@@ -129,8 +134,8 @@
 </body>
 <script>
     function goRendimiento() {
-        const sesionEntrenamiento = document.querySelector("button[name='sesionEntrenamiento']").value;
-        window.location.href = "/client/rutina/sesion/desempenyo?sesionEntrenamiento=" + sesionEntrenamiento;
+        const sesionEntrenamientoId = document.querySelector("button[name='sesionEntrenamiento']").value;
+        window.location.href = "/client/rutina/sesion/desempenyo?sesionEntrenamiento=" + sesionEntrenamientoId;
     }
 </script>
 </html>

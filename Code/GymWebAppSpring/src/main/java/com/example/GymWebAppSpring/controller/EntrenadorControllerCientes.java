@@ -1,8 +1,6 @@
 package com.example.GymWebAppSpring.controller;
 
-import com.example.GymWebAppSpring.dao.*;
 import com.example.GymWebAppSpring.dto.*;
-import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.service.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
@@ -37,7 +35,7 @@ public class EntrenadorControllerCientes {
     private RutinaService rutinaService;
 
     @Autowired
-    private EjercicioSesionService ejercicioSesionService;
+    private EjerciciosesionService ejercicioSesionService;
 
 
     @Autowired
@@ -87,7 +85,7 @@ public class EntrenadorControllerCientes {
         int[] numSesiones = new int[rutinas.size()];
         for (RutinaDTO rutina : rutinas) {
             map.put(rutina, rutinaClienteService.findFechaInicioByRutinaAndUsuario(rutina.getId(), usuarioId));
-            numSesiones[rutinas.indexOf(rutina)] = sesionentrenamientoService.findSesionesByRutina(rutina.getId()).size();
+            numSesiones[rutinas.indexOf(rutina)] = sesionentrenamientoService.findByRutina(rutina.getId()).size();
         }
         model.addAttribute("numSesiones", numSesiones);
         model.addAttribute("rutinas", rutinas);
@@ -123,7 +121,7 @@ public class EntrenadorControllerCientes {
             return "redirect:/entrenador/clientes/rutinas/anyadirRutina";
         } else {
             for (RutinaDTO rutina : rutinasEntrenador) {
-                List<SesionentrenamientoDTO> sesiones = sesionentrenamientoService.findSesionesByRutina(rutina.getId());
+                List<SesionentrenamientoDTO> sesiones = sesionentrenamientoService.findByRutina(rutina.getId());
                 mapSesiones.put(rutina, sesiones);
             }
         }
@@ -232,7 +230,7 @@ public class EntrenadorControllerCientes {
             return "redirect:/";
 
         UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
-        List<SesionentrenamientoDTO> sesiones = sesionentrenamientoService.findSesionesByRutina(rutina.getId());
+        List<SesionentrenamientoDTO> sesiones = sesionentrenamientoService.findByRutina(rutina.getId());
         List<EjerciciosesionDTO> ejercicios = new ArrayList<>();
         InformacionsesionDTO informacionSesion = new InformacionsesionDTO();
         Gson gson = new Gson();
@@ -243,7 +241,7 @@ public class EntrenadorControllerCientes {
         int total = 0;
 
         for (SesionentrenamientoDTO sesion : sesiones) {
-            ejercicios = ejercicioSesionService.findEjerciciosBySesion(sesion.getId());
+            ejercicios = ejercicioSesionService.findBySesion(sesion.getId());
             informacionSesion = informacionSesionService.findByUsuarioAndSesion(cliente.getId(), sesion.getId());
             if (informacionSesion == null) {
                 porcentaje.add(0);
@@ -286,7 +284,7 @@ public class EntrenadorControllerCientes {
             return "redirect:/";
 
         UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
-        List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findEjerciciosBySesion(sesion.getId());
+        List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findBySesion(sesion.getId());
         InformacionsesionDTO informacionSesion = informacionSesionService.findByUsuarioAndSesion(cliente.getId(), sesion.getId());
         List<InformacionejercicioDTO> infos = new ArrayList<>();
 

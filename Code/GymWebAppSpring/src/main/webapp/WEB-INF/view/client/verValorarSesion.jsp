@@ -1,8 +1,7 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
 <%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Ejerciciosesion" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Informacionsesion" %><%--
+<%@ page import="com.example.GymWebAppSpring.entity.Informacionsesion" %>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.InformacionsesionDTO" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 14/06/2024
@@ -11,8 +10,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Informacionsesion informacionSesion = (Informacionsesion) request.getAttribute("informacionSesion");
-    Sesionentrenamiento sesionentrenamiento = (Sesionentrenamiento) request.getAttribute("sesionEntrenamiento");
+    InformacionsesionDTO informacionSesion = (InformacionsesionDTO) request.getAttribute("informacionSesion");
+    SesionentrenamientoDTO sesionentrenamiento = (SesionentrenamientoDTO) request.getAttribute("sesionEntrenamiento");
 
     String comentario = informacionSesion.getComentario();
     String contenidoTextarea = comentario.equals("NaN") ? "" : comentario.trim();

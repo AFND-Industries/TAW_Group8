@@ -2,7 +2,8 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="com.example.GymWebAppSpring.entity.*" %>
-<%@ page import="com.google.gson.Gson" %><%--
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.example.GymWebAppSpring.dto.*" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 14/06/2024
@@ -12,9 +13,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Informacionsesion informacionSesion = (Informacionsesion) request.getAttribute("informacionSesion");
-    Sesionentrenamiento sesionEntrenamiento = (Sesionentrenamiento) request.getAttribute("sesionEntrenamiento");
-    HashMap<Ejerciciosesion, Informacionejercicio> ejercicios = (HashMap<Ejerciciosesion, Informacionejercicio>) request.getAttribute("ejercicios");
+    InformacionsesionDTO informacionSesion = (InformacionsesionDTO) request.getAttribute("informacionSesion");
+    SesionentrenamientoDTO sesionEntrenamiento = (SesionentrenamientoDTO) request.getAttribute("sesionEntrenamiento");
+    HashMap<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = (HashMap<EjerciciosesionDTO, InformacionejercicioDTO>) request.getAttribute("ejercicios");
     boolean ejercicioSinCompletar = false;
 
 %>
@@ -97,8 +98,8 @@
         <tbody>
         <%
             Gson gson = new Gson();
-            for (Map.Entry<Ejerciciosesion, Informacionejercicio> entry : ejercicios.entrySet()) {
-                Ejercicio ejercicio = entry.getKey().getEjercicio();
+            for (Map.Entry<EjerciciosesionDTO, InformacionejercicioDTO> entry : ejercicios.entrySet()) {
+                EjercicioDTO ejercicio = entry.getKey().getEjercicio();
                 HashMap<String, String> especificaciones = gson.fromJson(entry.getKey().getEspecificaciones(), HashMap.class);
 
 

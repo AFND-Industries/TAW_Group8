@@ -5,6 +5,9 @@
 <%@ page import="org.springframework.lang.NonNull" %>
 <%@ page import="com.google.gson.*" %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.EjerciciosesionDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%--
   Created by IntelliJ IDEA.
@@ -16,11 +19,11 @@
 <%
     Gson gson = new Gson();
 
-    Sesionentrenamiento sesionEntrenamiento = (Sesionentrenamiento) request.getAttribute("sesionEntrenamiento");
-    Ejerciciosesion ejercicioSesion = (Ejerciciosesion) request.getAttribute("ejercicioSesion");
+    SesionentrenamientoDTO sesionEntrenamiento = (SesionentrenamientoDTO) request.getAttribute("sesionEntrenamiento");
+    EjerciciosesionDTO ejercicioSesion = (EjerciciosesionDTO) request.getAttribute("ejercicioSesion");
     Integer ejercicioIndex = (Integer) request.getAttribute("ejercicioIndex");
-    Ejercicio ejercicio = ejercicioSesion.getEjercicio();
 
+    EjercicioDTO ejercicio = ejercicioSesion.getEjercicio();
     HashMap<String, String> especificaciones = gson.fromJson(ejercicioSesion.getEspecificaciones(), HashMap.class);
 
 
