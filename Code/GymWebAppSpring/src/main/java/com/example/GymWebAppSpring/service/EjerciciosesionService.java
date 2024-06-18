@@ -38,7 +38,8 @@ public class EjerciciosesionService extends DTOService<EjerciciosesionDTO, Ejerc
     }
 
     public void save(EjerciciosesionDTO ejerciciosesionDTO) {
-        Ejerciciosesion ejerciciosesion = this.ejercicioSesionRepository.findById(ejerciciosesionDTO.getId()).orElse(new Ejerciciosesion());
+        int ejerciciosesionId = ejerciciosesionDTO.getId() == null ? -1 : ejerciciosesionDTO.getId();
+        Ejerciciosesion ejerciciosesion = this.ejercicioSesionRepository.findById(ejerciciosesionId).orElse(new Ejerciciosesion());
         ejerciciosesion.setEjercicio(ejercicioRepository.findById(ejerciciosesionDTO.getEjercicio().getId()).orElse(null));
         ejerciciosesion.setOrden(ejerciciosesionDTO.getOrden());
         ejerciciosesion.setEspecificaciones(ejerciciosesionDTO.getEspecificaciones());

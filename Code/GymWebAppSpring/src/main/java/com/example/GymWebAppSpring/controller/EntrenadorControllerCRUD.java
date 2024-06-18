@@ -296,6 +296,8 @@ public class EntrenadorControllerCRUD {
         sesionEntrenamientoService.deleteAll(ids);
         rutinaService.delete(rutina.getId());
 
+        // PONER UN TOAST DE RUTINA BORRADA
+
         return "redirect:/entrenador/rutinas";
     }
 

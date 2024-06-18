@@ -54,7 +54,8 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
     }
 
     public void save(RutinaDTO rutinaDTO) {
-        Rutina rutina = this.rutinaRepository.findById(rutinaDTO.getId()).orElse(new Rutina());
+        int rutinaId = rutinaDTO.getId() == null ? -1 : rutinaDTO.getId();
+        Rutina rutina = this.rutinaRepository.findById(rutinaId).orElse(new Rutina());
         rutina.setDificultad(this.dificultadRepository.findById(rutinaDTO.getDificultad().getId()).orElse(null));
         rutina.setDescripcion(rutinaDTO.getDescripcion());
         rutina.setNombre(rutinaDTO.getNombre());

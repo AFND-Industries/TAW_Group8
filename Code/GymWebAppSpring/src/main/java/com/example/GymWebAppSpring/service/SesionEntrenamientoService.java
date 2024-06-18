@@ -34,7 +34,8 @@ public class SesionEntrenamientoService extends DTOService<SesionentrenamientoDT
     }
 
     public void save(SesionentrenamientoDTO sesionentrenamientoDTO) {
-        Sesionentrenamiento sesionentrenamiento = this.sesionEntrenamientoRepository.findById(sesionentrenamientoDTO.getId()).orElse(new Sesionentrenamiento());
+        int sesionId = sesionentrenamientoDTO.getId() == null ? -1 : sesionentrenamientoDTO.getId();
+        Sesionentrenamiento sesionentrenamiento = this.sesionEntrenamientoRepository.findById(sesionId).orElse(new Sesionentrenamiento());
         sesionentrenamiento.setNombre(sesionentrenamientoDTO.getNombre());
         sesionentrenamiento.setDia(sesionentrenamientoDTO.getDia());
         sesionentrenamiento.setDescripcion(sesionentrenamientoDTO.getDescripcion());
