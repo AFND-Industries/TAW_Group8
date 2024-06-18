@@ -24,7 +24,8 @@ public class CategoriaService extends DTOService<CategoriaDTO, Categoria>{
     }
 
     public void save(CategoriaDTO categoriaDTO){
-        Categoria categoria = categoriaRepository.findById(categoriaDTO.getId()).orElse(new Categoria());
+        Integer id = categoriaDTO.getId();
+        Categoria categoria = categoriaRepository.findById(id == null ? -1 : id).orElse(new Categoria());
         categoria.setTiposBase(categoriaDTO.getTiposBase());
         categoria.setDescripcion(categoriaDTO.getDescripcion());
         categoria.setNombre(categoriaDTO.getNombre());

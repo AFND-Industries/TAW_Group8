@@ -24,7 +24,8 @@ public class DificultadService extends DTOService<DificultadDTO, Dificultad>{
     }
 
     public void save(DificultadDTO dificultadDTO){
-        Dificultad dificultad = dificultadRepository.findById(dificultadDTO.getId()).orElse(new Dificultad());
+        Integer id = dificultadDTO.getId();
+        Dificultad dificultad = dificultadRepository.findById(id == null ? -1 : id).orElse(new Dificultad());
         dificultad.setNombre(dificultadDTO.getNombre());
         dificultad.setLogo(dificultadDTO.getLogo());
         dificultadRepository.save(dificultad);

@@ -31,7 +31,8 @@ public class TipoUsuarioService extends DTOService<TipousuarioDTO, Tipousuario> 
     }
 
     public void save(TipousuarioDTO tipousuarioDTO){
-        Tipousuario tipousuario = tipoUsuarioRepository.findById(tipousuarioDTO.getId()).orElse(new Tipousuario());
+        Integer id = tipousuarioDTO.getId();
+        Tipousuario tipousuario = tipoUsuarioRepository.findById(id == null ? -1 : id).orElse(new Tipousuario());
         tipousuario.setNombre(tipousuarioDTO.getNombre());
         tipoUsuarioRepository.save(tipousuario);
     }

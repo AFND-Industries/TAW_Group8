@@ -24,7 +24,8 @@ public class TipoFuerzaService extends DTOService<TipofuerzaDTO, Tipofuerza>{
     }
 
     public void save(TipofuerzaDTO tipofuerzaDTO){
-        Tipofuerza tipofuerza = tipoFuerzaRepository.findById(tipofuerzaDTO.getId()).orElse(new Tipofuerza());
+        Integer id = tipofuerzaDTO.getId();
+        Tipofuerza tipofuerza = tipoFuerzaRepository.findById(id == null ? -1 : id).orElse(new Tipofuerza());
         tipofuerza.setNombre(tipofuerzaDTO.getNombre());
         tipofuerza.setDescripcion(tipofuerzaDTO.getDescripcion());
         tipoFuerzaRepository.save(tipofuerza);

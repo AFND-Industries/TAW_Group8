@@ -52,7 +52,8 @@ public class UsuarioService extends DTOService<UsuarioDTO, Usuario>{
     }
 
     public void save(UsuarioDTO usuarioDTO){
-        Usuario usuario = usuarioRepository.findById(usuarioDTO.getId()).orElse(new Usuario());
+        Integer id = usuarioDTO.getId();
+        Usuario usuario = usuarioRepository.findById(id == null ? -1 : id).orElse(new Usuario());
         Tipousuario tipousuario = tipoUsuarioRepository.findById(usuarioDTO.getTipo().getId()).orElse(null);
         usuario.setNombre(usuarioDTO.getNombre());
         usuario.setApellidos(usuarioDTO.getApellidos());
