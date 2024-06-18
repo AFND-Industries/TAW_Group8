@@ -163,7 +163,6 @@ public class EntrenadorControllerCRUD {
                                   @RequestParam("dificultad") Integer dificultad,
                                   @RequestParam("descripcion") String descripcion,
                                   HttpSession session, Model model) {
-        // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
 
         rutina.setNombre(nombre);
@@ -186,97 +185,9 @@ public class EntrenadorControllerCRUD {
             return doEditarRutina(rutina.getId(), session, model);
         }
 
-        // RUTINA
-        // CREAR O MODIFICAR DATOS RUTINA
-        RutinaDTO r = rutinaService.findById(rutina.getId());
+        int rutinaId = rutinaService.saveOrCreateFullRutina(rutina, AuthUtils.getUser(session));
 
-        if (r == null) {
-            r = new RutinaDTO();
-
-            r.setEntrenador(AuthUtils.getUser(session));
-            r.setFechaCreacion(LocalDate.now());
-        }
-
-        r.setNombre(rutina.getNombre());
-        r.setDificultad(dificultadService.findById(rutina.getDificultad())); // no va a ser null, pero habria que controlarlo
-        r.setDescripcion(rutina.getDescripcion()); // problema description too long
-
-        rutinaService.save(r);
-
-        // SESION
-        List<SesionArgument> sesiones = rutina.getSesiones();
-
-        // ELIMINAR SESIONES
-        List<Integer> sesionesId = new ArrayList<>();
-        for (SesionArgument sesion : sesiones)
-            sesionesId.add(sesion.getId());
-
-        List<SesionentrenamientoDTO> sesionesRutina = sesionEntrenamientoService.findByRutina(r.getId());
-        for (SesionentrenamientoDTO sesion : sesionesRutina) {
-            if (!sesionesId.contains(sesion.getId())) {
-                // SI LA SESION TENIA EJERCICIOS
-                List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findBySesion(sesion.getId());
-                List<Integer> ids = new ArrayList<>();
-                for (EjerciciosesionDTO ejercicio : ejercicios)
-                    ids.add(ejercicio.getId());
-                ejercicioSesionService.deleteAll(ids);
-
-                sesionEntrenamientoService.delete(sesion.getId());
-            }
-        }
-
-        // CREAR O EDITAR SESIONES
-        for (int i = 0; i < sesiones.size(); i++) {
-            SesionArgument sesion = sesiones.get(i);
-            SesionentrenamientoDTO s = sesionEntrenamientoService.findById(sesion.getId());
-
-            if (s == null) {
-                s = new SesionentrenamientoDTO();
-
-                s.setRutina(r);
-            }
-
-            s.setNombre(sesion.getNombre());
-            s.setDia(Integer.parseInt(sesion.getDia()));
-            s.setDescripcion(sesion.getDescripcion());
-
-            sesionEntrenamientoService.save(s);
-
-            // EJERCICIOS
-            List<EjercicioArgument> ejercicios = sesion.getEjercicios();
-
-            // ELIMINAR EJERCICIOS
-            List<Integer> ejerciciosId = new ArrayList<>();
-            for (EjercicioArgument ejercicio : ejercicios)
-                ejerciciosId.add(ejercicio.getId());
-
-            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findBySesion(s.getId());
-            for (EjerciciosesionDTO ejerciciosesion : ejerciciossesion) {
-                if (!ejerciciosId.contains(ejerciciosesion.getId()))
-                    ejercicioSesionService.delete(ejerciciosesion.getId());
-            }
-
-            // CREAR O EDITAR EJERCICIOS
-            for (int j = 0; j < ejercicios.size(); j++) {
-                EjercicioArgument ejercicio = ejercicios.get(j);
-                EjerciciosesionDTO es = ejercicioSesionService.findById(ejercicio.getId());
-
-                if (es == null) {
-                    es = new EjerciciosesionDTO();
-
-                    es.setSesionentrenamiento(s);
-                }
-
-                es.setEjercicio(ejercicioService.findById(ejercicio.getEjercicio()));
-                es.setEspecificaciones(new Gson().toJson(ejercicio.getEspecificaciones()));
-                es.setOrden(j + 1);
-                es.setSesionentrenamiento(s);
-
-                ejercicioSesionService.save(es);
-            }
-        }
-
-        return "redirect:/entrenador/rutinas?changed=" + r.getId() + "&mode=" + (rutina.getId() < 0 ? 0 : 1);
+        return "redirect:/entrenador/rutinas?changed=" + rutinaId + "&mode=" + (rutina.getId() < 0 ? 0 : 1);
     }
 
     @GetMapping("/borrar")
