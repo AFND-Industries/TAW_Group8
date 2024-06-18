@@ -21,7 +21,7 @@ public class TipoUsuarioService extends DTOService<TipousuarioDTO, Tipousuario> 
     }
 
     public TipousuarioDTO findById(Integer id){
-        Tipousuario tipousuario = tipoUsuarioRepository.findById(id).orElse(null);
+        Tipousuario tipousuario = tipoUsuarioRepository.findById(id == null ? -1 : id).orElse(null);
         return tipousuario != null ? tipousuario.toDTO() : null;
     }
 

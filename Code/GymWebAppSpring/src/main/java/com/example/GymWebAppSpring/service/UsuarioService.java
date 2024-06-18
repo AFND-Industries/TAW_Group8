@@ -26,7 +26,8 @@ public class UsuarioService extends DTOService<UsuarioDTO, Usuario>{
     }
 
     public List<UsuarioDTO> findUsuarioByTipoUsuario(TipousuarioDTO tipousuarioDTO){
-        return entidadesADTO(usuarioRepository.findUsuarioByTipoUsuario(tipousuarioDTO.getId()));
+        Integer id = tipousuarioDTO.getId();
+        return entidadesADTO(usuarioRepository.findUsuarioByTipoUsuario(id == null ? -1 : id));
     }
 
     public List<UsuarioDTO> findUsuarioByDNI(String dni){
@@ -42,7 +43,7 @@ public class UsuarioService extends DTOService<UsuarioDTO, Usuario>{
     }
 
     public UsuarioDTO findById(Integer id){
-        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        Usuario usuario = usuarioRepository.findById(id == null ? -1 : id).orElse(null);
         return usuario != null ? usuario.toDTO() : null;
     }
 

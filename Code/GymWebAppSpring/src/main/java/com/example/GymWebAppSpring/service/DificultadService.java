@@ -19,7 +19,7 @@ public class DificultadService extends DTOService<DificultadDTO, Dificultad>{
     }
 
     public DificultadDTO findById(Integer id){
-        Dificultad dificultad = dificultadRepository.findById(id).orElse(null);
+        Dificultad dificultad = dificultadRepository.findById(id == null ? -1 : id).orElse(null);
         return dificultad != null ? dificultad.toDTO() : null;
     }
 

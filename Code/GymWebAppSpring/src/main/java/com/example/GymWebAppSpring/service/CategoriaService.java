@@ -19,7 +19,7 @@ public class CategoriaService extends DTOService<CategoriaDTO, Categoria>{
     }
 
     public CategoriaDTO findById(Integer id){
-        Categoria categoria = categoriaRepository.findById(id).orElse(null);
+        Categoria categoria = categoriaRepository.findById(id == null ? -1 : id).orElse(null);
         return categoria != null ? categoria.toDTO() : null;
     }
 
