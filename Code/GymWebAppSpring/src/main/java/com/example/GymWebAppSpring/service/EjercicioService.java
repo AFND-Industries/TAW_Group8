@@ -32,7 +32,7 @@ public class EjercicioService extends DTOService<EjercicioDTO, Ejercicio>{
     }
 
     public List<EjercicioDTO> findEjercicioBySesion(Integer sesionId) {
-        List<Ejercicio> lista = this.ejercicioRepository.findEjercicioBySesion(sesionId);
+        List<Ejercicio> lista = this.ejercicioRepository.findEjercicioBySesion(sesionId == null ? -1 : sesionId);
         return this.entidadesADTO(lista);
     }
 
@@ -47,22 +47,22 @@ public class EjercicioService extends DTOService<EjercicioDTO, Ejercicio>{
     }
 
     public List<EjercicioDTO> findAllByCategoria(Integer categoriaId) {
-        List<Ejercicio> lista = this.ejercicioRepository.findAllByCategoria(categoriaId);
+        List<Ejercicio> lista = this.ejercicioRepository.findAllByCategoria(categoriaId == null ? -1 : categoriaId);
         return this.entidadesADTO(lista);
     }
 
     public List<EjercicioDTO> findAllByMusculo(Integer musculoId) {
-        List<Ejercicio> lista = this.ejercicioRepository.findAllByMusculo(musculoId);
+        List<Ejercicio> lista = this.ejercicioRepository.findAllByMusculo(musculoId == null ? -1 : musculoId);
         return this.entidadesADTO(lista);
     }
 
     public List<EjercicioDTO> findAllByNombre(String nombre) {
-        List<Ejercicio> lista = this.ejercicioRepository.findAllByNombre(nombre);
+        List<Ejercicio> lista = this.ejercicioRepository.findAllByNombre(nombre == null ? "" : nombre);
         return this.entidadesADTO(lista);
     }
 
     public EjercicioDTO findById(Integer ejercicioId) {
-        Ejercicio ejercicio = this.ejercicioRepository.findById(ejercicioId).orElse(null);
+        Ejercicio ejercicio = this.ejercicioRepository.findById(ejercicioId == null ? -1 : ejercicioId).orElse(null);
         return ejercicio == null ? null : ejercicio.toDTO();
     }
 

@@ -19,12 +19,13 @@ public class TipoFuerzaService extends DTOService<TipofuerzaDTO, Tipofuerza>{
     }
 
     public TipofuerzaDTO findById(Integer id){
-        Tipofuerza tipofuerza = tipoFuerzaRepository.findById(id).orElse(null);
+        Tipofuerza tipofuerza = tipoFuerzaRepository.findById(id == null ? -1 : id).orElse(null);
         return tipofuerza != null ? tipofuerza.toDTO() : null;
     }
 
     public void save(TipofuerzaDTO tipofuerzaDTO){
-        Tipofuerza tipofuerza = tipoFuerzaRepository.findById(tipofuerzaDTO.getId()).orElse(new Tipofuerza());
+        Integer id = tipofuerzaDTO.getId();
+        Tipofuerza tipofuerza = tipoFuerzaRepository.findById(id == null ? -1 : id).orElse(new Tipofuerza());
         tipofuerza.setNombre(tipofuerzaDTO.getNombre());
         tipofuerza.setDescripcion(tipofuerzaDTO.getDescripcion());
         tipoFuerzaRepository.save(tipofuerza);
