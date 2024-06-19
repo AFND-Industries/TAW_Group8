@@ -138,7 +138,7 @@
             <div class="col-8 d-flex justify-content-end align-items-center">
                 <div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filter-modal" >Filtros de búsqueda</button>
-                    <a class="btn btn-primary" href="/entrenador/rutinas/crear">Crear nueva rutina</a>
+                    <a class="btn btn-primary" href="/entrenador/rutinas/crear/rutina/crear">Crear nueva rutina</a>
                 </div>
             </div>
         </div>
@@ -180,7 +180,7 @@
         %>
             <div class="row">
                 <a class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-                     href="/entrenador/rutinas/ver?id=<%= rutina.getId() %>">
+                     href="/entrenador/rutinas/crear/rutina/ver?id=<%= rutina.getId() %>">
                     <img src="<%=rutina.getDificultad().getLogo()%>" alt="Dificultad" style="width:50px; height:50px">
                     <div class="ms-3">
                         <span class="h2" style="color: black;"><%=rutina.getNombre()%></span><br>
@@ -188,7 +188,7 @@
                     </div>
                 </a>
                 <div class="col-3 d-flex justify-content-end align-items-center">
-                    <a href="/entrenador/rutinas/editar?id=<%= rutina.getId() %>" style="cursor: pointer; text-decoration: none;">
+                    <a href="/entrenador/rutinas/crear/rutina/editar?id=<%= rutina.getId() %>" style="cursor: pointer; text-decoration: none;">
                         <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                     </a>
                     <div style="cursor: pointer;" onclick="showDeleteModal('<%=rutina.getNombre()%>', '<%=rutina.getId()%>')">
@@ -208,7 +208,7 @@
         const modalButton = document.getElementById("delete-modal-button");
 
         modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la rutina <b>` + nombre + `</b>?`;
-        modalButton.onclick = () => { window.location.href = `/entrenador/rutinas/borrar?id=` + id; };
+        modalButton.onclick = () => { window.location.href = `/entrenador/rutinas/crear/rutina/borrar?id=` + id; };
 
         deleteModal.show();
     }

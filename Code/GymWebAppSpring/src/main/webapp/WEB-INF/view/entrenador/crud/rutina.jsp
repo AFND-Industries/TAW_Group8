@@ -183,7 +183,7 @@
     }
 
     function goGuardarRutina() {
-        goPage('/entrenador/rutinas/guardar');
+        goPage('/entrenador/rutinas/crear/rutina/guardar');
     }
 
     function showDeleteModal(nombre, pos) {

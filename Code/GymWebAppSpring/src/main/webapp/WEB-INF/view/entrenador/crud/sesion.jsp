@@ -208,7 +208,7 @@
     }
 
     function goVolverVerRutina() {
-        window.location.href = "/entrenador/rutinas/ver?id=<%=rutina.getId()%>";
+        window.location.href = "/entrenador/rutinas/crear/rutina/ver?id=<%=rutina.getId()%>";
     }
 
     function goVerEjercicio(id) {
