@@ -17,58 +17,27 @@ import java.util.List;
 public class RutinaController extends BaseController {
 
     @GetMapping("/ver")
-    public String doVerRutina(@RequestParam("id") Integer id,
-                              Model model, HttpSession session) {
-        RutinaDTO r = rutinaService.findById(id);
-        List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findByRutina(r.getId());;
-        List<SesionArgument> sesiones = new ArrayList<>();
-        for (SesionentrenamientoDTO s : ss) {
-            int sesionId = s.getId();
-            List<EjerciciosesionDTO> ee = ejercicioSesionService.findBySesion(sesionId);
-            sesiones.add(new SesionArgument(s, ee));
-        }
-        RutinaArgument rutina = new RutinaArgument(r, sesiones);
-
-        session.setAttribute("cache", rutina);
-        model.addAttribute("readOnly", true);
-        model.addAttribute("dificultades", dificultadService.findAll());
+    public String doVerRutina(@RequestParam("id") Integer id, Model model, HttpSession session) {
+        RutinaArgument rutina = createRutinaArgument(id);
+        initializeRutina(model, session, rutina, true);
 
         return "/entrenador/crud/rutina";
     }
 
     @GetMapping("/crear")
     public String doCrearRutina(HttpSession session, Model model) {
-        RutinaArgument rutina = new RutinaArgument();
-        rutina.setId(-1);
-
-        session.setAttribute("cache", rutina);
-
-        model.addAttribute("dificultades", dificultadService.findAll());
+        RutinaArgument rutina = new RutinaArgument(-1);
+        initializeRutina(model, session, rutina, false);
 
         return "/entrenador/crud/rutina";
     }
 
 
     @GetMapping("/editar")
-    public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id,
-                                 HttpSession session, Model model) {
-        RutinaArgument rutina;
-        if (session.getAttribute("cache") != null) {
-            rutina = (RutinaArgument) session.getAttribute("cache");
-        } else {
-            RutinaDTO r = rutinaService.findById(id);
-            List<SesionentrenamientoDTO> ss = sesionEntrenamientoService.findByRutina(r.getId());;
-            List<SesionArgument> sesiones = new ArrayList<>();
-            for (SesionentrenamientoDTO s : ss) {
-                List<EjerciciosesionDTO> ee = ejercicioSesionService.findBySesion(s.getId());
-                sesiones.add(new SesionArgument(s, ee));
-            }
-            rutina = new RutinaArgument(r, sesiones);
-        }
-
-        session.setAttribute("cache", rutina);
-
-        model.addAttribute("dificultades", dificultadService.findAll());
+    public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id, HttpSession session, Model model) {
+        Object cache = session.getAttribute("cache");
+        RutinaArgument rutina = cache != null ? (RutinaArgument) cache : createRutinaArgument(id);
+        initializeRutina(model, session, rutina, false);
 
         return "/entrenador/crud/rutina";
     }
@@ -79,10 +48,7 @@ public class RutinaController extends BaseController {
                                   @RequestParam("descripcion") String descripcion,
                                   HttpSession session, Model model) {
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
-
-        rutina.setNombre(nombre);
-        rutina.setDificultad(dificultad);
-        rutina.setDescripcion(descripcion);
+        rutina.update(nombre, dificultad, descripcion);
 
         List<String> errorList = new ArrayList<>();
         if (nombre.trim().isEmpty())
@@ -107,22 +73,26 @@ public class RutinaController extends BaseController {
 
     @GetMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
-        RutinaDTO rutina = rutinaService.findById(id); // no deberia ser nunca null pero se puede probar
+        RutinaDTO rutina = rutinaService.findById(id);
         String nombreRutina = rutina.getNombre();
-        List<SesionentrenamientoDTO> sesiones = sesionEntrenamientoService.findByRutina(rutina.getId());
-        for (SesionentrenamientoDTO sesion : sesiones) {
-            List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findBySesion(sesion.getId());
-            List<Integer> ids = new ArrayList<>();
-            for (EjerciciosesionDTO ejercicio : ejerciciossesion)
-                ids.add(ejercicio.getId());
-            ejercicioSesionService.deleteAll(ids);
+
+        List<SesionentrenamientoDTO> sesionesDTO = sesionEntrenamientoService.findByRutina(rutina.getId());
+        for (SesionentrenamientoDTO sesion : sesionesDTO) {
+            List<EjerciciosesionDTO> ejerciciosDTO = ejercicioSesionService.findBySesion(sesion.getId());
+            ejercicioSesionService.deleteAll(ejerciciosDTO);
         }
-        List<Integer> ids = new ArrayList<>();
-        for (SesionentrenamientoDTO sesion : sesiones)
-            ids.add(sesion.getId());
-        sesionEntrenamientoService.deleteAll(ids);
+
+        sesionEntrenamientoService.deleteAll(sesionesDTO);
         rutinaService.delete(rutina.getId());
 
         return "redirect:/entrenador/rutinas?changedName=" + nombreRutina + "&changedCase=" + 2;
+    }
+
+    private void initializeRutina(Model model, HttpSession session, RutinaArgument rutina, boolean readOnly) {
+        session.setAttribute("cache", rutina);
+
+        List<DificultadDTO> dificultades = dificultadService.findAll();
+        model.addAttribute("dificultades", dificultades);
+        model.addAttribute("readOnly", readOnly);
     }
 }

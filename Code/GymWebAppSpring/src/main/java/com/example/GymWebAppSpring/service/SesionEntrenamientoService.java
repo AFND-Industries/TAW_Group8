@@ -11,6 +11,7 @@ import com.example.GymWebAppSpring.iu.FiltroRendimientoArgument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,9 +53,15 @@ public class SesionEntrenamientoService extends DTOService<SesionentrenamientoDT
         this.sesionEntrenamientoRepository.deleteById(sesionentrenamientoId);
     }
 
-    public void deleteAll(List<Integer> sesiones) {
+    public void deleteAllById(List<Integer> sesiones) {
         this.sesionEntrenamientoRepository.deleteAllById(sesiones);
     }
 
+    public void deleteAll(List<SesionentrenamientoDTO> sesiones) {
+        List<Integer> ids = new ArrayList<>();
+        for (SesionentrenamientoDTO sesion : sesiones)
+            ids.add(sesion.getId());
 
+        deleteAllById(ids);
+    }
 }

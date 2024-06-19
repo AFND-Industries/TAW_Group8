@@ -13,18 +13,22 @@ public class RutinaArgument {
     private List<SesionArgument> sesiones;
 
     public RutinaArgument() {
-        this.id = -100;
-        this.nombre = "";
-        this.descripcion = "";
-        this.dificultad = -1;
-        this.sesiones = new ArrayList<>();
+        this(-100);
+    }
+
+    public RutinaArgument(Integer id) {
+        this(id, "", "", -1, new ArrayList<>());
     }
 
     public RutinaArgument(RutinaDTO rutina, List<SesionArgument> sesiones) {
-        this.id = rutina.getId();
-        this.nombre = rutina.getNombre();
-        this.descripcion = rutina.getDescripcion();
-        this.dificultad = rutina.getDificultad().getId();
+        this(rutina.getId(), rutina.getNombre(), rutina.getDescripcion(), rutina.getDificultad().getId(), sesiones);
+    }
+
+    public RutinaArgument(Integer id, String nombre, String descripcion, Integer dificultad, List<SesionArgument> sesiones) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.dificultad = dificultad;
         this.sesiones = sesiones;
     }
 
@@ -68,4 +72,9 @@ public class RutinaArgument {
         this.sesiones = sesiones;
     }
 
+    public void update(String nombre, Integer dificultad, String descripcion) {
+        setNombre(nombre);
+        setDificultad(dificultad);
+        setDescripcion(descripcion);
+    }
 }

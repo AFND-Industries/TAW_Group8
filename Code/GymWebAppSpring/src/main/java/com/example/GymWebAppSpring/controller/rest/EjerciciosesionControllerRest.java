@@ -41,6 +41,6 @@ public class EjerciciosesionControllerRest {
 
     @DeleteMapping("/borrar-todos")
     public void borrarTodosEjerciciosSesion(@RequestBody List<Integer> ejerciciosSesionIds) {
-        ejerciciosesionService.deleteAll(ejerciciosSesionIds);
+        ejerciciosesionService.deleteAllById(ejerciciosSesionIds);
     }
 }

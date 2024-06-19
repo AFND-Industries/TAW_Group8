@@ -8,6 +8,7 @@ import com.example.GymWebAppSpring.entity.Ejerciciosesion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,7 +52,15 @@ public class EjerciciosesionService extends DTOService<EjerciciosesionDTO, Ejerc
         this.ejercicioSesionRepository.deleteById(ejercicioSesionid);
     }
 
-    public void deleteAll(List<Integer> ejerciciosSesion) {
+    public void deleteAllById(List<Integer> ejerciciosSesion) {
         ejercicioSesionRepository.deleteAllById(ejerciciosSesion);
+    }
+
+    public void deleteAll(List<EjerciciosesionDTO> ejerciciosSesion) {
+        List<Integer> ids = new ArrayList<>();
+        for (EjerciciosesionDTO ejercicio : ejerciciosSesion)
+            ids.add(ejercicio.getId());
+
+        deleteAllById(ids);
     }
 }

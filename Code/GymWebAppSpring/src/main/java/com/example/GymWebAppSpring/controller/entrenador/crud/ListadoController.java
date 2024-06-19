@@ -28,7 +28,7 @@ public class ListadoController extends BaseController {
         flushContext(session);
 
         Integer entrenadorId = AuthUtils.getUser(session).getId();
-        initializeRutinasModel(model, entrenadorId, new FiltroArgument());
+        initializeListado(model, entrenadorId, new FiltroArgument());
 
         model.addAttribute("changedName", changedName);
         model.addAttribute("changedCase", changedCase);
@@ -44,13 +44,13 @@ public class ListadoController extends BaseController {
         if (filtro.estaVacio()) strTo = "redirect:/entrenador/rutinas";
         else {
             Integer entrenadorId = AuthUtils.getUser(session).getId();
-            initializeRutinasModel(model, entrenadorId, filtro);
+            initializeListado(model, entrenadorId, filtro);
         }
 
         return strTo;
     }
 
-    private void initializeRutinasModel(Model model, Integer entrenadorId, FiltroArgument filtro) {
+    private void initializeListado(Model model, Integer entrenadorId, FiltroArgument filtro) {
         List<RutinaDTO> rutinas = rutinaService.filtrarRutinas(filtro, entrenadorId);
         List<DificultadDTO> dificultades = dificultadService.findAll();
 
