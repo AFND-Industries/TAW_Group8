@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Controller
-@RequestMapping("/entrenador/rutinas/crear/sesion")
+@RequestMapping("/entrenador/rutinas/sesion")
 public class SesionController extends BaseController {
 
     @GetMapping("/volver")
@@ -32,7 +32,7 @@ public class SesionController extends BaseController {
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
 
-        return "redirect:/entrenador/rutinas/crear/rutina/editar";
+        return "redirect:/entrenador/rutinas/rutina/editar";
     }
 
     @GetMapping("/ver")
@@ -63,7 +63,7 @@ public class SesionController extends BaseController {
         return "/entrenador/crud/sesion";
     }
 
-    @GetMapping("")
+    @GetMapping("/crear")
     public String doCrearSesion(@RequestParam("nombre") String nombre,
                                 @RequestParam("dificultad") Integer dificultad,
                                 @RequestParam("descripcion") String descripcion,
@@ -186,7 +186,7 @@ public class SesionController extends BaseController {
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
 
-        return "redirect:/entrenador/rutinas/crear/rutina/editar";
+        return "redirect:/entrenador/rutinas/rutina/editar";
     }
 
     @GetMapping("/borrar")
@@ -203,7 +203,7 @@ public class SesionController extends BaseController {
 
         rutina.getSesiones().remove((int) pos);
 
-        return "redirect:/entrenador/rutinas/crear/rutina/editar";
+        return "redirect:/entrenador/rutinas/rutina/editar";
     }
 
 }

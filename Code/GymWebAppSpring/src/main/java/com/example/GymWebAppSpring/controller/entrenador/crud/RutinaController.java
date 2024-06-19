@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/entrenador/rutinas/crear/rutina")
+@RequestMapping("/entrenador/rutinas/rutina")
 public class RutinaController extends BaseController {
 
     @GetMapping("/ver")

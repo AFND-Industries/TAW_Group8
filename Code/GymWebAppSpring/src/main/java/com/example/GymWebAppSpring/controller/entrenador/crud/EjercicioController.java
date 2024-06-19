@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/entrenador/rutinas/crear/ejercicio")
+@RequestMapping("/entrenador/rutinas/ejercicio")
 public class EjercicioController extends BaseController {
 
     @GetMapping("/volver")
@@ -30,7 +30,7 @@ public class EjercicioController extends BaseController {
         SesionArgument sesion = rutina.getSesiones().get(pos);
         sesion.getEjercicios().remove((int) ejpos);
 
-        return "redirect:/entrenador/rutinas/seleccionar";
+        return "redirect:/entrenador/rutinas/ejercicio/seleccionar";
     }
 
     @GetMapping("/seleccionar")
@@ -84,7 +84,7 @@ public class EjercicioController extends BaseController {
         return "entrenador/crud/ejercicio_sesion";
     }
 
-    @GetMapping("")
+    @GetMapping("/crear")
     public String doCrearEjercicio(@RequestParam("ejbase") Integer ejbase,
                                    Model model, HttpSession session) {
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
@@ -154,7 +154,7 @@ public class EjercicioController extends BaseController {
         if (ejercicioSesion.getId() < -1)
             ejercicioSesion.setId(-1);
 
-        return "redirect:/entrenador/rutinas/crear/sesion/editar";
+        return "redirect:/entrenador/rutinas/sesion/editar";
     }
 
     @GetMapping("/borrar")
@@ -174,6 +174,6 @@ public class EjercicioController extends BaseController {
 
         rutina.getSesiones().get(pos).getEjercicios().remove((int) ejPos);
 
-        return "redirect:/entrenador/rutinas/crear/sesion/editar";
+        return "redirect:/entrenador/rutinas/sesion/editar";
     }
 }

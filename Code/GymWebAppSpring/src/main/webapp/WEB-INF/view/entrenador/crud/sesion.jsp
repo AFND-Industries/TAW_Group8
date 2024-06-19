@@ -204,31 +204,31 @@
     }
 
     function goVolverEditarRutina() {
-        window.location.href = "/entrenador/rutinas/crear/sesion/volver";
+        window.location.href = "/entrenador/rutinas/sesion/volver";
     }
 
     function goVolverVerRutina() {
-        window.location.href = "/entrenador/rutinas/crear/rutina/ver?id=<%=rutina.getId()%>";
+        window.location.href = "/entrenador/rutinas/rutina/ver?id=<%=rutina.getId()%>";
     }
 
     function goVerEjercicio(id) {
-        window.location.href = "/entrenador/rutinas/crear/ejercicio/ver?id=" + id;
+        window.location.href = "/entrenador/rutinas/ejercicio/ver?id=" + id;
     }
 
     function goSeleccionarEjercicio() {
-        goPage("/entrenador/rutinas/crear/ejercicio/seleccionar");
+        goPage("/entrenador/rutinas/ejercicio/seleccionar");
     }
 
     function goEditarEjercicio(ejPos) {
-        goPage("/entrenador/rutinas/crear/ejercicio/editar", add = "ejPos=" + ejPos);
+        goPage("/entrenador/rutinas/ejercicio/editar", add = "ejPos=" + ejPos);
     }
 
     function goBorrarEjercicio(ejPos) {
-        goPage("/entrenador/rutinas/crear/ejercicio/borrar", add = "ejPos=" + ejPos);
+        goPage("/entrenador/rutinas/ejercicio/borrar", add = "ejPos=" + ejPos);
     }
 
     function goGuardarSesion() {
-        goPage("/entrenador/rutinas/crear/sesion/guardar");
+        goPage("/entrenador/rutinas/sesion/guardar");
     }
 
     function showDeleteModal(nombre, ejPos) {

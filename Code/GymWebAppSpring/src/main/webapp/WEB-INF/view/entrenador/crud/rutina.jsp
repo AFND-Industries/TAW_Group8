@@ -167,23 +167,23 @@
     }
 
     function goVerSesion(id) {
-        window.location.href = '/entrenador/rutinas/crear/sesion/ver?id=' + id; // no necesita el nombre dificultad y demas
+        window.location.href = '/entrenador/rutinas/sesion/ver?id=' + id; // no necesita el nombre dificultad y demas
     }
 
     function goCrearSesion() {
-        goPage('/entrenador/rutinas/crear/sesion');
+        goPage('/entrenador/rutinas/sesion/crear');
     }
 
     function goEditarSesion(pos) {
-        goPage(action = '/entrenador/rutinas/crear/sesion/editar', add = 'pos=' + pos);
+        goPage(action = '/entrenador/rutinas/sesion/editar', add = 'pos=' + pos);
     }
 
     function goBorrarSesion(pos) {
-        goPage('/entrenador/rutinas/crear/sesion/borrar', 'pos=' + pos);
+        goPage('/entrenador/rutinas/sesion/borrar', 'pos=' + pos);
     }
 
     function goGuardarRutina() {
-        goPage('/entrenador/rutinas/crear/rutina/guardar');
+        goPage('/entrenador/rutinas/rutina/guardar');
     }
 
     function showDeleteModal(nombre, pos) {

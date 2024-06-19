@@ -142,11 +142,11 @@
 </div>
 <script>
     function goEditarSesion() {
-        window.location.href = "/entrenador/rutinas/crear/sesion/editar";
+        window.location.href = "/entrenador/rutinas/sesion/editar";
     }
 
     function goCrearEjercicio(ejbase) {
-        window.location.href = "/entrenador/rutinas/crear/ejercicio?ejbase=" + ejbase;
+        window.location.href = "/entrenador/rutinas/ejercicio/crear?ejbase=" + ejbase;
     }
 
     function changeWatch() {

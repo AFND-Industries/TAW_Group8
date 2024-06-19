@@ -99,15 +99,15 @@
     </div>
 <script>
     function goVolverEditarSesion() {
-        window.location.href = "/entrenador/rutinas/crear/sesion/editar";
+        window.location.href = "/entrenador/rutinas/sesion/editar";
     }
 
     function goVolverVerSesion() {
-        window.location.href = "/entrenador/rutinas/crear/sesion/ver?id=<%=sesion.getId()%>";
+        window.location.href = "/entrenador/rutinas/sesion/ver?id=<%=sesion.getId()%>";
     }
 
     function doVolverToSeleccionar() {
-        window.location.href = "/entrenador/rutinas/crear/ejercicio/volver?ejpos=<%=ejercicioPos%>";
+        window.location.href = "/entrenador/rutinas/ejercicio/volver?ejpos=<%=ejercicioPos%>";
     }
 
     function goGuardarEjercicio() {
@@ -119,7 +119,7 @@
 
         const especificacionesJSON = encodeURIComponent(JSON.stringify(especificaciones));
 
-        window.location.href = "/entrenador/rutinas/crear/ejercicio/guardar?especificaciones="
+        window.location.href = "/entrenador/rutinas/ejercicio/guardar?especificaciones="
             + especificacionesJSON + "&ejpos=<%=ejercicioPos%>";
     }
 </script>
