@@ -323,7 +323,8 @@ public class EntrenadorControllerCRUD {
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         int pos = (int) session.getAttribute("sesionPos");
 
-        SesionArgument sesion = rutina.getSesiones().get(pos);
+        List<SesionArgument> sesiones = rutina.getSesiones();
+        SesionArgument sesion = sesiones.get(pos);
 
         sesion.setNombre(nombre);
         sesion.setDia(dia);
@@ -336,11 +337,31 @@ public class EntrenadorControllerCRUD {
         if (dia.trim().isEmpty())
             errorList.add("Debes especificar un día");
 
-        // si no es numerico
+        Integer diaInt;
+        try {
+            diaInt = Integer.parseInt(dia);
+        } catch (Exception e) {
+            diaInt = null;
+        }
 
-        // si no es mayor que cero y menor o igual que 7
+        if (diaInt == null)
+            errorList.add("Has introducido un dia no númerico");
 
+        if (diaInt != null && (diaInt <= 0 || diaInt > 7))
+            errorList.add("El dia debe ser un numero entre 1 y 7, corresponde a un dia de la semana");
         // si el día está repetido
+        if (diaInt != null) {
+            boolean diaFound = false;
+            int i = 0;
+            while(!diaFound && i < sesiones.size()) {
+                if (Integer.parseInt(sesiones.get(i).getDia()) == diaInt)
+                    diaFound = true;
+                i++;
+            }
+
+            if (diaFound)
+                errorList.add("Ya existe una sesión en esta rutina para el día " + diaInt);
+        }
 
         if (descripcion.trim().isEmpty())
             errorList.add("No puedes tener una descripción vacía");
