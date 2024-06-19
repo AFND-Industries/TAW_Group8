@@ -65,7 +65,7 @@
             <%
                 for (MusculoDTO musculo : musculos) {
             %>
-            <option value="<%=musculo.getId()%>" <%=musculo != null && musculo.equals(_categoria) ? "selected" : ""%>>
+            <option value="<%=musculo.getId()%>" <%=musculo.equals(_musculo) ? "selected" : ""%>>
                 <%=musculo.getNombre()%>
             </option>
             <%

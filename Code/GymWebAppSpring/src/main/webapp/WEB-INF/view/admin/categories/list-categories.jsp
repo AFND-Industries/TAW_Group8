@@ -15,7 +15,7 @@
 %>
 <html lang="es">
 <head>
-    <title>Listado de ejercicios</title>
+    <title>Listado de categorías</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -40,7 +40,7 @@
 <body>
 <jsp:include page="../../components/header.jsp" />
 <div class="container">
-    <h1 class="text-center mb-2">Listado de ejercicios</h1>
+    <h1 class="text-center mb-2">Listado de categorías</h1>
     <form class="d-flex justify-content-between" method="post" action="">
         <input type="text" class="form-control" value="<%= _nombre != null ? _nombre : ""%>" name="nombre" placeholder="Nombre"/>
         <button class="btn btn-primary d-flex align-items-center ms-2">
