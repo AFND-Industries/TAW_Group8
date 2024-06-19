@@ -2,16 +2,21 @@ package com.example.GymWebAppSpring.service;
 
 import com.example.GymWebAppSpring.dao.RutinaRepository;
 import com.example.GymWebAppSpring.dao.SesionEntrenamientoRepository;
+import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
+import com.example.GymWebAppSpring.dto.InformacionejercicioDTO;
 import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
+import com.example.GymWebAppSpring.dto.TipofuerzaDTO;
 import com.example.GymWebAppSpring.entity.Sesionentrenamiento;
+import com.example.GymWebAppSpring.iu.FiltroRendimientoArgument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class SesionEntrenamientoService extends DTOService<SesionentrenamientoDTO, Sesionentrenamiento> {
-    
+
     @Autowired
     protected SesionEntrenamientoRepository sesionEntrenamientoRepository;
 
@@ -50,4 +55,6 @@ public class SesionEntrenamientoService extends DTOService<SesionentrenamientoDT
     public void deleteAll(List<Integer> sesiones) {
         this.sesionEntrenamientoRepository.deleteAllById(sesiones);
     }
+
+
 }
