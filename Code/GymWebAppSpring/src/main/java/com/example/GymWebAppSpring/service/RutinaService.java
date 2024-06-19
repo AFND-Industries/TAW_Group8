@@ -4,6 +4,7 @@ import com.example.GymWebAppSpring.dao.*;
 import com.example.GymWebAppSpring.dto.*;
 import com.example.GymWebAppSpring.entity.*;
 import com.example.GymWebAppSpring.iu.EjercicioArgument;
+import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
@@ -72,6 +73,19 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
         rutina.setEntrenador(this.usuarioRepository.findById(rutinaDTO.getEntrenador().getId()).orElse(null));
         rutina.setFechaCreacion(rutinaDTO.getFechaCreacion());
         this.rutinaRepository.save(rutina);
+    }
+
+    public List<RutinaDTO> filtrarRutinas(FiltroArgument filtro, Integer entrenadorId) {
+        String nombre = filtro.getNombre();
+        Integer sesionNum = filtro.getIntegerSesionNum();
+        Integer sesionMode = filtro.getSesionMode();
+        Integer dificultadId = filtro.getDificultad() == -1 ? null : filtro.getDificultad();
+
+        Integer limiteBajo = (sesionMode == 3 || sesionMode == -1) ? 0 : sesionNum;
+        Integer limiteAlto = (sesionMode == 2 || sesionMode == -1) ? 7 : sesionNum;
+
+        return this.findRutinaByEntrenadorWithFilter(
+                entrenadorId, nombre, limiteBajo, limiteAlto, dificultadId);
     }
 
     public int saveOrCreateFullRutina(RutinaArgument rutina, UsuarioDTO entrenador) {

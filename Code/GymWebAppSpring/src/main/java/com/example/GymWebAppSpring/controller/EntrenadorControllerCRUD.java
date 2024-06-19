@@ -40,6 +40,13 @@ public class EntrenadorControllerCRUD {
     @Autowired
     protected EjercicioService ejercicioService;
 
+    // Utils
+    private void flushContext(HttpSession session) {
+        session.removeAttribute("cache");
+        session.removeAttribute("sesionPos");
+        session.removeAttribute("oldSesion");
+    }
+
     @GetMapping("")
     public String doRutinas(@RequestParam(value = "changed", required = false) Integer changed,
                             @RequestParam(value = "mode", required = false) Integer mode,
@@ -47,13 +54,8 @@ public class EntrenadorControllerCRUD {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
 
-        // Para que siempre que se termine una sesion se borre una cache, aunque haya veces que este vacia ya
-        session.removeAttribute("cache");
-        session.removeAttribute("sesionPos");
-        session.removeAttribute("oldSesion");
-
-        UsuarioDTO entrenador = AuthUtils.getUser(session);
-        List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorId(entrenador.getId());
+        flushContext(session);
+        List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorId(AuthUtils.getUser(session).getId());
 
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadService.findAll());
@@ -67,8 +69,9 @@ public class EntrenadorControllerCRUD {
     @GetMapping("/filtrar")
     public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro,
                             Model model, HttpSession session) {
-        if(!AuthUtils.isTrainer(session))
+        if (!AuthUtils.isTrainer(session)) {
             return "redirect:/";
+        }
 
         // Si se ignora uno de los dos campos, el otro también, pues van de la mano
         if (filtro.getIntegerSesionNum() == -1 || filtro.getSesionMode() == -1) {
@@ -76,22 +79,12 @@ public class EntrenadorControllerCRUD {
             filtro.setSesionNum("");
         }
 
-        if (filtro.estaVacio())
+        if (filtro.estaVacio()) {
             return "redirect:/entrenador/rutinas";
-
-        String nombre = filtro.getNombre();
-        Integer sesionNum = filtro.getIntegerSesionNum();
-        Integer sesionMode = filtro.getSesionMode();
-        Integer dificultadid = filtro.getDificultad();
+        }
 
         UsuarioDTO entrenador = AuthUtils.getUser(session);
-        DificultadDTO dificultad = dificultadService.findById(dificultadid);
-
-        Integer limiteBajo = sesionMode == 3 || sesionMode == -1 ? 0 : sesionNum;
-        Integer limiteAlto = sesionMode == 2 || sesionMode == -1 ? 7 : sesionNum;
-
-        List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorWithFilter(
-                entrenador.getId(), nombre, limiteBajo, limiteAlto, dificultad.getId());
+        List<RutinaDTO> rutinas = rutinaService.filtrarRutinas(filtro, entrenador.getId());
 
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadService.findAll());
@@ -113,9 +106,8 @@ public class EntrenadorControllerCRUD {
         }
         RutinaArgument rutina = new RutinaArgument(r, sesiones);
 
-        model.addAttribute("readOnly", true);
         session.setAttribute("cache", rutina);
-
+        model.addAttribute("readOnly", true);
         model.addAttribute("dificultades", dificultadService.findAll());
 
         return "/entrenador/crud/rutina";

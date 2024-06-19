@@ -169,7 +169,7 @@
             if (rutinas.isEmpty()) {%>
                 <div class="d-flex justify-content-center align-items-center mt-3">
                     <h3 class="alert alert-danger">
-                        <%=filtro.estaVacio()
+                        <%=!filtro.estaVacio()
                             ? "No se encontró ningun resultado. Prueba a cambiar el filtro..."
                             : "Vaya, parece que aún no has creado ninguna rutina... ¿A qué esperas?"%>
                     </h3>

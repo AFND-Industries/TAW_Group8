@@ -15,8 +15,8 @@ public interface RutinaRepository extends JpaRepository<Rutina, Integer> {
 
 
     @Query("SELECT r FROM Rutina r WHERE r.entrenador.id = :entrenadorId " +
-            "AND UPPER(r.nombre) LIKE CONCAT('%',UPPER(:nombre),'%') " +
-            "AND (r.dificultad.id = :dificultadId OR :dificultadId IS NULL) " +
+            "AND (:nombre IS NULL OR UPPER(r.nombre) LIKE CONCAT('%', UPPER(:nombre), '%')) " +
+            "AND (:dificultadId IS NULL OR r.dificultad.id = :dificultadId) " +
             "AND (SELECT COUNT(s) FROM Sesionentrenamiento s WHERE s.rutina = r) >= :limiteBajo " +
             "AND (SELECT COUNT(s) FROM Sesionentrenamiento s WHERE s.rutina = r) <= :limiteAlto")
     public List<Rutina> findRutinaByEntrenadorWithFilter(@Param("entrenadorId") Integer entrenadorId,
