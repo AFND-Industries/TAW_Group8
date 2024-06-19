@@ -88,7 +88,7 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
                 entrenadorId, nombre, limiteBajo, limiteAlto, dificultadId);
     }
 
-    public int saveOrCreateFullRutina(RutinaArgument rutina, UsuarioDTO entrenador) {
+    public void saveOrCreateFullRutina(RutinaArgument rutina, UsuarioDTO entrenador) {
         // RUTINA
         // CREAR O MODIFICAR DATOS RUTINA
         Rutina r = rutinaRepository.findById(rutina.getId()).orElse(null);
@@ -175,8 +175,6 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
                 ejercicioSesionRepository.save(es);
             }
         }
-
-        return r.getId();
     }
 
     public void delete(Integer rutinaId) {

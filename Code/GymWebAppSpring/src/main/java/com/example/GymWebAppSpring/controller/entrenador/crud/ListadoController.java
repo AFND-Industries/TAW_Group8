@@ -21,8 +21,8 @@ import java.util.List;
 public class ListadoController extends BaseController {
 
     @GetMapping("")
-    public String doRutinas(@RequestParam(value = "changed", required = false) Integer changed,
-                            @RequestParam(value = "mode", required = false) Integer mode,
+    public String doRutinas(@RequestParam(value = "changedName", required = false, defaultValue = "") String changedName,
+                            @RequestParam(value = "changedCase", required = false, defaultValue = "-1") Integer changedCase,
                             Model model, HttpSession session) {
         if(!AuthUtils.isTrainer(session))
             return "redirect:/";
@@ -33,8 +33,8 @@ public class ListadoController extends BaseController {
         model.addAttribute("rutinas", rutinas);
         model.addAttribute("dificultades", dificultadService.findAll());
         model.addAttribute("filtro", new FiltroArgument());
-        if (changed != null) model.addAttribute("rutinaChanged", rutinaService.findById(changed));
-        if (mode != null) model.addAttribute("changeMode", mode);
+        model.addAttribute("changedName", changedName);
+        model.addAttribute("changedCase", changedCase); // 0: Creada. 1: Editada. 2: Guardada
 
         return "/entrenador/crud/rutinas";
     }

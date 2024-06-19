@@ -15,8 +15,9 @@
 <%
     List<RutinaDTO> rutinas = (List<RutinaDTO>) request.getAttribute("rutinas");
     List<DificultadDTO> dificultades = (List<DificultadDTO>) request.getAttribute("dificultades");
-    RutinaDTO rutinaChanged = (RutinaDTO) request.getAttribute("rutinaChanged");
-    Integer changeMode = (Integer) request.getAttribute("changeMode");
+
+    String changedName = (String) request.getAttribute("changedName");
+    Integer changedCase = (Integer) request.getAttribute("changedCase");
 
     FiltroArgument filtro = (FiltroArgument) request.getAttribute("filtro");
 %>
@@ -31,8 +32,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-        const rutinaChangedName = '<%=rutinaChanged != null ? rutinaChanged.getNombre() : ""%>';
-        const changeMode = <%=changeMode != null ? changeMode : -1%>;
+        const changedName = '<%=changedName%>';
+        const changedCase = <%=changedCase%>;
     </script>
 </head>
 <body>
@@ -225,9 +226,12 @@
         toastBootstrap.show();
     }
 
-    if (rutinaChangedName.length > 0) {
-        showToast('Rutina ' + (changeMode === 0 ? 'creada' : 'editada') + ' correctamente', 'Has ' + (changeMode === 0 ? 'creado' : 'editado') + ' la rutina <b>' + rutinaChangedName + '</b> correctamente.');
-    }
+    if (changedCase === 0)
+        showToast('Rutina creada correctamente', 'Has <b>creado</b> la rutina <b>' + changedName + '</b> correctamente.');
+    else if (changedCase === 1)
+        showToast('Rutina editada correctamente', 'Has <b>editado</b> la rutina <b>' + changedName + '</b> correctamente.');
+    else if (changedCase === 2)
+        showToast('Rutina borrada correctamente', 'Has <b>borrada</b> la rutina <b>' + changedName + '</b> correctamente.');
 </script>
 </body>
 </html>

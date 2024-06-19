@@ -73,7 +73,7 @@ public class RutinaController extends BaseController {
         return "/entrenador/crud/rutina";
     }
 
-    @GetMapping("/guardar") // 0 = CREAR, 1 = EDITAR
+    @GetMapping("/guardar")
     public String doGuardarRutina(@RequestParam("nombre") String nombre,
                                   @RequestParam("dificultad") Integer dificultad,
                                   @RequestParam("descripcion") String descripcion,
@@ -100,14 +100,15 @@ public class RutinaController extends BaseController {
             return doEditarRutina(rutina.getId(), session, model);
         }
 
-        int rutinaId = rutinaService.saveOrCreateFullRutina(rutina, AuthUtils.getUser(session));
+        rutinaService.saveOrCreateFullRutina(rutina, AuthUtils.getUser(session));
 
-        return "redirect:/entrenador/rutinas?changed=" + rutinaId + "&mode=" + (rutina.getId() < 0 ? 0 : 1);
+        return "redirect:/entrenador/rutinas?changedName=" + nombre + "&changedCase=" + (rutina.getId() < 0 ? 0 : 1);
     }
 
     @GetMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         RutinaDTO rutina = rutinaService.findById(id); // no deberia ser nunca null pero se puede probar
+        String nombreRutina = rutina.getNombre();
         List<SesionentrenamientoDTO> sesiones = sesionEntrenamientoService.findByRutina(rutina.getId());
         for (SesionentrenamientoDTO sesion : sesiones) {
             List<EjerciciosesionDTO> ejerciciossesion = ejercicioSesionService.findBySesion(sesion.getId());
@@ -122,8 +123,6 @@ public class RutinaController extends BaseController {
         sesionEntrenamientoService.deleteAll(ids);
         rutinaService.delete(rutina.getId());
 
-        // PONER UN TOAST DE RUTINA BORRADA
-
-        return "redirect:/entrenador/rutinas";
+        return "redirect:/entrenador/rutinas?changedName=" + nombreRutina + "&changedCase=" + 2;
     }
 }
