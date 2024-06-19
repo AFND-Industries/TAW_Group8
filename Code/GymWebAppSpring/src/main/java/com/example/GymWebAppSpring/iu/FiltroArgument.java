@@ -49,6 +49,14 @@ public class FiltroArgument {
         return this.sesionNum.isEmpty() ? -1 : Integer.parseInt(sesionNum);
     }
 
+    public void processFiltro() {
+        // Si se ignora uno de los dos campos, el otro también, pues van de la mano
+        if (getIntegerSesionNum() == -1 || getSesionMode() == -1) {
+            setSesionMode(-1);
+            setSesionNum("");
+        }
+    }
+
     public boolean estaVacio() {
         return this.sesionNum.isEmpty() && this.sesionMode == -1 && this.dificultad == -1 && this.nombre.isEmpty();
     }

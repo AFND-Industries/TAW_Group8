@@ -1,12 +1,11 @@
 package com.example.GymWebAppSpring.controller.entrenador.crud;
 
+import com.example.GymWebAppSpring.dto.DificultadDTO;
 import com.example.GymWebAppSpring.dto.RutinaDTO;
-import com.example.GymWebAppSpring.dto.UsuarioDTO;
 import com.example.GymWebAppSpring.iu.FiltroArgument;
-import com.example.GymWebAppSpring.service.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,48 +20,42 @@ import java.util.List;
 public class ListadoController extends BaseController {
 
     @GetMapping("")
-    public String doRutinas(@RequestParam(value = "changedName", required = false, defaultValue = "") String changedName,
-                            @RequestParam(value = "changedCase", required = false, defaultValue = "-1") Integer changedCase,
-                            Model model, HttpSession session) {
-        if(!AuthUtils.isTrainer(session))
-            return "redirect:/";
+    public String doRutinas(
+            @RequestParam(value = "changedName", required = false, defaultValue = "") String changedName,
+            @RequestParam(value = "changedCase", required = false, defaultValue = "-1") Integer changedCase,
+            Model model, HttpSession session) {
 
         flushContext(session);
-        List<RutinaDTO> rutinas = rutinaService.findRutinaByEntrenadorId(AuthUtils.getUser(session).getId());
 
-        model.addAttribute("rutinas", rutinas);
-        model.addAttribute("dificultades", dificultadService.findAll());
-        model.addAttribute("filtro", new FiltroArgument());
+        Integer entrenadorId = AuthUtils.getUser(session).getId();
+        initializeRutinasModel(model, entrenadorId, new FiltroArgument());
+
         model.addAttribute("changedName", changedName);
-        model.addAttribute("changedCase", changedCase); // 0: Creada. 1: Editada. 2: Guardada
+        model.addAttribute("changedCase", changedCase);
 
         return "/entrenador/crud/rutinas";
     }
 
     @GetMapping("/filtrar")
-    public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro,
-                            Model model, HttpSession session) {
-        if (!AuthUtils.isTrainer(session)) {
-            return "redirect:/";
+    public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro, Model model, HttpSession session) {
+        filtro.processFiltro();
+
+        String strTo = "/entrenador/crud/rutinas";
+        if (filtro.estaVacio()) strTo = "redirect:/entrenador/rutinas";
+        else {
+            Integer entrenadorId = AuthUtils.getUser(session).getId();
+            initializeRutinasModel(model, entrenadorId, filtro);
         }
 
-        // Si se ignora uno de los dos campos, el otro también, pues van de la mano
-        if (filtro.getIntegerSesionNum() == -1 || filtro.getSesionMode() == -1) {
-            filtro.setSesionMode(-1);
-            filtro.setSesionNum("");
-        }
+        return strTo;
+    }
 
-        if (filtro.estaVacio()) {
-            return "redirect:/entrenador/rutinas";
-        }
-
-        UsuarioDTO entrenador = AuthUtils.getUser(session);
-        List<RutinaDTO> rutinas = rutinaService.filtrarRutinas(filtro, entrenador.getId());
+    private void initializeRutinasModel(Model model, Integer entrenadorId, FiltroArgument filtro) {
+        List<RutinaDTO> rutinas = rutinaService.filtrarRutinas(filtro, entrenadorId);
+        List<DificultadDTO> dificultades = dificultadService.findAll();
 
         model.addAttribute("rutinas", rutinas);
-        model.addAttribute("dificultades", dificultadService.findAll());
+        model.addAttribute("dificultades", dificultades);
         model.addAttribute("filtro", filtro);
-
-        return "/entrenador/crud/rutinas";
     }
 }

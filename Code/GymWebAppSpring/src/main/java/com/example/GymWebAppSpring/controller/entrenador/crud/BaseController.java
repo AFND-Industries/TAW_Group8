@@ -21,7 +21,7 @@ public class BaseController {
     @Autowired
     protected EjercicioService ejercicioService;
 
-    public static void flushContext(HttpSession session) {
+    public void flushContext(HttpSession session) {
         session.removeAttribute("cache");
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
