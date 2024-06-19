@@ -52,6 +52,7 @@ public class RutinaclienteService extends DTOService<RutinaclienteDTO, Rutinacli
         id.setRutinaId(rutinaclienteDTO.getId().getRutinaId());
         id.setUsuarioId(rutinaclienteDTO.getId().getUsuarioId());
         Rutinacliente rutinacliente = rutinaclienteRepository.findById(id).orElse(new Rutinacliente());
+        rutinacliente.setId(id);
         rutinacliente.setRutina(rutinaRepository.findById(rutinaclienteDTO.getRutina().getId()).orElse(null));
         rutinacliente.setFechaInicio(rutinaclienteDTO.getFechaInicio());
         rutinacliente.setUsuario(usuarioRepository.findById(rutinaclienteDTO.getUsuario().getId()).orElse(null));
@@ -64,8 +65,6 @@ public class RutinaclienteService extends DTOService<RutinaclienteDTO, Rutinacli
         id.setUsuarioId(UsuarioId);
         rutinaclienteRepository.deleteById(id);
     }
-
-
 
 
 }
