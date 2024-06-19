@@ -13,4 +13,6 @@ public interface EjercicioSesionRepository extends JpaRepository<Ejerciciosesion
 
     @Query("SELECT e FROM Ejerciciosesion e WHERE e.sesionentrenamiento.id = :sesionId")
     public List<Ejerciciosesion> findEjerciciosBySesion(@Param("sesionId") Integer sesionId);
+
+
 }

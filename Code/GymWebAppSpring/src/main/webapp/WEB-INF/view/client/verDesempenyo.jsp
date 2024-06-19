@@ -1,7 +1,9 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.example.GymWebAppSpring.dto.*" %><%--
+<%@ page import="com.example.GymWebAppSpring.dto.*" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 14/06/2024
@@ -13,6 +15,7 @@
 <%
     InformacionsesionDTO informacionSesion = (InformacionsesionDTO) request.getAttribute("informacionSesion");
     SesionentrenamientoDTO sesionEntrenamiento = (SesionentrenamientoDTO) request.getAttribute("sesionEntrenamiento");
+    List<TipofuerzaDTO> tiposFuerza = (List<TipofuerzaDTO>) request.getAttribute("tiposFuerza");
     HashMap<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = (HashMap<EjerciciosesionDTO, InformacionejercicioDTO>) request.getAttribute("ejercicios");
     boolean ejercicioSinCompletar = false;
 
@@ -146,7 +149,7 @@
 
     <div class="mb-4">
         <button class="btn btn-danger" onclick="borrarDatos()">Borrar Datos</button>
-        <button class="btn btn-primary">Aplicar Filtro</button>
+        <button class="btn btn-primary" onclick="mostrarFiltro()">Aplicar Filtro</button>
     </div>
     <form method="get" action="/client/rutina/sesion/valorarEntrenamiento">
         <input type="hidden" name="sesionEntrenamiento" value="<%=sesionEntrenamiento.getId()%>">
@@ -202,7 +205,7 @@
                 %>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary" <%=ejercicioSinCompletar? "disabled" : ""%>>
+                <button type="submit" class="btn btn-primary" <%=ejercicioSinCompletar ? "disabled" : ""%>>
                     <i class="bi bi-chat-left-text-fill"></i>
                     Editar valoración
                 </button>
@@ -232,6 +235,91 @@
         </div>
     </form>
 </div>
+<!-- Modal Filtro-->
+<div class="modal fade" id="filter-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Filtros de búsqueda</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form:form action="/client/rutina/sesion/desempenyo/fitrar" method="get" modelAttribute="filtro">
+                <form:input path="sesionEntrenamientoId" type="hidden" value="<%=sesionEntrenamiento.getId()%>"/>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-3 d-flex align-items-center">
+                            <label for="nombre-ejercico" class="form-label">Nombre del ejercico</label>
+                        </div>
+                        <div class="col-9 d-flex align-items-center">
+                            <form:input path="nombre" type="text" class="form-control" id="nombre-ejercico"
+                                        placeholder="Nombre del ejercico"/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 d-flex align-items-center">
+                            <label for="num-objetivos" class="form-label">Número de objetivos</label>
+                        </div>
+                        <div class="col-4 d-flex align-items-center">
+                            <form:select path="objetivosMode" class="form-select" id="num-objetivos">
+                                <form:option value="-1">No seleccionado</form:option>
+                                <form:option value="1">Igual</form:option>
+                                <form:option value="2">Mayor o igual</form:option>
+                                <form:option value="3">Menor o igual</form:option>
+                            </form:select>
+                        </div>
+                        <div class="col-1 d-flex justify-content-center align-items-center">
+                            <span>a</span>
+                        </div>
+                        <div class="col-4 d-flex align-items-center">
+                            <form:input path="obejetivosNum" type="text" class="form-control" id="num-objetivos-valor"
+                                        placeholder="Número"/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 d-flex align-items-center">
+                            <label for="num-objetivos-alc" class="form-label">Número de objetivos alcanzados</label>
+                        </div>
+                        <div class="col-4 d-flex align-items-center">
+                            <form:select path="objetivosSuperadosMode" class="form-select" id="num-objetivos-alc">
+                                <form:option value="-1">No seleccionado</form:option>
+                                <form:option value="1">Igual</form:option>
+                                <form:option value="2">Mayor o igual</form:option>
+                                <form:option value="3">Menor o igual</form:option>
+                            </form:select>
+                        </div>
+                        <div class="col-1 d-flex justify-content-center align-items-center">
+                            <span>a</span>
+                        </div>
+                        <div class="col-4 d-flex align-items-center">
+                            <form:input path="objetivosSuperadosNum" type="text" class="form-control"
+                                        id="num-objetivos-alc-valor" placeholder="Número"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3 d-flex align-items-center">
+                            <label for="dificultad" class="form-label">Tipo Ejercicio</label>
+                        </div>
+                        <div class="col-9 d-flex align-items-center">
+                            <form:select path="tipoEjercicio" class="form-select" id="dificultad">
+                                <form:option value="-1">No seleccionado</form:option>
+                                <%for (TipofuerzaDTO fuerza : tiposFuerza) {%>
+                                <form:option value="<%=fuerza.getId()%>"><%=fuerza.getNombre()%>
+                                </form:option>
+                                <%}%>
+                            </form:select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form:button class="btn btn-primary">Aplicar</form:button>
+                </div>
+            </form:form>
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal Editar-->
 <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
     <form id="editarForm" method="post" action="/client/rutina/sesion/ejercicio/guardar">
@@ -288,6 +376,10 @@
     function borrarDatos() {
         $("#confirmationModal").modal("show");
 
+    }
+
+    function mostrarFiltro() {
+        $("#filter-modal").modal("show");
     }
 
     function editarDatos(ejercicoId, especificaciones, resultados) {
