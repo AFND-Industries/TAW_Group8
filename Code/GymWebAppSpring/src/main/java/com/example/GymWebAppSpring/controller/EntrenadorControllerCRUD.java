@@ -336,31 +336,31 @@ public class EntrenadorControllerCRUD {
 
         if (dia.trim().isEmpty())
             errorList.add("Debes especificar un día");
-
-        Integer diaInt;
-        try {
-            diaInt = Integer.parseInt(dia);
-        } catch (Exception e) {
-            diaInt = null;
-        }
-
-        if (diaInt == null)
-            errorList.add("Has introducido un dia no númerico");
-
-        if (diaInt != null && (diaInt <= 0 || diaInt > 7))
-            errorList.add("El dia debe ser un numero entre 1 y 7, corresponde a un dia de la semana");
-        // si el día está repetido
-        if (diaInt != null) {
-            boolean diaFound = false;
-            int i = 0;
-            while(!diaFound && i < sesiones.size()) {
-                if (Integer.parseInt(sesiones.get(i).getDia()) == diaInt)
-                    diaFound = true;
-                i++;
+        else {
+            Integer diaInt;
+            try {
+                diaInt = Integer.parseInt(dia);
+            } catch (Exception e) {
+                diaInt = null;
             }
 
-            if (diaFound)
-                errorList.add("Ya existe una sesión en esta rutina para el día " + diaInt);
+            if (diaInt == null)
+                errorList.add("Has introducido un dia no númerico");
+            else if (diaInt <= 0 || diaInt > 7)
+                errorList.add("El dia debe ser un numero entre 1 y 7, corresponde a un dia de la semana");
+            else {
+                boolean diaFound = false;
+                int i = 0;
+                while(!diaFound && i < sesiones.size()) {
+                    SesionArgument s = sesiones.get(i);
+                    if (sesion != s && Integer.parseInt(s.getDia()) == diaInt)
+                        diaFound = true;
+                    i++;
+                }
+
+                if (diaFound)
+                    errorList.add("Ya existe una sesión en esta rutina para el día " + diaInt);
+            }
         }
 
         if (descripcion.trim().isEmpty())
