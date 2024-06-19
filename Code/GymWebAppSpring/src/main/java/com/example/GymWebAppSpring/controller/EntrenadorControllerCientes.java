@@ -153,7 +153,7 @@ public class EntrenadorControllerCientes {
         Integer limiteAlto = sesionMode == 2 || sesionMode == -1 ? 7 : filtro.getIntegerSesionNum();
 
         List<RutinaDTO> rutinasEntrenador = rutinaService.findRutinaByEntrenadorWithFilter(usuario.getId(),
-                filtro.getNombre(), limiteBajo, limiteAlto, dificultad.getId());
+                filtro.getNombre(), limiteBajo, limiteAlto, dificultad == null ? null : dificultad.getId());
 
         return rutinasEntrenador;
     }
@@ -178,12 +178,16 @@ public class EntrenadorControllerCientes {
 
 
     @PostMapping("/rutinas/guardar")
-    public String doGuardarRutina(@RequestParam("rutinas") List<RutinaDTO> rutinas,
+    public String doGuardarRutina(@RequestParam("rutinas") List<Integer> rutinasId,
                                   @RequestParam Map<String, String> datId,
                                   Model model,
                                   HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
+        List<RutinaDTO> rutinas = new ArrayList<>();
+        for (Integer id : rutinasId) {
+            rutinas.add(rutinaService.findById(id));
+        }
         UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("cliente");
         List<RutinaDTO> rutinasCliente = rutinaService.findRutinaByUsuarioID(usuario.getId());
 
@@ -214,21 +218,23 @@ public class EntrenadorControllerCientes {
     }
 
     @GetMapping("/rutinas/eliminarRutina")
-    public String doEliminarRutina(@RequestParam("idRutina") RutinaDTO rutina,
+    public String doEliminarRutina(@RequestParam("idRutina") Integer rutinaId,
                                    HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
+        RutinaDTO rutina = rutinaService.findById(rutinaId);
         UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
         rutinaClienteService.delete(rutina.getId(), cliente.getId());
         return "redirect:/entrenador/clientes/rutinas?id=" + cliente.getId();
     }
 
     @GetMapping("/rutinas/verRutina")
-    public String doVerRutina(@RequestParam("idRutina") RutinaDTO rutina,
+    public String doVerRutina(@RequestParam("idRutina") Integer rutinaId,
                               Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
+        RutinaDTO rutina = rutinaService.findById(rutinaId);
         UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
         List<SesionentrenamientoDTO> sesiones = sesionentrenamientoService.findByRutina(rutina.getId());
         List<EjerciciosesionDTO> ejercicios = new ArrayList<>();
@@ -278,11 +284,12 @@ public class EntrenadorControllerCientes {
     }
 
     @GetMapping("/rutinas/verSesion")
-    public String doVerSesion(@RequestParam("idSesion") SesionentrenamientoDTO sesion,
+    public String doVerSesion(@RequestParam("idSesion") Integer sesionId,
                               Model model, HttpSession session) {
         if (!AuthUtils.isTrainer(session))
             return "redirect:/";
 
+        SesionentrenamientoDTO sesion = sesionentrenamientoService.findById(sesionId);
         UsuarioDTO cliente = (UsuarioDTO) session.getAttribute("cliente");
         List<EjerciciosesionDTO> ejercicios = ejercicioSesionService.findBySesion(sesion.getId());
         InformacionsesionDTO informacionSesion = informacionSesionService.findByUsuarioAndSesion(cliente.getId(), sesion.getId());
