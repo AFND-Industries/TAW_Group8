@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class RutinaService extends DTOService<RutinaDTO, Rutina> {
@@ -88,93 +90,94 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
                 entrenadorId, nombre, limiteBajo, limiteAlto, dificultadId);
     }
 
-    public void saveOrCreateFullRutina(RutinaArgument rutina, UsuarioDTO entrenador) {
-        // RUTINA
-        // CREAR O MODIFICAR DATOS RUTINA
-        Rutina r = rutinaRepository.findById(rutina.getId()).orElse(null);
-
-        if (r == null) {
-            r = new Rutina();
-
-            r.setEntrenador(usuarioRepository.findById(entrenador.getId()).orElse(null));
-            r.setFechaCreacion(LocalDate.now());
+    public void saveOrCreateFullRutina(RutinaArgument rutinaArgument, UsuarioDTO entrenadorDTO) {
+        Rutina rutina = rutinaRepository.findById(rutinaArgument.getId()).orElse(null);
+        if (rutina == null) {
+            rutina = new Rutina();
+            rutina.setEntrenador(usuarioRepository.findById(entrenadorDTO.getId()).orElse(null));
+            rutina.setFechaCreacion(LocalDate.now());
         }
 
-        r.setNombre(rutina.getNombre());
-        r.setDificultad(dificultadRepository.findById(rutina.getDificultad()).orElse(null)); // no va a ser null, pero habria que controlarlo
-        r.setDescripcion(rutina.getDescripcion()); // problema description too long
+        rutina.setNombre(rutinaArgument.getNombre());
+        rutina.setDificultad(dificultadRepository.findById(rutinaArgument.getDificultad()).orElse(null));
+        rutina.setDescripcion(rutinaArgument.getDescripcion());
+        
+        rutinaRepository.save(rutina);
 
-        rutinaRepository.save(r);
+        updateSesiones(rutinaArgument.getSesiones(), rutina);
+    }
 
-        // SESION
-        List<SesionArgument> sesiones = rutina.getSesiones();
+    private void updateSesiones(List<SesionArgument> sesionesArgument, Rutina rutina) {
+        List<Integer> sesionesId = sesionesArgument.stream()
+                .map(SesionArgument::getId)
+                .toList();
 
-        // ELIMINAR SESIONES
-        List<Integer> sesionesId = new ArrayList<>();
-        for (SesionArgument sesion : sesiones)
-            sesionesId.add(sesion.getId());
-
-        List<Sesionentrenamiento> sesionesRutina = sesionEntrenamientoRepository.findSesionesByRutina(r.getId());
+        List<Sesionentrenamiento> sesionesRutina = sesionEntrenamientoRepository.findSesionesByRutina(rutina.getId());
         for (Sesionentrenamiento sesion : sesionesRutina) {
             if (!sesionesId.contains(sesion.getId())) {
-                // SI LA SESION TENIA EJERCICIOS
                 List<Ejerciciosesion> ejercicios = ejercicioSesionRepository.findEjerciciosBySesion(sesion.getId());
                 ejercicioSesionRepository.deleteAll(ejercicios);
-
                 sesionEntrenamientoRepository.delete(sesion);
             }
         }
 
-        // CREAR O EDITAR SESIONES
-        for (int i = 0; i < sesiones.size(); i++) {
-            SesionArgument sesion = sesiones.get(i);
-            Sesionentrenamiento s = sesionEntrenamientoRepository.findById(sesion.getId()).orElse(null);
+        for (SesionArgument sesionArgument : sesionesArgument)
+            updateSesion(sesionArgument, sesionesRutina, rutina);
+    }
 
-            if (s == null) {
-                s = new Sesionentrenamiento();
+    private void updateSesion(SesionArgument sesionArgument, List<Sesionentrenamiento> sesionesRutina, Rutina rutina) {
+        Sesionentrenamiento sesion = sesionesRutina.stream()
+                .filter(e -> Objects.equals(e.getId(), sesionArgument.getId()))
+                .findFirst()
+                .orElse(null);
 
-                s.setRutina(r);
-            }
+        if (sesion == null) {
+            sesion = new Sesionentrenamiento();
+            sesion.setRutina(rutina);
+        }
 
-            s.setNombre(sesion.getNombre());
-            s.setDia(Integer.parseInt(sesion.getDia()));
-            s.setDescripcion(sesion.getDescripcion());
+        sesion.setNombre(sesionArgument.getNombre());
+        sesion.setDia(Integer.parseInt(sesionArgument.getDia()));
+        sesion.setDescripcion(sesionArgument.getDescripcion());
 
-            sesionEntrenamientoRepository.save(s);
+        sesionEntrenamientoRepository.save(sesion);
 
-            // EJERCICIOS
-            List<EjercicioArgument> ejercicios = sesion.getEjercicios();
+        updateExercises(sesionArgument.getEjercicios(), sesion);
+    }
 
-            // ELIMINAR EJERCICIOS
-            List<Integer> ejerciciosId = new ArrayList<>();
-            for (EjercicioArgument ejercicio : ejercicios)
-                ejerciciosId.add(ejercicio.getId());
+    private void updateExercises(List<EjercicioArgument> ejercicios, Sesionentrenamiento sesion) {
+        List<Integer> ejerciciosId = ejercicios.stream()
+                .map(EjercicioArgument::getId)
+                .toList();
 
-            List<Ejerciciosesion> ejerciciossesion = ejercicioSesionRepository.findEjerciciosBySesion(s.getId());
-            for (Ejerciciosesion ejerciciosesion : ejerciciossesion) {
-                if (!ejerciciosId.contains(ejerciciosesion.getId()))
-                    ejercicioSesionRepository.delete(ejerciciosesion);
-            }
-
-            // CREAR O EDITAR EJERCICIOS
-            for (int j = 0; j < ejercicios.size(); j++) {
-                EjercicioArgument ejercicio = ejercicios.get(j);
-                Ejerciciosesion es = ejercicioSesionRepository.findById(ejercicio.getId()).orElse(null);
-
-                if (es == null) {
-                    es = new Ejerciciosesion();
-
-                    es.setSesionentrenamiento(s);
-                }
-
-                es.setEjercicio(ejercicioRepository.findById(ejercicio.getEjercicio()).orElse(null));
-                es.setEspecificaciones(new Gson().toJson(ejercicio.getEspecificaciones()));
-                es.setOrden(j + 1);
-                es.setSesionentrenamiento(s);
-
-                ejercicioSesionRepository.save(es);
+        List<Ejerciciosesion> ejerciciosSesion = ejercicioSesionRepository.findEjerciciosBySesion(sesion.getId());
+        for (Ejerciciosesion ejercicioSesion : ejerciciosSesion) {
+            if (!ejerciciosId.contains(ejercicioSesion.getId())) {
+                ejercicioSesionRepository.delete(ejercicioSesion);
             }
         }
+
+        for (EjercicioArgument ejercicioArgument : ejercicios)
+            updateExercise(ejercicioArgument, ejerciciosSesion, sesion);
+    }
+
+    private void updateExercise(EjercicioArgument ejercicioArgument, List<Ejerciciosesion> ejerciciosSesion, Sesionentrenamiento sesion) {
+        Ejerciciosesion ejercicioSesion = ejerciciosSesion.stream()
+                .filter(e -> Objects.equals(e.getId(), ejercicioArgument.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (ejercicioSesion == null) {
+            ejercicioSesion = new Ejerciciosesion();
+            ejercicioSesion.setSesionentrenamiento(sesion);
+        }
+
+        ejercicioSesion.setEjercicio(ejercicioRepository.findById(ejercicioArgument.getEjercicio()).orElse(null));
+        ejercicioSesion.setEspecificaciones(new Gson().toJson(ejercicioArgument.getEspecificaciones()));
+        ejercicioSesion.setOrden(1);
+        ejercicioSesion.setSesionentrenamiento(sesion);
+
+        ejercicioSesionRepository.save(ejercicioSesion);
     }
 
     public void delete(Integer rutinaId) {
