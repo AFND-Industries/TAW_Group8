@@ -32,7 +32,6 @@ public class RutinaController extends BaseController {
         return "/entrenador/crud/rutina";
     }
 
-
     @GetMapping("/editar")
     public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id, HttpSession session, Model model) {
         Object cache = session.getAttribute("cache");
@@ -74,7 +73,6 @@ public class RutinaController extends BaseController {
     @GetMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         RutinaDTO rutina = rutinaService.findById(id);
-        String nombreRutina = rutina.getNombre();
 
         List<SesionentrenamientoDTO> sesionesDTO = sesionEntrenamientoService.findByRutina(rutina.getId());
         for (SesionentrenamientoDTO sesion : sesionesDTO) {
@@ -85,7 +83,7 @@ public class RutinaController extends BaseController {
         sesionEntrenamientoService.deleteAll(sesionesDTO);
         rutinaService.delete(rutina.getId());
 
-        return "redirect:/entrenador/rutinas?changedName=" + nombreRutina + "&changedCase=" + 2;
+        return "redirect:/entrenador/rutinas?changedName=" + rutina.getNombre() + "&changedCase=" + 2;
     }
 
     private void initializeRutina(Model model, HttpSession session, RutinaArgument rutina, boolean readOnly) {
