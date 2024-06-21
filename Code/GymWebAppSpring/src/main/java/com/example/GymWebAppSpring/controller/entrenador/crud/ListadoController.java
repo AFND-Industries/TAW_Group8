@@ -20,11 +20,9 @@ import java.util.List;
 public class ListadoController extends BaseController {
 
     @GetMapping("")
-    public String doRutinas(
-            @RequestParam(value = "changedName", required = false, defaultValue = "") String changedName,
-            @RequestParam(value = "changedCase", required = false, defaultValue = "-1") Integer changedCase,
-            Model model, HttpSession session) {
-
+    public String doRutinas(@RequestParam(value = "changedName", required = false, defaultValue = "") String changedName,
+                            @RequestParam(value = "changedCase", required = false, defaultValue = "-1") Integer changedCase,
+                            Model model, HttpSession session) {
         flushContext(session);
 
         Integer entrenadorId = AuthUtils.getUser(session).getId();

@@ -67,7 +67,29 @@ public class SesionArgument {
         return ejercicios;
     }
 
+    public List<Integer> getEjerciciosId() {
+        return ejercicios.stream().map(EjercicioArgument::getEjercicio).toList();
+    }
+
     public void setEjercicios(List<EjercicioArgument> ejercicios) {
         this.ejercicios = ejercicios;
+    }
+
+    public void update(String nombre, String dia, String descripcion) {
+        if (nombre != null) setNombre(nombre);
+        if (dia != null) setDia(dia);
+        if (descripcion != null) setDescripcion(descripcion);
+    }
+
+    public SesionArgument clone() {
+        SesionArgument clone = new SesionArgument();
+
+        clone.setId(id);
+        clone.setNombre(nombre);
+        clone.setDescripcion(descripcion);
+        clone.setDia(dia);
+        clone.setEjercicios(ejercicios.stream().map(EjercicioArgument::clone).toList());
+
+        return clone;
     }
 }

@@ -30,10 +30,14 @@ public class BaseController {
     @Autowired
     protected EjercicioService ejercicioService;
 
-    public void flushContext(HttpSession session) {
-        session.removeAttribute("cache");
+    public void flushSesionEntrenamiento(HttpSession session) {
         session.removeAttribute("sesionPos");
         session.removeAttribute("oldSesion");
+    }
+
+    public void flushContext(HttpSession session) {
+        session.removeAttribute("cache");
+        flushSesionEntrenamiento(session);
     }
 
     public RutinaArgument createRutinaArgument(Integer rutinaId) {

@@ -68,13 +68,15 @@ public class RutinaArgument {
         return sesiones;
     }
 
+    public List<String> getDiasSesiones() { return sesiones.stream().map(SesionArgument::getDia).toList(); }
+
     public void setSesiones(List<SesionArgument> sesiones) {
         this.sesiones = sesiones;
     }
 
     public void update(String nombre, Integer dificultad, String descripcion) {
-        setNombre(nombre);
-        setDificultad(dificultad);
-        setDescripcion(descripcion);
+        if (nombre != null) setNombre(nombre);
+        if (dificultad != null) setDificultad(dificultad);
+        if (descripcion != null) setDescripcion(descripcion);
     }
 }
