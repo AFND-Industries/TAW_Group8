@@ -1,10 +1,9 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.example.GymWebAppSpring.iu.SesionArgument" %>
 <%@ page import="com.example.GymWebAppSpring.iu.RutinaArgument" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.example.GymWebAppSpring.iu.EjercicioArgument" %>
 <%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
+<%@ page import="java.util.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: elgam
@@ -138,16 +137,27 @@
         <%}%>
     </div>
     <%
-        Gson gson = new Gson();
+        List<EjercicioArgument> ejerciciosArgument = sesion.getEjercicios();
+        Map<Integer, Integer> ejerciciosIndices = new HashMap<>();
+        for (int i = 0; i < ejerciciosArgument.size(); i++)
+            ejerciciosIndices.put(ejerciciosArgument.get(i).getOrden(), i);
 
-        List<EjercicioArgument> ejerciciosArguments = sesion.getEjercicios();
-        for (int i = 0; i < ejerciciosArguments.size(); i++) {
-            EjercicioArgument ejercicioSesion = ejerciciosArguments.get(i);
+        List<Integer> ordenOrdenados = new ArrayList<>(ejerciciosIndices.keySet());
+        Collections.sort(ordenOrdenados);
+
+        Gson gson = new Gson();
+        for (Integer orden : ordenOrdenados) {
+            int posReal = ejerciciosIndices.get(orden);
+            EjercicioArgument ejercicioSesion = ejerciciosArgument.get(posReal);
             EjercicioDTO ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
     %>
     <div class="row">
         <div class="col-9 d-flex align-items-center" style="cursor: pointer"
-             onClick="<%=readOnly ? ("goVerEjercicio(" + ejercicioSesion.getId() + ")") : ("goEditarEjercicio(" + i + ")")%>">
+             onClick="<%=readOnly ? ("goVerEjercicio(" + ejercicioSesion.getId() + ")") : ("goEditarEjercicio(" + posReal + ")")%>">
+            <div class="d-flex flex-column justify-content-center align-items-center"
+                 style="width:50px; height:50px">
+                <span class="h1 mb-0 text-dark"><%=ejercicioSesion.getOrden() + 1%>.</span>
+            </div>
             <img src="<%=ejercicio.getCategoria().getIcono()%>" alt="Borrar" style="width:50px; height:50px">
             <div class="ms-3">
                 <span class="h2"><%=ejercicio.getNombre()%> <span class="text-danger">(<%=ejercicio.getCategoria().getNombre()%>)</span></span></br>
@@ -166,10 +176,18 @@
         </div>
         <%if (!readOnly) {%>
             <div class="col-3 d-flex justify-content-end align-items-center">
-                <div onClick="goEditarEjercicio(<%=i%>)" style="cursor: pointer; text-decoration: none;">
+                <div>
+                    <div onClick="goMoverEjercicio(<%=posReal%>, -1)" style="cursor: pointer; text-decoration: none;">
+                        <img src="/svg/caret-up.svg" alt="Subir" style="width:60px; height:60px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div onClick="goMoverEjercicio(<%=posReal%>, 1)" style="cursor: pointer; text-decoration: none;">
+                        <img src="/svg/caret-down.svg" alt="Bajarr" style="width:60px; height:60px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div onClick="goEditarEjercicio(<%=posReal%>)" style="cursor: pointer; text-decoration: none;">
                     <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
-                <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=i%>)" style="cursor: pointer;">
+                <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=posReal%>)" style="cursor: pointer;">
                     <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
                 </div>
             </div>
@@ -225,6 +243,10 @@
 
     function goBorrarEjercicio(ejPos) {
         goPage("/entrenador/rutinas/ejercicio/borrar", add = "ejPos=" + ejPos);
+    }
+
+    function goMoverEjercicio(ejPos, move) {
+        goPage("/entrenador/rutinas/ejercicio/mover", add = "ejPos=" + ejPos + "&move=" + move);
     }
 
     function goGuardarSesion() {

@@ -172,19 +172,44 @@ public class EjercicioController extends BaseController {
                                     @RequestParam("descripcion") String descripcion,
                                     @RequestParam("ejPos") Integer ejPos,
                                     HttpSession session) {
-        // Las modificaciones de sesion antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
-        int pos = (int) session.getAttribute("sesionPos");
+        int sesionPos = (int) session.getAttribute("sesionPos");
 
-        SesionArgument sesion = rutina.getSesiones().get(pos);
+        SesionArgument sesion = rutina.getSesiones().get(sesionPos);
         sesion.setNombre(nombre);
         sesion.setDia(dia);
         sesion.setDescripcion(descripcion);
 
-        rutina.getSesiones().get(pos).getEjercicios().remove((int) ejPos);
-        for (int i = ejPos; i < rutina.getSesiones().get(pos).getEjercicios().size(); i++) { // shift
-            EjercicioArgument ejercicio = rutina.getSesiones().get(pos).getEjercicios().get(i);
-            rutina.getSesiones().get(pos).getEjercicios().get(i).setOrden(ejercicio.getOrden() - 1);
+        List<EjercicioArgument> ejercicios = rutina.getSesiones().get(sesionPos).getEjercicios();
+        ejercicios.remove((int) ejPos);
+        for (int i = ejPos; i < ejercicios.size(); i++)
+            ejercicios.get(i).setOrden(ejercicios.get(i).getOrden() - 1);
+
+        return "redirect:/entrenador/rutinas/sesion/editar";
+    }
+
+    @GetMapping("/mover")
+    public String doMoverEjercicio(@RequestParam("ejPos") Integer ejPos,
+                                   @RequestParam("move") Integer move,
+                                   HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        int sesionPos = (int) session.getAttribute("sesionPos");
+        List<EjercicioArgument> ejercicios = rutina.getSesiones().get(sesionPos).getEjercicios();
+
+        EjercicioArgument ejercicio = ejercicios.get(ejPos);
+        int orden = ejercicio.getOrden();
+
+        EjercicioArgument swapEjercicio = null;
+        int i = 0;
+        while (swapEjercicio == null && i < ejercicios.size()) {
+            if (ejercicios.get(i).getOrden() == orden + move)
+                swapEjercicio = ejercicios.get(i);
+            i++;
+        }
+
+        if (swapEjercicio != null) {
+            ejercicio.setOrden(orden + move);
+            swapEjercicio.setOrden(orden);
         }
 
         return "redirect:/entrenador/rutinas/sesion/editar";
