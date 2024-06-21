@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EntrenadorAsignadoService extends DTOService<EntrenadorasignadoDTO, Entrenadorasignado>{
+public class EntrenadorAsignadoService extends DTOService<EntrenadorasignadoDTO, Entrenadorasignado> {
 
     @Autowired
     private EntrenadorAsignadoRepository entrenadorAsignadoRepository;
@@ -22,11 +22,11 @@ public class EntrenadorAsignadoService extends DTOService<EntrenadorasignadoDTO,
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<EntrenadorasignadoDTO> findAll(){
+    public List<EntrenadorasignadoDTO> findAll() {
         return entidadesADTO(entrenadorAsignadoRepository.findAll());
     }
 
-    public EntrenadorasignadoDTO findById(EntrenadorasignadoIdDTO idDTO){
+    public EntrenadorasignadoDTO findById(EntrenadorasignadoIdDTO idDTO) {
         EntrenadorasignadoId id = new EntrenadorasignadoId();
         id.setEntrenador(idDTO.getEntrenador());
         id.setCliente(idDTO.getCliente());
@@ -34,20 +34,24 @@ public class EntrenadorAsignadoService extends DTOService<EntrenadorasignadoDTO,
         return entrenador != null ? entrenador.toDTO() : null;
     }
 
-    public List<UsuarioDTO> findClientsByEntrenadorID(UsuarioDTO entrenador){
+    public List<UsuarioDTO> findClientsByEntrenadorID(UsuarioDTO entrenador) {
         return entrenadorAsignadoRepository.findClientsByEntrenadorID(entrenador.getId()).stream().map(usuario -> usuario.toDTO()).toList();
     }
 
-    public List<UsuarioDTO> findEntrenadoresByClientID(UsuarioDTO client){
+    public List<UsuarioDTO> findEntrenadoresByClientID(UsuarioDTO client) {
         return entrenadorAsignadoRepository.findEntrenadoresByClientID(client.getId()).stream().map(usuario -> usuario.toDTO()).toList();
     }
 
-    public List<EntrenadorasignadoDTO> findByCliente(UsuarioDTO client){
+    public List<UsuarioDTO> findClientesByEntrenadorWithFilter(UsuarioDTO entrenador, String nombre, Character genero, Integer limiteBajo, Integer limiteAlto, String apellido) {
+        return entrenadorAsignadoRepository.findClientesByEntrenadorWithFilter(entrenador.getId(), nombre, genero, limiteBajo, limiteAlto, apellido).stream().map(usuario -> usuario.toDTO()).toList();
+    }
+
+    public List<EntrenadorasignadoDTO> findByCliente(UsuarioDTO client) {
         return entidadesADTO(entrenadorAsignadoRepository.findByCliente(client.getId()));
     }
 
-    public void save(EntrenadorasignadoDTO entrenadorasignadoDTO){
-        EntrenadorasignadoId id = new EntrenadorasignadoId(){{
+    public void save(EntrenadorasignadoDTO entrenadorasignadoDTO) {
+        EntrenadorasignadoId id = new EntrenadorasignadoId() {{
             setCliente(entrenadorasignadoDTO.getId().getCliente());
             setEntrenador(entrenadorasignadoDTO.getId().getEntrenador());
         }};
@@ -58,8 +62,8 @@ public class EntrenadorAsignadoService extends DTOService<EntrenadorasignadoDTO,
         entrenadorAsignadoRepository.save(entrenadorasignado);
     }
 
-    public void delete(EntrenadorasignadoIdDTO idDTO){
-        EntrenadorasignadoId id = new EntrenadorasignadoId(){{
+    public void delete(EntrenadorasignadoIdDTO idDTO) {
+        EntrenadorasignadoId id = new EntrenadorasignadoId() {{
             setCliente(idDTO.getCliente());
             setEntrenador(idDTO.getEntrenador());
         }};
