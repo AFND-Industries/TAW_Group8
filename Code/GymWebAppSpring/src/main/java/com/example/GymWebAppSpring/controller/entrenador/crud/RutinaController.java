@@ -33,10 +33,18 @@ public class RutinaController extends BaseController {
     }
 
     @GetMapping("/editar")
-    public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id, HttpSession session, Model model) {
+    public String doEditarRutina(@RequestParam(value = "id", required = false) Integer id,
+                                 @RequestParam(value = "fullSesion", required = false) Boolean fullSesion,
+                                 HttpSession session, Model model) {
         Object cache = session.getAttribute("cache");
         RutinaArgument rutina = cache != null ? (RutinaArgument) cache : createRutinaArgument(id);
         initializeRutina(model, session, rutina, false);
+
+        if (fullSesion != null && fullSesion) {
+            List<String> errorList = new ArrayList<>();
+            errorList.add("No puedes añadir más sesiones. Ya has completado toda la semana");
+            model.addAttribute("errorList", errorList);
+        }
 
         return "/entrenador/crud/rutina";
     }
@@ -62,7 +70,7 @@ public class RutinaController extends BaseController {
         if (!errorList.isEmpty()) {
             model.addAttribute("errorList", errorList);
 
-            return doEditarRutina(rutina.getId(), session, model);
+            return doEditarRutina(rutina.getId(), false, session, model);
         }
 
         rutinaService.updateRutina(rutina, AuthUtils.getUser(session));

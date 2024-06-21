@@ -20,6 +20,7 @@
     boolean readOnly = readOnlyObject != null && ((Boolean) readOnlyObject);
 
     List<String> errorList = (List<String>) request.getAttribute("errorList");
+    String[] dias = { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" };
 %>
 
 <html>
@@ -119,10 +120,9 @@
             <div class="row">
                 <div class="col-9 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
                      onClick="<%=readOnly ? ("goVerSesion(" + sesion.getId() + ")") : ("goEditarSesion(" + posReal + ")")%>">
-                    <div class="d-flex flex-column justify-content-center align-items-center"
-                         alt="Borrar" style="width:50px; height:50px">
-                        <span class="h4 mb-0">Día</span>
-                        <span class="h2 mb-0 text-danger"><%=sesion.getDia()%></span>
+                    <div class="d-flex flex-column justify-content-start align-items-center"
+                         style="width: 125px">
+                        <span class="h3 mb-0 text-danger"><%=dias[Integer.parseInt(sesion.getDia()) - 1]%></span>
                     </div>
                     <div class="ms-3">
                         <span class="h2" style="color: black;"><%=sesion.getNombre()%></span><br>

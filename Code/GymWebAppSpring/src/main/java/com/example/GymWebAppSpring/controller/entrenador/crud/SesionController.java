@@ -67,12 +67,16 @@ public class SesionController extends BaseController {
     public String doCrearSesion(@RequestParam("nombre") String nombre,
                                 @RequestParam("dificultad") Integer dificultad,
                                 @RequestParam("descripcion") String descripcion,
-                                HttpSession session) {
+                                HttpSession session, Model model) {
         // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         rutina.setNombre(nombre);
         rutina.setDificultad(dificultad);
         rutina.setDescripcion(descripcion);
+
+        if (rutina.getSesiones().size() >= 7) {
+            return "redirect:/entrenador/rutinas/rutina/editar?fullSesion=true";
+        }
 
         if (session.getAttribute("oldSesion") == null) { // Para que si recargas la pagina no se cree otra
             SesionArgument sesion = new SesionArgument();
@@ -83,6 +87,12 @@ public class SesionController extends BaseController {
             session.setAttribute("oldSesion", sesion); // al crear no hay ninguna antigua, metemos la misma que estamos creando
         }
 
+        List<String> diasCogidos = new ArrayList<>();
+        for (int i = 0; i < rutina.getSesiones().size(); i++)
+            diasCogidos.add(rutina.getSesiones().get(i).getDia());
+
+        model.addAttribute("diasCogidos", diasCogidos);
+
         return "/entrenador/crud/sesion";
     }
 
@@ -92,7 +102,6 @@ public class SesionController extends BaseController {
                                  @RequestParam(value = "descripcion", required = false) String descripcion,
                                  @RequestParam(value = "pos", required = false) Integer pos,
                                  HttpSession session, Model model) {
-        // Las modificaciones de rutina antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         if (nombre != null) rutina.setNombre(nombre);
         if (dificultad != null) rutina.setDificultad(dificultad);
@@ -116,6 +125,12 @@ public class SesionController extends BaseController {
         if (session.getAttribute("sesionPos") == null)
             session.setAttribute("sesionPos", sesionPos);
 
+        List<String> diasCogidos = new ArrayList<>();
+        for (int i = 0; i < rutina.getSesiones().size(); i++)
+            diasCogidos.add(rutina.getSesiones().get(i).getDia());
+
+        model.addAttribute("diasCogidos", diasCogidos);
+
         return "/entrenador/crud/sesion";
     }
 
@@ -124,7 +139,6 @@ public class SesionController extends BaseController {
                                   @RequestParam("dia") String dia,
                                   @RequestParam("descripcion") String descripcion,
                                   HttpSession session, Model model) {
-        // Las modificaciones de sesion antes de venir a esta pantalla
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         int pos = (int) session.getAttribute("sesionPos");
 
@@ -138,35 +152,6 @@ public class SesionController extends BaseController {
         List<String> errorList = new ArrayList<>();
         if (nombre.trim().isEmpty())
             errorList.add("No puedes crear una sesión sin nombre");
-
-        if (dia.trim().isEmpty())
-            errorList.add("Debes especificar un día");
-        else {
-            Integer diaInt;
-            try {
-                diaInt = Integer.parseInt(dia);
-            } catch (Exception e) {
-                diaInt = null;
-            }
-
-            if (diaInt == null)
-                errorList.add("Has introducido un dia no númerico");
-            else if (diaInt <= 0 || diaInt > 7)
-                errorList.add("El dia debe ser un numero entre 1 y 7, corresponde a un dia de la semana");
-            else {
-                boolean diaFound = false;
-                int i = 0;
-                while(!diaFound && i < sesiones.size()) {
-                    SesionArgument s = sesiones.get(i);
-                    if (sesion != s && Integer.parseInt(s.getDia()) == diaInt)
-                        diaFound = true;
-                    i++;
-                }
-
-                if (diaFound)
-                    errorList.add("Ya existe una sesión en esta rutina para el día " + diaInt);
-            }
-        }
 
         if (descripcion.trim().isEmpty())
             errorList.add("No puedes tener una descripción vacía");

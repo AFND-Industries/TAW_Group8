@@ -29,6 +29,9 @@
         ejercicios = (List<EjercicioDTO>) request.getAttribute("ejercicios");
 
     List<String> errorList = (List<String>) request.getAttribute("errorList");
+
+    String[] dias = { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" };
+    List<String> diasCogidos = (List<String>) request.getAttribute("diasCogidos");
 %>
 
 <%!
@@ -115,8 +118,19 @@
                    value="<%=sesion.getNombre()%>" <%=readOnly ? "disabled" : ""%>>
         </div>
         <div class="col-6">
-            <input id="dia" type="text" class="form-control mt-2"
-                   value='<%=sesion.getDia().isEmpty() ? "" : sesion.getDia()%>' <%=readOnly ? "disabled" : ""%>>
+            <select id="dia" name="dificultad" class="form-select mt-2" <%=readOnly ? "disabled" : ""%>>
+                <%for(int i = 1; i <= dias.length; i++) {
+                    String selectedDia = sesion.getDia(); int j = 0;
+                    while (diasCogidos != null && selectedDia.isEmpty() && j < dias.length) {
+                        if (!diasCogidos.contains(dias[j]))
+                            selectedDia = dias[j];
+                        j++;
+                    }%>
+                    <option <%=Objects.equals(selectedDia, i + "") ? "selected" :
+                            (diasCogidos != null && diasCogidos.contains(i + "") ? "disabled" : "")%>
+                            value="<%=i%>"><%=dias[i - 1]%></option>
+                <%}%>
+            </select>
         </div>
     </div>
     <div class="row mb-3">
