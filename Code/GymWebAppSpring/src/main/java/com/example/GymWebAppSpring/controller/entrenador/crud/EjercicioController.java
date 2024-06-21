@@ -2,6 +2,7 @@ package com.example.GymWebAppSpring.controller.entrenador.crud;
 
 import com.example.GymWebAppSpring.dto.EjercicioDTO;
 import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
+import com.example.GymWebAppSpring.entity.Ejerciciosesion;
 import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
@@ -136,6 +137,17 @@ public class EjercicioController extends BaseController {
         Gson gson = new Gson();
         JsonObject esp = gson.fromJson(especificaciones, JsonObject.class);
         ejercicioSesion.setEspecificaciones(esp);
+        if (ejercicioSesion.getId() < -1) { // Si es una creacion
+            int maxOrden = -1;
+            for (int i = 0; i < sesion.getEjercicios().size(); i++) {
+                int orden = sesion.getEjercicios().get(i).getOrden();
+                if (i != ejpos && orden > maxOrden)
+                    maxOrden = orden;
+            }
+
+            ejercicioSesion.setOrden(maxOrden + 1);
+            ejercicioSesion.setId(-1);
+        }
 
         List<String> errorList = new ArrayList<>();
         for (String tipoBase : esp.keySet()) {
@@ -150,9 +162,6 @@ public class EjercicioController extends BaseController {
 
             return doEditarEjercicio(null, null, null, ejpos, session, model);
         }
-
-        if (ejercicioSesion.getId() < -1)
-            ejercicioSesion.setId(-1);
 
         return "redirect:/entrenador/rutinas/sesion/editar";
     }
@@ -173,6 +182,10 @@ public class EjercicioController extends BaseController {
         sesion.setDescripcion(descripcion);
 
         rutina.getSesiones().get(pos).getEjercicios().remove((int) ejPos);
+        for (int i = ejPos; i < rutina.getSesiones().get(pos).getEjercicios().size(); i++) { // shift
+            EjercicioArgument ejercicio = rutina.getSesiones().get(pos).getEjercicios().get(i);
+            rutina.getSesiones().get(pos).getEjercicios().get(i).setOrden(ejercicio.getOrden() - 1);
+        }
 
         return "redirect:/entrenador/rutinas/sesion/editar";
     }

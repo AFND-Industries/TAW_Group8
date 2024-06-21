@@ -90,8 +90,10 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
                 entrenadorId, nombre, limiteBajo, limiteAlto, dificultadId);
     }
 
-    public void saveOrCreateFullRutina(RutinaArgument rutinaArgument, UsuarioDTO entrenadorDTO) {
-        Rutina rutina = rutinaRepository.findById(rutinaArgument.getId()).orElse(null);
+    public void updateRutina(RutinaArgument rutinaArgument, UsuarioDTO entrenadorDTO) {
+        Rutina rutina = rutinaRepository.findById(rutinaArgument.getId())
+                .orElse(null);
+
         if (rutina == null) {
             rutina = new Rutina();
             rutina.setEntrenador(usuarioRepository.findById(entrenadorDTO.getId()).orElse(null));
@@ -174,8 +176,7 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
 
         ejercicioSesion.setEjercicio(ejercicioRepository.findById(ejercicioArgument.getEjercicio()).orElse(null));
         ejercicioSesion.setEspecificaciones(new Gson().toJson(ejercicioArgument.getEspecificaciones()));
-        ejercicioSesion.setOrden(1);
-        ejercicioSesion.setSesionentrenamiento(sesion);
+        ejercicioSesion.setOrden(ejercicioArgument.getOrden());
 
         ejercicioSesionRepository.save(ejercicioSesion);
     }

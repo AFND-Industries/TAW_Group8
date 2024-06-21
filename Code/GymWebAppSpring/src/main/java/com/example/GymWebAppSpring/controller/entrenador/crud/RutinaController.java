@@ -65,7 +65,7 @@ public class RutinaController extends BaseController {
             return doEditarRutina(rutina.getId(), session, model);
         }
 
-        rutinaService.saveOrCreateFullRutina(rutina, AuthUtils.getUser(session));
+        rutinaService.updateRutina(rutina, AuthUtils.getUser(session));
 
         return "redirect:/entrenador/rutinas?changedName=" + nombre + "&changedCase=" + (rutina.getId() < 0 ? 0 : 1);
     }

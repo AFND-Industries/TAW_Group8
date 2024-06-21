@@ -7,20 +7,21 @@ import com.google.gson.JsonObject;
 public class EjercicioArgument {
     private Integer id;
     private Integer ejercicio;
+    private Integer orden;
     private JsonObject especificaciones;
 
     public EjercicioArgument() {
         this.id = -100;
         this.ejercicio = -1;
+        this.orden = -1;
         this.especificaciones = new JsonObject();
     }
 
     public EjercicioArgument(EjerciciosesionDTO e) {
         this.id = e.getId();
         this.ejercicio = e.getEjercicio().getId();
-
-        Gson gson = new Gson();
-        this.especificaciones = gson.fromJson(e.getEspecificaciones(), JsonObject.class);
+        this.orden = e.getOrden();
+        this.especificaciones = new Gson().fromJson(e.getEspecificaciones(), JsonObject.class);
     }
 
     public Integer getId() {
@@ -37,6 +38,12 @@ public class EjercicioArgument {
 
     public void setEjercicio(Integer ejercicio) {
         this.ejercicio = ejercicio;
+    }
+
+    public Integer getOrden() { return orden; }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 
     public JsonObject getEspecificaciones() {
