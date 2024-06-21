@@ -104,16 +104,7 @@ public class SesionController extends BaseController {
         SesionArgument sesion = rutina.getSesiones().get(pos);
         sesion.update(nombre, dia, descripcion);
 
-        List<String> errorList = new ArrayList<>();
-        if (nombre.trim().isEmpty())
-            errorList.add("No puedes crear una sesión sin nombre");
-
-        if (descripcion.trim().isEmpty())
-            errorList.add("No puedes tener una descripción vacía");
-
-        if (sesion.getEjercicios().isEmpty())
-            errorList.add("No puedes crear una sesión sin ejercicios");
-
+        List<String> errorList = validateSesion(sesion);
         if (!errorList.isEmpty()) {
             model.addAttribute("errorList", errorList);
             return doEditarSesion(null, null, null, null, session, model);
@@ -135,6 +126,20 @@ public class SesionController extends BaseController {
         rutina.getSesiones().remove((int) pos);
 
         return "redirect:/entrenador/rutinas/rutina/editar";
+    }
+
+    private List<String> validateSesion(SesionArgument sesion) {
+        List<String> errorList = new ArrayList<>();
+        if (sesion.getNombre().trim().isEmpty())
+            errorList.add("No puedes crear una sesión sin nombre");
+
+        if (sesion.getDescripcion().trim().isEmpty())
+            errorList.add("No puedes tener una descripción vacía");
+
+        if (sesion.getEjercicios().isEmpty())
+            errorList.add("No puedes crear una sesión sin ejercicios");
+
+        return errorList;
     }
 
     private RutinaArgument getRutinaFromSession(HttpSession session) {

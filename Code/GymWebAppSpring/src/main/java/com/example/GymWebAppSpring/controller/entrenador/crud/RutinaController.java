@@ -57,16 +57,7 @@ public class RutinaController extends BaseController {
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
         rutina.update(nombre, dificultad, descripcion);
 
-        List<String> errorList = new ArrayList<>();
-        if (nombre.trim().isEmpty())
-            errorList.add("No puedes crear una rutina sin nombre");
-
-        if (descripcion.trim().isEmpty())
-            errorList.add("No puedes tener una descripción vacía");
-
-        if (rutina.getSesiones().isEmpty())
-            errorList.add("No puedes crear una rutina sin sesiones");
-
+        List<String> errorList = validateRutina(rutina);
         if (!errorList.isEmpty()) {
             model.addAttribute("errorList", errorList);
 
@@ -92,6 +83,20 @@ public class RutinaController extends BaseController {
         rutinaService.delete(rutina.getId());
 
         return "redirect:/entrenador/rutinas?changedName=" + rutina.getNombre() + "&changedCase=" + 2;
+    }
+
+    private List<String> validateRutina(RutinaArgument rutina) {
+        List<String> errorList = new ArrayList<>();
+        if (rutina.getNombre().trim().isEmpty())
+            errorList.add("No puedes crear una rutina sin nombre");
+
+        if (rutina.getDescripcion().trim().isEmpty())
+            errorList.add("No puedes tener una descripción vacía");
+
+        if (rutina.getSesiones().isEmpty())
+            errorList.add("No puedes crear una rutina sin sesiones");
+
+        return errorList;
     }
 
     private void initializeRutina(Model model, HttpSession session, RutinaArgument rutina, boolean readOnly) {
