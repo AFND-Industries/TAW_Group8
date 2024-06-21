@@ -3,7 +3,6 @@ package com.example.GymWebAppSpring.controller.entrenador.crud;
 import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
 import com.example.GymWebAppSpring.dto.RutinaDTO;
 import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
-import com.example.GymWebAppSpring.entity.Rutina;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.service.*;
@@ -42,7 +41,7 @@ public class BaseController {
 
     public RutinaArgument createRutinaArgument(Integer rutinaId) {
         RutinaDTO rutinaDTO = rutinaService.findById(rutinaId);
-        List<SesionentrenamientoDTO> sesionesDTO = sesionEntrenamientoService.findByRutina(rutinaDTO.getId());;
+        List<SesionentrenamientoDTO> sesionesDTO = sesionEntrenamientoService.findByRutina(rutinaDTO.getId());
 
         List<SesionArgument> sesionesArgument = new ArrayList<>();
         for (SesionentrenamientoDTO sesionDTO : sesionesDTO) {
@@ -52,5 +51,15 @@ public class BaseController {
         }
 
         return new RutinaArgument(rutinaDTO, sesionesArgument);
+    }
+
+    public SesionArgument getSesionFromSession(HttpSession session) {
+        RutinaArgument rutina = getRutinaFromSession(session);
+        int pos = (int) session.getAttribute("sesionPos");
+        return rutina.getSesiones().get(pos);
+    }
+
+    public RutinaArgument getRutinaFromSession(HttpSession session) {
+        return (RutinaArgument) session.getAttribute("cache");
     }
 }

@@ -60,7 +60,6 @@ public class RutinaController extends BaseController {
         List<String> errorList = validateRutina(rutina);
         if (!errorList.isEmpty()) {
             model.addAttribute("errorList", errorList);
-
             return doEditarRutina(rutina.getId(), false, session, model);
         }
 

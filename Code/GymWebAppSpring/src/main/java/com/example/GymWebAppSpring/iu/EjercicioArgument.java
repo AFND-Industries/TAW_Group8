@@ -54,6 +54,12 @@ public class EjercicioArgument {
         this.especificaciones = especificaciones;
     }
 
+    public void update(String especificaciones) {
+        Gson gson = new Gson();
+        JsonObject esp = gson.fromJson(especificaciones, JsonObject.class);
+        setEspecificaciones(esp);
+    }
+
     public EjercicioArgument clone() {
         EjercicioArgument clone = new EjercicioArgument();
 

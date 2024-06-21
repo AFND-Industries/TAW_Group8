@@ -142,10 +142,6 @@ public class SesionController extends BaseController {
         return errorList;
     }
 
-    private RutinaArgument getRutinaFromSession(HttpSession session) {
-        return (RutinaArgument) session.getAttribute("cache");
-    }
-
     private SesionArgument findSesionById(RutinaArgument rutina, Integer id) {
         return rutina.getSesiones().stream()
                 .filter(s -> Objects.equals(s.getId(), id))
