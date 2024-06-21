@@ -5,6 +5,7 @@ import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SesionArgument {
     private Integer id;
@@ -88,7 +89,7 @@ public class SesionArgument {
         clone.setNombre(nombre);
         clone.setDescripcion(descripcion);
         clone.setDia(dia);
-        clone.setEjercicios(ejercicios.stream().map(EjercicioArgument::clone).toList());
+        clone.setEjercicios(new ArrayList<>(ejercicios.stream().map(EjercicioArgument::clone).collect(Collectors.toList())));
 
         return clone;
     }

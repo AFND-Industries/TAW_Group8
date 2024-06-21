@@ -1,7 +1,6 @@
 package com.example.GymWebAppSpring.controller.entrenador.crud;
 
 import com.example.GymWebAppSpring.dto.EjercicioDTO;
-import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
 import jakarta.servlet.http.HttpSession;
@@ -25,8 +24,10 @@ public class SesionController extends BaseController {
         int sesionPos = (int) session.getAttribute("sesionPos");
         SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
 
-        if (oldSesion.getId() < -1) rutina.getSesiones().remove(sesionPos);
-        else rutina.getSesiones().set(sesionPos, oldSesion);
+        if (oldSesion.getId() < -1) // Si la sesion era creada, la sacamos de la lista
+            rutina.getSesiones().remove(sesionPos);
+        else  // Si la sesion era editada, restauramos su version anterior
+            rutina.getSesiones().set(sesionPos, oldSesion);
 
         flushSesionEntrenamiento(session);
         return "redirect:/entrenador/rutinas/rutina/editar";
@@ -61,7 +62,7 @@ public class SesionController extends BaseController {
                 rutina.getSesiones().add(sesion);
 
                 session.setAttribute("sesionPos", rutina.getSesiones().size() - 1);
-                session.setAttribute("oldSesion", sesion.clone()); // al crear no hay ninguna antigua, metemos la misma que estamos creando
+                session.setAttribute("oldSesion", sesion.clone());
             }
 
             model.addAttribute("diasCogidos", rutina.getDiasSesiones());
@@ -84,8 +85,10 @@ public class SesionController extends BaseController {
         model.addAttribute("diasCogidos", rutina.getDiasSesiones());
 
         initializeSesion(model, sesion, false);
-        if (session.getAttribute("oldSesion") == null) session.setAttribute("oldSesion", sesion.clone());
-        if (session.getAttribute("sesionPos") == null) session.setAttribute("sesionPos", sesionPos);
+        if (session.getAttribute("oldSesion") == null) // El if es para que no reemplace la version antes de editar
+            session.setAttribute("oldSesion", sesion.clone());
+        if (session.getAttribute("sesionPos") == null)
+            session.setAttribute("sesionPos", sesionPos);
 
         return "/entrenador/crud/sesion";
     }

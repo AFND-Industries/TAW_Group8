@@ -53,4 +53,15 @@ public class EjercicioArgument {
     public void setEspecificaciones(JsonObject especificaciones) {
         this.especificaciones = especificaciones;
     }
+
+    public EjercicioArgument clone() {
+        EjercicioArgument clone = new EjercicioArgument();
+
+        clone.setId(id);
+        clone.setEjercicio(ejercicio);
+        clone.setOrden(orden);
+        clone.setEspecificaciones(especificaciones);
+
+        return clone;
+    }
 }
