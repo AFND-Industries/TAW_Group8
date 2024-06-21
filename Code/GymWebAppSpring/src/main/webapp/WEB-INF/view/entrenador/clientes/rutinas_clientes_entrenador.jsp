@@ -52,6 +52,7 @@
                 <p style="display: flex; justify-content: center"> ¿Estás seguro de que quieres eliminar la rutina? </p>
                 <p id="rutina-nombre"></p>
                 <p id="fecha-rutina"></p>
+                <p> ¡Se eliminirán todas la evaluaciones correspondientes a esta rutina y a este usuario!</p>
             </div>
             <div class="modal-footer">
                 <a id="delete-option" class="btn btn-danger">Eliminar</a>
