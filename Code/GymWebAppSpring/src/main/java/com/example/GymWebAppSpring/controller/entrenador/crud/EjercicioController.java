@@ -19,14 +19,14 @@ import java.util.List;
 public class EjercicioController extends BaseController {
 
     @GetMapping("/volver")
-    public String volverDesdeCrearEjercicio(@RequestParam("ejpos") Integer ejpos, HttpSession session) {
+    public String doVolverDesdeCrearEjercicio(@RequestParam("ejpos") Integer ejpos, HttpSession session) {
         SesionArgument sesion = getSesionFromSession(session);
         sesion.getEjercicios().remove((int) ejpos);
         return "redirect:/entrenador/rutinas/ejercicio/seleccionar";
     }
 
     @GetMapping("/seleccionar")
-    public String seleccionarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
+    public String doSeleccionarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
                                        @RequestParam(value = "dia", required = false) String dia,
                                        @RequestParam(value = "descripcion", required = false) String descripcion,
                                        Model model, HttpSession session) {
@@ -42,7 +42,7 @@ public class EjercicioController extends BaseController {
     }
 
     @GetMapping("/ver")
-    public String verEjercicio(@RequestParam("id") Integer id, Model model, HttpSession session) {
+    public String doVerEjercicio(@RequestParam("id") Integer id, Model model, HttpSession session) {
         RutinaArgument rutina = getRutinaFromSession(session);
         int pos = findEjercicioPosition(rutina.getSesiones(), id);
         EjerciciosesionDTO ejerciciosesion = ejercicioSesionService.findById(id);
@@ -54,7 +54,7 @@ public class EjercicioController extends BaseController {
     }
 
     @GetMapping("/crear")
-    public String crearEjercicio(@RequestParam("ejbase") Integer ejbase, Model model, HttpSession session) {
+    public String doCrearEjercicio(@RequestParam("ejbase") Integer ejbase, Model model, HttpSession session) {
         SesionArgument sesion = getSesionFromSession(session);
         if (sesion.getEjercicios().isEmpty() || sesion.getEjercicios().getLast().getId() >= -1)
             sesion.getEjercicios().add(new EjercicioArgument());
@@ -65,7 +65,7 @@ public class EjercicioController extends BaseController {
     }
 
     @GetMapping("/editar")
-    public String editarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
+    public String doEditarEjercicio(@RequestParam(value = "nombre", required = false) String nombre,
                                   @RequestParam(value = "dia", required = false) String dia,
                                   @RequestParam(value = "descripcion", required = false) String descripcion,
                                   @RequestParam("ejPos") Integer ejPos,
@@ -80,7 +80,7 @@ public class EjercicioController extends BaseController {
     }
 
     @GetMapping("/guardar")
-    public String guardarEjercicio(@RequestParam("especificaciones") String especificaciones,
+    public String doGuardarEjercicio(@RequestParam("especificaciones") String especificaciones,
                                    @RequestParam("ejpos") Integer ejpos,
                                    HttpSession session, Model model) {
         SesionArgument sesion = getSesionFromSession(session);
@@ -96,14 +96,14 @@ public class EjercicioController extends BaseController {
         List<String> errorList = validateEjercicio(ejercicioSesion);
         if (!errorList.isEmpty()) {
             model.addAttribute("errorList", errorList);
-            return editarEjercicio(null, null, null, ejpos, session, model);
+            return doEditarEjercicio(null, null, null, ejpos, session, model);
         }
 
         return "redirect:/entrenador/rutinas/sesion/editar";
     }
 
     @GetMapping("/borrar")
-    public String borrarEjercicio(@RequestParam("nombre") String nombre,
+    public String doBorrarEjercicio(@RequestParam("nombre") String nombre,
                                   @RequestParam("dia") String dia,
                                   @RequestParam("descripcion") String descripcion,
                                   @RequestParam("ejPos") Integer ejPos,
@@ -117,7 +117,7 @@ public class EjercicioController extends BaseController {
     }
 
     @GetMapping("/mover")
-    public String moverEjercicio(@RequestParam("ejPos") Integer ejPos, @RequestParam("move") Integer move, HttpSession session) {
+    public String doMoverEjercicio(@RequestParam("ejPos") Integer ejPos, @RequestParam("move") Integer move, HttpSession session) {
         SesionArgument sesion = getSesionFromSession(session);
         List<EjercicioArgument> ejercicios = sesion.getEjercicios();
 
