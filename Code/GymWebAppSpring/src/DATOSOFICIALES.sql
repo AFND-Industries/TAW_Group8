@@ -44,6 +44,20 @@ INSERT INTO `dificultad` VALUES (1,'Principiante','https://example.com/logo_prin
 /*!40000 ALTER TABLE `dificultad` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+LOCK TABLES `tipousuario` WRITE;
+/*!40000 ALTER TABLE `tipousuario` DISABLE KEYS */;
+INSERT INTO `tipousuario` VALUES (1,'Cliente'),(2,'Entrenador de Fuerza'),(3,'Entrenador de Crossfit'),(4,'Administrador');
+/*!40000 ALTER TABLE `tipousuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+LOCK TABLES `tipofuerza` WRITE;
+/*!40000 ALTER TABLE `tipofuerza` DISABLE KEYS */;
+INSERT INTO `tipofuerza` VALUES (1,'Resistencia','Ejercicios para mejorar la resistencia muscular'),(2,'Potencia','Ejercicios para desarrollar la fuerza explosiva'),(3,'Hipertrofia','Ejercicios para aumentar el tamaño muscular');
+/*!40000 ALTER TABLE `tipofuerza` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `ejercicio`
 --
@@ -82,12 +96,6 @@ UNLOCK TABLES;
 -- Dumping data for table `entrenadorasignado`
 --
 
-LOCK TABLES `entrenadorasignado` WRITE;
-/*!40000 ALTER TABLE `entrenadorasignado` DISABLE KEYS */;
-INSERT INTO `entrenadorasignado` VALUES (2,1),(2,3);
-/*!40000 ALTER TABLE `entrenadorasignado` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `informacionejercicio`
 --
@@ -97,11 +105,6 @@ UNLOCK TABLES;
 -- Dumping data for table `informacionejercicio`
 --
 
-LOCK TABLES `informacionejercicio` WRITE;
-/*!40000 ALTER TABLE `informacionejercicio` DISABLE KEYS */;
-INSERT INTO `informacionejercicio` VALUES (4,'{\"Series\":\"1\",\"Peso añadido\":\"2\",\"Repeticiones\":\"2\"}',4,3);
-/*!40000 ALTER TABLE `informacionejercicio` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `informacionsesion`
@@ -139,12 +142,6 @@ UNLOCK TABLES;
 -- Dumping data for table `rutina`
 --
 
-LOCK TABLES `rutina` WRITE;
-/*!40000 ALTER TABLE `rutina` DISABLE KEYS */;
-INSERT INTO `rutina` VALUES (1,'Rutina de fuerza','Rutina para mejorar la fuerza muscular',2,'2024-06-01',2),(2,'Rutina de cardio','Rutina para mejorar la resistencia cardiovascular',1,'2024-06-02',2);
-/*!40000 ALTER TABLE `rutina` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `rutinacliente`
 --
@@ -153,12 +150,6 @@ UNLOCK TABLES;
 --
 -- Dumping data for table `rutinacliente`
 --
-
-LOCK TABLES `rutinacliente` WRITE;
-/*!40000 ALTER TABLE `rutinacliente` DISABLE KEYS */;
-INSERT INTO `rutinacliente` VALUES (1,1,'2024-06-10'),(3,2,'2024-06-15');
-/*!40000 ALTER TABLE `rutinacliente` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `sesionentrenamiento`
@@ -169,12 +160,6 @@ UNLOCK TABLES;
 -- Dumping data for table `sesionentrenamiento`
 --
 
-LOCK TABLES `sesionentrenamiento` WRITE;
-/*!40000 ALTER TABLE `sesionentrenamiento` DISABLE KEYS */;
-INSERT INTO `sesionentrenamiento` VALUES (1,'Sesión de fuerza 1','Primera sesión de la rutina de fuerza',1,1),(2,'Sesión de cardio 1','Primera sesión de la rutina de cardio',1,2);
-/*!40000 ALTER TABLE `sesionentrenamiento` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `tipofuerza`
 --
@@ -184,24 +169,12 @@ UNLOCK TABLES;
 -- Dumping data for table `tipofuerza`
 --
 
-LOCK TABLES `tipofuerza` WRITE;
-/*!40000 ALTER TABLE `tipofuerza` DISABLE KEYS */;
-INSERT INTO `tipofuerza` VALUES (1,'Resistencia','Ejercicios para mejorar la resistencia muscular'),(2,'Potencia','Ejercicios para desarrollar la fuerza explosiva'),(3,'Hipertrofia','Ejercicios para aumentar el tamaño muscular');
-/*!40000 ALTER TABLE `tipofuerza` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `tipousuario`
 --
 --
 -- Dumping data for table `tipousuario`
 --
-
-LOCK TABLES `tipousuario` WRITE;
-/*!40000 ALTER TABLE `tipousuario` DISABLE KEYS */;
-INSERT INTO `tipousuario` VALUES (1,'Cliente'),(2,'Entrenador'),(3,'Administrador');
-/*!40000 ALTER TABLE `tipousuario` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `usuario`
@@ -214,8 +187,38 @@ UNLOCK TABLES;
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Juan','Pérez','M',28,'1','6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B',1),(2,'Ana','Martínez','F',32,'2','D4735E3A265E16EEE03F59718B9B5D03019C07D8B6C51F90DA3A666EEC13AB35',2),(3,'Carlos','López','M',25,'11223344X','6D5074B4BF2B913866157D7674F1EDA042C5C614876DE876F7512702D2572A06',1),(4,'Francisco','Domínguez','M',32,'22222222A','6D5074B4BF2B913866157D7674F1EDA042C5C614876DE876F7512702D2572A06',3);
+INSERT INTO `usuario` VALUES (1,'Juan','Pérez','M',28,'1','6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B',1),(2,'Ana','Martínez','F',32,'2','D4735E3A265E16EEE03F59718B9B5D03019C07D8B6C51F90DA3A666EEC13AB35',2),(3,'Carlos','López','M',25,'11223344X','6D5074B4BF2B913866157D7674F1EDA042C5C614876DE876F7512702D2572A06',1),(4,'Francisco','Domínguez','M',32,'22222222A','6D5074B4BF2B913866157D7674F1EDA042C5C614876DE876F7512702D2572A06',4),(5,'Antonio','Cuervo','M',23,'3','4E07408562BEDB8B60CE05C1DECFE3AD16B72230967DE01F640B7E4729B49FCE',3);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `rutina` WRITE;
+/*!40000 ALTER TABLE `rutina` DISABLE KEYS */;
+INSERT INTO `rutina` VALUES (1,'Rutina de fuerza','Rutina para mejorar la fuerza muscular',2,'2024-06-01',2),(2,'Rutina de cardio','Rutina para mejorar la resistencia cardiovascular',1,'2024-06-02',2);
+/*!40000 ALTER TABLE `rutina` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `sesionentrenamiento` WRITE;
+/*!40000 ALTER TABLE `sesionentrenamiento` DISABLE KEYS */;
+INSERT INTO `sesionentrenamiento` VALUES (1,'Sesión de fuerza 1','Primera sesión de la rutina de fuerza',1,1),(2,'Sesión de cardio 1','Primera sesión de la rutina de cardio',1,2);
+/*!40000 ALTER TABLE `sesionentrenamiento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `entrenadorasignado` WRITE;
+/*!40000 ALTER TABLE `entrenadorasignado` DISABLE KEYS */;
+INSERT INTO `entrenadorasignado` VALUES (2,1),(2,3);
+/*!40000 ALTER TABLE `entrenadorasignado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `rutinacliente` WRITE;
+/*!40000 ALTER TABLE `rutinacliente` DISABLE KEYS */;
+INSERT INTO `rutinacliente` VALUES (1,1,'2024-06-10'),(3,2,'2024-06-15');
+/*!40000 ALTER TABLE `rutinacliente` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `informacionejercicio` WRITE;
+/*!40000 ALTER TABLE `informacionejercicio` DISABLE KEYS */;
+INSERT INTO `informacionejercicio` VALUES (4,'{\"Series\":\"1\",\"Peso añadido\":\"2\",\"Repeticiones\":\"2\"}',4,3);
+/*!40000 ALTER TABLE `informacionejercicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
 -- Dump completed on 2024-06-16 23:19:43

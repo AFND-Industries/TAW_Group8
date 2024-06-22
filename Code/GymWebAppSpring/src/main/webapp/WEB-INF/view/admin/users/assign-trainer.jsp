@@ -10,7 +10,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     UsuarioDTO usuario = (UsuarioDTO) request.getAttribute("user");
-    List<UsuarioDTO> entrenadores = (List<UsuarioDTO>) request.getAttribute("trainers");
+    List<UsuarioDTO> strengthTrainers = (List<UsuarioDTO>) request.getAttribute("strength-trainers");
+    List<UsuarioDTO> crossfitTrainers = (List<UsuarioDTO>) request.getAttribute("crossfit-trainers");
     List<UsuarioDTO> selected = (List<UsuarioDTO>) request.getAttribute("sTrainers");
 %>
 <html lang="es">
@@ -32,8 +33,11 @@
             <input type="hidden" value="<%=usuario.getId()%>" name="user" />
             <div class="card p-2 mb-2">
                 <div class="row g-3 overflow-auto m-1" style="max-height: 340px">
+                    <div class="col-12 text-center">
+                        <h4>Entrenadores de Fuerza</h4>
+                    </div>
                     <%
-                        for (UsuarioDTO entrenador : entrenadores){
+                        for (UsuarioDTO entrenador : strengthTrainers){
                     %>
                     <div class="col-md-6 col-12">
                         <div class="card d-flex justify-content-center align-items-center">
@@ -42,6 +46,25 @@
                                 <label class="form-check-label" for="check<%=entrenador.getId()%>"><%=entrenador.getNombre()%> <%=entrenador.getApellidos()%></label>
                             </div>
                          </div>
+                    </div>
+                    <%
+                        }
+                    %>
+                </div>
+                <div class="row g-3 overflow-auto m-1" style="max-height: 340px">
+                    <div class="col-12 text-center">
+                        <h4>Entrenadores de Crossfit</h4>
+                    </div>
+                    <%
+                        for (UsuarioDTO entrenador : crossfitTrainers){
+                    %>
+                    <div class="col-md-6 col-12">
+                        <div class="card d-flex justify-content-center align-items-center">
+                            <div class="form-check py-2">
+                                <input type="checkbox" id="check<%=entrenador.getId()%>" class="form-check-input me-2" value="<%=entrenador.getId()%>" name="trainers" <%=selected.contains(entrenador) ? "checked" : ""%>  />
+                                <label class="form-check-label" for="check<%=entrenador.getId()%>"><%=entrenador.getNombre()%> <%=entrenador.getApellidos()%></label>
+                            </div>
+                        </div>
                     </div>
                     <%
                         }
