@@ -7,10 +7,14 @@ public class FiltroArgument {
     private Integer dificultad;
 
     public FiltroArgument() {
-        this.sesionNum = "";
-        this.nombre = "";
-        this.sesionMode = -1;
-        this.dificultad = -1;
+        this("", -1, "", -1);
+    }
+
+    public FiltroArgument(String nombre, Integer sesionMode, String sesionNum, Integer dificultad) {
+        setNombre(nombre);
+        setSesionMode(sesionMode);
+        setSesionNum(sesionNum);
+        setDificultad(dificultad);
     }
 
     public String getNombre() {

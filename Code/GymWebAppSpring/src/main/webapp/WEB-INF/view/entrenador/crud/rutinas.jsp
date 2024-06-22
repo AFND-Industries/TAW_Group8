@@ -147,21 +147,48 @@
             <div class="col-12 d-flex align-items-center">
                 <%if (!filtro.estaVacio()) {
                     if (!filtro.getNombre().isEmpty()) {%>
-                    <span class="border border-secondary rounded me-2"
-                          style="padding: 6px 12px">Nombre: <%=filtro.getNombre()%></span>
+                    <form action="/entrenador/rutinas/filtrar" class="mb-0">
+                        <input type="hidden" name="nombre" value=""/>
+                        <input type="hidden" name="sesionMode" value="<%=filtro.getSesionMode()%>"/>
+                        <input type="hidden" name="sesionNum" value="<%=filtro.getSesionNum()%>"/>
+                        <input type="hidden" name="dificultad" value="<%=filtro.getDificultad()%>"/>
+                        <button type="submit" class="btn btn-outline-secondary me-2"
+                                style="padding: 6px 12px">
+                            <i class="bi bi-x-lg me-2"></i>
+                            Nombre: <%=filtro.getNombre()%>
+                        </button>
+                    </form>
                     <%}
                     if (!filtro.getSesionNum().isEmpty()) {
                     String simbolo = filtro.getSesionMode() == 0 ? "=" : (filtro.getSesionMode() == 1 ? "<=" : "=>");%>
-                    <span class="border border-secondary rounded me-2"
-                          style="padding: 6px 12px">Nºsesiones <%=simbolo%> <%=filtro.getIntegerSesionNum()%></span>
+                    <form action="/entrenador/rutinas/filtrar" class="mb-0">
+                        <input type="hidden" name="nombre" value="<%=filtro.getNombre()%>"/>
+                        <input type="hidden" name="sesionMode" value="-1"/>
+                        <input type="hidden" name="sesionNum" value=""/>
+                        <input type="hidden" name="dificultad" value="<%=filtro.getDificultad()%>"/>
+                        <button type="submit" class="btn btn-outline-secondary me-2"
+                                style="padding: 6px 12px">
+                            <i class="bi bi-x-lg me-2"></i>
+                            Nºsesiones <%=simbolo%> <%=filtro.getIntegerSesionNum()%>
+                        </button>
+                    </form>
                     <%}
                     if (filtro.getDificultad() != -1) {%>
-                    <span class="border border-secondary rounded me-2"
-                          style="padding: 6px 12px">Dificultad: ${dificultades.get(filtro.dificultad - 1).nombre}</span>
+                    <form action="/entrenador/rutinas/filtrar" class="mb-0">
+                        <input type="hidden" name="nombre" value="<%=filtro.getNombre()%>"/>
+                        <input type="hidden" name="sesionMode" value="<%=filtro.getSesionMode()%>"/>
+                        <input type="hidden" name="sesionNum" value="<%=filtro.getSesionNum()%>"/>
+                        <input type="hidden" name="dificultad" value="-1"/>
+                        <button type="submit" class="btn btn-outline-secondary me-2"
+                               style="padding: 6px 12px">
+                            <i class="bi bi-x-lg me-2"></i>
+                            Dificultad: ${dificultades.get(filtro.dificultad - 1).nombre}
+                        </button>
+                    </form>
                     <%}%>
                 <a href="/entrenador/rutinas" class="btn btn-outline-danger">
                     <i class="bi bi-x-lg me-2"></i>
-                    <span class="d-sm-inline d-none">Eliminar filtros</span>
+                    <span class="d-sm-inline d-none">Eliminar todos los filtros</span>
                 </a>
                 <%}%>
             </div>
