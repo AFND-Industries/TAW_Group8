@@ -1,16 +1,14 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Usuario" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutina" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Rutinacliente" %>
-<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
-<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %>
-<%@ page import="com.example.GymWebAppSpring.dto.RutinaclienteDTO" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 22/04/2024
   Time: 13:21
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.UsuarioDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaclienteDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -58,7 +56,7 @@
                             value="<%=r.getId()%>" name="rutinaElegida">
 
                         <span><%=r.getNombre()%></span>
-                        <span>Fecha Creacion: <%=r.getFechaCreacion()%></span>
+                        <span>Fecha de inicio: <%=rutinacliente.getFechaInicio()%></span>
                     </button>
                     <%
                         }
@@ -79,7 +77,7 @@
                     <li class="page-item">
                         <a class="page-link" href="#">2</a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item "><a class="page-link" href="#">3</a></li>
                     <li class="page-item disabled">
                         <a class="page-link" href="#">Next</a>
                     </li>

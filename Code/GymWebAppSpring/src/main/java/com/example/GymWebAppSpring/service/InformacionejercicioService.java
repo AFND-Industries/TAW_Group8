@@ -37,8 +37,15 @@ public class InformacionejercicioService extends DTOService<Informacionejercicio
         return informacionejercicio != null ? informacionejercicio.toDTO() : null;
     }
 
+    public InformacionejercicioDTO findBySesionentrenamientoAndIndex(Integer sesionentrenamientoId, Integer index) {
+        List<Informacionejercicio> informacionejercicios = informacionejercicioRepository.findBySesionentrenamiento(sesionentrenamientoId);
+        if (informacionejercicios == null || index >= informacionejercicios.size() || index < 0) return null;
+        return informacionejercicios.get(index) == null ? null : informacionejercicios.get(index).toDTO();
+    }
+
     public InformacionejercicioDTO findByEjerciciosesionAndInformacionsesion(Integer ejerciciosesionId, Integer informacionsesionId) {
-        return informacionejercicioRepository.findByEjerciciosesionAndInformacionsesion(ejerciciosesionId, informacionsesionId).toDTO();
+        Informacionejercicio informacionejercicio = informacionejercicioRepository.findByEjerciciosesionAndInformacionsesion(ejerciciosesionId, informacionsesionId);
+        return informacionejercicio != null ? informacionejercicio.toDTO() : null;
     }
 
     public void save(InformacionejercicioDTO informacionejercicioDTO) {
@@ -66,6 +73,11 @@ public class InformacionejercicioService extends DTOService<Informacionejercicio
 
     public List<InformacionejercicioDTO> findBySesionentrenamiento(Integer sesionentrenamientoId) {
         return this.entidadesADTO(informacionejercicioRepository.findBySesionentrenamiento(sesionentrenamientoId));
+    }
+
+    public int getLastExerciseIndex(Integer sesionentrenamientoId) {
+        List<Informacionejercicio> ejerciciosesion = this.informacionejercicioRepository.findBySesionentrenamiento(sesionentrenamientoId);
+        return ejerciciosesion.size();
     }
 
     public List<InformacionejercicioDTO> filtrarEjercicios(FiltroRendimientoArgument filtro, Integer sesionentrenamientoId) {
@@ -96,7 +108,7 @@ public class InformacionejercicioService extends DTOService<Informacionejercicio
         }
         ejerciciosesionCopy = List.copyOf(ejerciciosesion);
         if (objetivosSuperadosMode != -1) {
-           for(Informacionejercicio info : ejerciciosesionCopy){
+            for (Informacionejercicio info : ejerciciosesionCopy) {
                 int cont = 0;
                 HashMap<String, String> especificaciones = gson.fromJson(info.getEjerciciosesion().getEspecificaciones(), HashMap.class);
                 HashMap<String, String> resultados = gson.fromJson(info.getEvaluacion(), HashMap.class);

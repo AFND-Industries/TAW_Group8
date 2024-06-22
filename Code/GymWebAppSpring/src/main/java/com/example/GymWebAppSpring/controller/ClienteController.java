@@ -48,7 +48,8 @@ public class ClienteController {
     }
 
     @GetMapping("/rutina")
-    public String doVerRutina(@RequestParam("rutinaElegida") Integer rutinaId, HttpSession session, Model modelo) {
+    public String doVerRutina(@RequestParam("rutinaElegida") Integer rutinaId,
+                              HttpSession session, Model modelo) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
@@ -78,35 +79,42 @@ public class ClienteController {
                                  @RequestParam(value = "ejercicioIndex", required = false, defaultValue = "0") Integer ejercicioIndex,
                                  HttpSession session, Model modelo) {
 
-        if (!AuthUtils.isClient(session))
+        if (!AuthUtils.isClient(session)) {
             return "redirect:/";
+        }
+
+        ejercicioIndex = Math.max(ejercicioIndex, 0);
 
         SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
-        ejercicioIndex = (ejercicioIndex < 0) ? 0 : ejercicioIndex;
+        if (sesionEntrenamiento == null)
+            return "redirect:/client";
 
         List<EjerciciosesionDTO> ejercicios = ejerciciosesionService.findBySesion(sesionEntrenamiento.getId());
 
-        if (ejercicioIndex >= ejercicios.size()) //Ya ha acabado los ejercicos por lo que hay que valorarlos
+        int numEjercicios = ejercicios.size();
+
+        if (ejercicioIndex >= numEjercicios) {
+            // Ya ha acabado los ejercicios, por lo que hay que valorarlos
             return "redirect:/client/rutina/sesion/valorarEntrenamiento?sesionEntrenamiento=" + sesionEntrenamiento.getId();
-
-        if (ejercicioIndex == 0) { //Comprobar si ya ha hecho algun ejercicio
-            List<InformacionejercicioDTO> informacionEjercicios = informacionejercicioService.findBySesionentrenamiento(sesionEntrenamiento.getId());
-            if (informacionEjercicios != null && !informacionEjercicios.isEmpty()) {
-                int lastExer = informacionEjercicios.indexOf(informacionEjercicios.getFirst());
-                ejercicioIndex = lastExer + 1;
-            }
         }
-        Gson gson = new Gson();
-        EjerciciosesionDTO ejercicioSesion = ejercicios.get(ejercicioIndex);
-        HashMap<String, String> especificaciones = gson.fromJson(ejercicioSesion.getEspecificaciones(), HashMap.class);
 
+        if (ejercicioIndex == 0) {
+            // Obtenemos el índice del siguiente ejercicio al último evaluado
+            ejercicioIndex = informacionejercicioService.getLastExerciseIndex(sesionEntrenamiento.getId());
+        }
+
+        EjerciciosesionDTO ejercicioSesion = ejerciciosesionService.findBySesionAndIndexOrdered(sesionEntrenamiento.getId(), ejercicioIndex);
+        if (ejercicioSesion == null) {
+            return "redirect:/client/rutina?rutinaElegida=" + sesionEntrenamiento.getRutina().getId();
+        }
 
         modelo.addAttribute("sesionEntrenamiento", sesionEntrenamiento);
-        modelo.addAttribute("ejercicioSesion", ejercicios.get(ejercicioIndex));
+        modelo.addAttribute("ejercicioSesion", ejercicioSesion);
         modelo.addAttribute("ejercicioIndex", ejercicioIndex);
 
         return "client/verEjercicio";
     }
+
 
     @PostMapping("rutina/sesion/ejercicio/guardar")
     public String doGuardarEjercicio(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
@@ -116,11 +124,11 @@ public class ClienteController {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
 
-        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
-
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId());
-        if (informacionSesion == null) {
+
+        if (informacionSesion == null) { //Crear la sesionInfo si no existe
             informacionSesion = new InformacionsesionDTO();
             informacionSesion.setComentario("NaN");
             informacionSesion.setValoracion(0);
@@ -128,22 +136,17 @@ public class ClienteController {
             informacionSesion.setUsuario(user);
             informacionsesionService.save(informacionSesion);
         }
-        List<InformacionejercicioDTO> informacionEjercicioLista = informacionejercicioService.findBySesionentrenamiento(sesionEntrenamiento.getId());
-        InformacionejercicioDTO informacionEjercicio;
-        if (informacionEjercicioLista.size() <= ejercicioIndex) {
+
+        InformacionejercicioDTO informacionEjercicio = informacionejercicioService.findBySesionentrenamientoAndIndex(sesionEntrenamiento.getId(), ejercicioIndex);
+        if (informacionEjercicio == null) {
             informacionEjercicio = new InformacionejercicioDTO();
-            informacionEjercicio.setEjerciciosesion(ejerciciosesionService.findBySesion(sesionEntrenamiento.getId()).get(ejercicioIndex));
+            informacionEjercicio.setEjerciciosesion(ejerciciosesionService.findBySesionOrdered(sesionEntrenamiento.getId()).get(ejercicioIndex));
             informacionEjercicio.setInformacionsesion(informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId()));
-        } else {
-            informacionEjercicio = informacionEjercicioLista.get(ejercicioIndex);
         }
         informacionEjercicio.setEvaluacion(resultados);
         informacionejercicioService.save(informacionEjercicio);
 
-
         return "redirect:/client/rutina/sesion/ejercicio?sesionEntrenamiento=" + sesionEntrenamiento.getId() + "&ejercicioIndex=" + (ejercicioIndex + 1);
-
-
     }
 
     @PostMapping("rutina/sesion/ejercicio/modificar")
@@ -203,6 +206,7 @@ public class ClienteController {
                                             HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
+
         SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(user.getId(), sesionEntrenamiento.getId());
@@ -219,31 +223,48 @@ public class ClienteController {
     }
 
     @GetMapping("/rutina/sesion/desempenyo")
-    public String doDesempenyo(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
-                               HttpSession session, Model modelo) {
-        if (!AuthUtils.isClient(session))
-            return "redirect:/";
+    public String mostrarDesempenyo(
+            @RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
+            HttpSession session,
+            Model modelo) {
 
-        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
+        // Verificar autenticación del usuario
+        if (!AuthUtils.isClient(session)) {
+            return "redirect:/";
+        }
+
+        // Obtener usuario autenticado
         UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("user");
-        InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionEntrenamiento.getId());
-        if (informacionSesion == null)
+
+        // Buscar sesión de entrenamiento por ID
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
+        if (sesionEntrenamiento == null) {
             return "redirect:/client";
+        }
+
+        // Buscar información de sesión para el usuario y la sesión de entrenamiento
+        InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionEntrenamiento.getId());
+        if (informacionSesion == null) {
+            return "redirect:/client";
+        }
+
+        // Obtener tipos de fuerza disponibles para el filtro
         List<TipofuerzaDTO> tiposFuerza = tipoFuerzaService.findAll();
 
-        modelo.addAttribute("tiposFuerza", tiposFuerza);
+        // Obtener ejercicios de la sesión y su información asociada
+        Map<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = new LinkedHashMap<>();
+        List<EjerciciosesionDTO> ejerciciosSesion = ejerciciosesionService.findBySesionOrdered(sesionEntrenamiento.getId());
+        for (EjerciciosesionDTO ejercicio : ejerciciosSesion) {
+            InformacionejercicioDTO informacionEjercicio = informacionejercicioService.findByEjerciciosesionAndInformacionsesion(ejercicio.getId(), informacionSesion.getId());
+            ejercicios.put(ejercicio, informacionEjercicio);
+        }
+
         modelo.addAttribute("sesionEntrenamiento", sesionEntrenamiento);
         modelo.addAttribute("informacionSesion", informacionSesion);
+        modelo.addAttribute("tiposFuerza", tiposFuerza);
+        modelo.addAttribute("ejercicios", ejercicios);
         modelo.addAttribute("filtro", new FiltroRendimientoArgument());
 
-
-        HashMap<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = new HashMap<>();
-        List<EjerciciosesionDTO> ejerciciosSesion = ejerciciosesionService.findBySesion(sesionEntrenamiento.getId());
-        for (EjerciciosesionDTO e : ejerciciosSesion) {
-            InformacionejercicioDTO informacionEjercicio = informacionejercicioService.findByEjerciciosesionAndInformacionsesion(e.getId(), informacionSesion.getId());
-            ejercicios.put(e, informacionEjercicio);
-        }
-        modelo.addAttribute("ejercicios", ejercicios);
         return "client/verDesempenyo";
     }
 
@@ -252,14 +273,21 @@ public class ClienteController {
                                      HttpSession session) {
         if (!AuthUtils.isClient(session))
             return "redirect:/";
-        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
 
         UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("user");
+
+        SesionentrenamientoDTO sesionEntrenamiento = sesionEntrenamientoService.findById(sesionEntrenamientoId);
+        if (sesionEntrenamiento == null)
+            return "redirect:/client";
+
         InformacionsesionDTO informacionSesion = informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionEntrenamiento.getId());
-        List<InformacionejercicioDTO> informacionEjercicios = informacionejercicioService.findBySesionentrenamiento(sesionEntrenamiento.getId());
         if (informacionSesion == null)
             return "redirect:/client";
-        informacionejercicioService.deleteAll(informacionEjercicios);
+
+        List<InformacionejercicioDTO> informacionEjercicios = informacionejercicioService.findBySesionentrenamiento(sesionEntrenamiento.getId());
+        if (informacionEjercicios != null)
+            informacionejercicioService.deleteAll(informacionEjercicios);
+
         informacionsesionService.delete(informacionSesion);
 
 
@@ -269,62 +297,34 @@ public class ClienteController {
     @GetMapping("/rutina/sesion/desempenyo/fitrar")
     public String doFiltar(@ModelAttribute("filtro") FiltroRendimientoArgument filtro,
                            Model model, HttpSession session) {
-        if(!AuthUtils.isClient(session))
+        if (!AuthUtils.isClient(session))
             return "redirect:/";
 
-        if(filtro.getObjetivosMode() == -1 || filtro.getIntegerObjetivosNum() == -1){
+        if (filtro.getObjetivosMode() == -1 || filtro.getIntegerObjetivosNum() == -1) {
             filtro.setObjetivosMode(-1);
             filtro.setObejetivosNum("");
         }
 
-        if(filtro.getObjetivosSuperadosMode() == -1 || filtro.getIntegerObjetivosSuperadosNum() == -1){
+        if (filtro.getObjetivosSuperadosMode() == -1 || filtro.getIntegerObjetivosSuperadosNum() == -1) {
             filtro.setObjetivosSuperadosMode(-1);
             filtro.setObjetivosSuperadosNum("");
         }
 
-        if(filtro.estaVacio()){
-            return "redirect:/client";
+        if (filtro.estaVacio()) {
+            return "redirect:/client/rutina/sesion/desempenyo?sesionEntrenamiento=" + filtro.getSesionEntrenamientoId();
         }
-        Integer sesionentrenamientoId = filtro.getSesionEntrenamientoId();
-        HashMap<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = new HashMap<>();
+
+        int sesionentrenamientoId = filtro.getSesionEntrenamientoId();
+        Map<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = new LinkedHashMap<>();
         List<InformacionejercicioDTO> informacionejercicios = informacionejercicioService.filtrarEjercicios(filtro, sesionentrenamientoId);
-        for(InformacionejercicioDTO ie : informacionejercicios){
+        for (InformacionejercicioDTO ie : informacionejercicios) {
             ejercicios.put(ie.getEjerciciosesion(), ie);
         }
         UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("user");
-        model.addAttribute("informacionSesion",informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionentrenamientoId));
+        model.addAttribute("informacionSesion", informacionsesionService.findByUsuarioAndSesion(usuario.getId(), sesionentrenamientoId));
         model.addAttribute("tiposFuerza", tipoFuerzaService.findAll());
         model.addAttribute("sesionEntrenamiento", sesionEntrenamientoService.findById(sesionentrenamientoId));
         model.addAttribute("ejercicios", ejercicios);
-        return  "client/verDesempenyo";
+        return "client/verDesempenyo";
     }
-
-
-//    public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro,
-//                            Model model, HttpSession session) {
-//        if (!AuthUtils.isTrainer(session)) {
-//            return "redirect:/";
-//        }
-//
-//        // Si se ignora uno de los dos campos, el otro también, pues van de la mano
-//        if (filtro.getIntegerSesionNum() == -1 || filtro.getSesionMode() == -1) {
-//            filtro.setSesionMode(-1);
-//            filtro.setSesionNum("");
-//        }
-//
-//        if (filtro.estaVacio()) {
-//            return "redirect:/entrenador/rutinas";
-//        }
-//
-//        UsuarioDTO entrenador = AuthUtils.getUser(session);
-//        List<RutinaDTO> rutinas = rutinaService.filtrarRutinas(filtro, entrenador.getId());
-//
-//        model.addAttribute("rutinas", rutinas);
-//        model.addAttribute("dificultades", dificultadService.findAll());
-//        model.addAttribute("filtro", filtro);
-//
-//        return "/entrenador/crud/rutinas";
-//    }
-
-
 }

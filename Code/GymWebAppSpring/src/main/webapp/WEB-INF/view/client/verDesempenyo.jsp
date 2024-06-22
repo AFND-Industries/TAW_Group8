@@ -3,7 +3,8 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.example.GymWebAppSpring.dto.*" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.LinkedHashMap" %><%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 14/06/2024
@@ -16,7 +17,7 @@
     InformacionsesionDTO informacionSesion = (InformacionsesionDTO) request.getAttribute("informacionSesion");
     SesionentrenamientoDTO sesionEntrenamiento = (SesionentrenamientoDTO) request.getAttribute("sesionEntrenamiento");
     List<TipofuerzaDTO> tiposFuerza = (List<TipofuerzaDTO>) request.getAttribute("tiposFuerza");
-    HashMap<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = (HashMap<EjerciciosesionDTO, InformacionejercicioDTO>) request.getAttribute("ejercicios");
+    LinkedHashMap<EjerciciosesionDTO, InformacionejercicioDTO> ejercicios = (LinkedHashMap<EjerciciosesionDTO, InformacionejercicioDTO>) request.getAttribute("ejercicios");
     boolean ejercicioSinCompletar = false;
 
 %>

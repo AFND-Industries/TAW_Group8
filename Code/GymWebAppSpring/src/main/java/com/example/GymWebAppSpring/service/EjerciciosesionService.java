@@ -4,6 +4,7 @@ import com.example.GymWebAppSpring.dao.EjercicioRepository;
 import com.example.GymWebAppSpring.dao.EjercicioSesionRepository;
 import com.example.GymWebAppSpring.dao.SesionEntrenamientoRepository;
 import com.example.GymWebAppSpring.dto.EjerciciosesionDTO;
+import com.example.GymWebAppSpring.dto.SesionentrenamientoDTO;
 import com.example.GymWebAppSpring.entity.Ejerciciosesion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class EjerciciosesionService extends DTOService<EjerciciosesionDTO, Ejerciciosesion>{
+public class EjerciciosesionService extends DTOService<EjerciciosesionDTO, Ejerciciosesion> {
 
     @Autowired
     protected EjercicioSesionRepository ejercicioSesionRepository;
@@ -63,4 +64,16 @@ public class EjerciciosesionService extends DTOService<EjerciciosesionDTO, Ejerc
 
         deleteAllById(ids);
     }
+
+    public List<EjerciciosesionDTO> findBySesionOrdered(Integer sesionId) {
+        List<Ejerciciosesion> ejerciciosesion = this.ejercicioSesionRepository.findBySesionOrdered(sesionId);
+        return this.entidadesADTO(ejerciciosesion);
+    }
+
+    public EjerciciosesionDTO findBySesionAndIndexOrdered(Integer sesionId, Integer index) {
+        List<Ejerciciosesion> ejerciciosesion = this.ejercicioSesionRepository.findBySesionOrdered(sesionId);
+        return ejerciciosesion == null ? null : ejerciciosesion.get(index).toDTO();
+    }
+
+
 }

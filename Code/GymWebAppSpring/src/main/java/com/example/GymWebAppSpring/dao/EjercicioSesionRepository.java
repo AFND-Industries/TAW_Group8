@@ -15,4 +15,7 @@ public interface EjercicioSesionRepository extends JpaRepository<Ejerciciosesion
     public List<Ejerciciosesion> findEjerciciosBySesion(@Param("sesionId") Integer sesionId);
 
 
+    @Query("SELECT e FROM Ejerciciosesion e WHERE e.sesionentrenamiento.id = :sesionId ORDER BY e.orden ASC")
+    public List<Ejerciciosesion>  findBySesionOrdered(@Param("sesionId") Integer sesionId);
+
 }
