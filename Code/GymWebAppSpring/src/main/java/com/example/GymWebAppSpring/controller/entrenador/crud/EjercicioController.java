@@ -160,9 +160,12 @@ public class EjercicioController extends BaseController {
     }
 
     private void removeEjercicioAndReorder(List<EjercicioArgument> ejercicios, int ejPos) {
+        int orden = ejercicios.get(ejPos).getOrden();
         ejercicios.remove(ejPos);
-        for (int i = ejPos; i < ejercicios.size(); i++) {
-            ejercicios.get(i).setOrden(ejercicios.get(i).getOrden() - 1);
+        
+        for (EjercicioArgument ejercicio : ejercicios) {
+            if (ejercicio.getOrden() > orden)
+                ejercicio.setOrden(ejercicio.getOrden() - 1);
         }
     }
 

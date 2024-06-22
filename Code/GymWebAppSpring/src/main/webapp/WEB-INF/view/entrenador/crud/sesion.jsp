@@ -191,12 +191,16 @@
         <%if (!readOnly) {%>
             <div class="col-3 d-flex justify-content-end align-items-center">
                 <div>
+                    <%if (!ordenOrdenados.getFirst().equals(orden)) {%>
                     <div onClick="goMoverEjercicio(<%=posReal%>, -1)" style="cursor: pointer; text-decoration: none;">
                         <img src="/svg/caret-up.svg" alt="Subir" style="width:60px; height:60px;">&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
+                    <%}%>
+                    <%if (!ordenOrdenados.getLast().equals(orden)) {%>
                     <div onClick="goMoverEjercicio(<%=posReal%>, 1)" style="cursor: pointer; text-decoration: none;">
                         <img src="/svg/caret-down.svg" alt="Bajarr" style="width:60px; height:60px;">&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
+                    <%}%>
                 </div>
                 <div onClick="goEditarEjercicio(<%=posReal%>)" style="cursor: pointer; text-decoration: none;">
                     <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
