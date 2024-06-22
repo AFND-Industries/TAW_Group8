@@ -1,17 +1,19 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.example.GymWebAppSpring.dto.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.LinkedHashMap" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 14/06/2024
   Time: 21:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.example.GymWebAppSpring.dto.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.LinkedHashMap" %>
+<%@ page import="com.example.GymWebAppSpring.service.EjerciciosesionService" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <%
     InformacionsesionDTO informacionSesion = (InformacionsesionDTO) request.getAttribute("informacionSesion");
@@ -47,7 +49,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sesión Lunes</title>
+    <title>Desempeño de <%=sesionEntrenamiento.getNombre()%>
+    </title>
 
     <!-- Bootstrap CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -62,16 +65,14 @@
 
 <body>
 <jsp:include page="../components/header.jsp"/>
-<button class=" mx-3 my-1 btn btn-dark"
+<button class=" mx-3 btn btn-dark"
         onclick="location.href='/client/rutina?rutinaElegida=<%=sesionEntrenamiento.getRutina().getId()%>'">
     <i class="bi bi-arrow-left"></i> Volver
 </button>
-<div class="container mt-4">
-
+<main class="container mt-4">
     <h1 class="text-center"><%=sesionEntrenamiento.getNombre()%>
     </h1>
     <h2 class="text-center">Tu desempeño</h2>
-
     <div class="card mb-4">
         <div class="card-body text-center fs-3">
             <%
@@ -87,7 +88,7 @@
             %>
         </div>
     </div>
-
+    <hr/>
     <h3>Ejercicios</h3>
     <table class="table table-bordered">
         <thead>
@@ -101,30 +102,28 @@
         <%
             Gson gson = new Gson();
             for (Map.Entry<EjerciciosesionDTO, InformacionejercicioDTO> entry : ejercicios.entrySet()) {
-                EjercicioDTO ejercicio = entry.getKey().getEjercicio();
+                EjerciciosesionDTO ejercicioSesion = entry.getKey();
+                EjercicioDTO ejercicio = ejercicioSesion.getEjercicio();
+                InformacionejercicioDTO informacionEjercicio = entry.getValue();
                 HashMap<String, String> especificaciones = gson.fromJson(entry.getKey().getEspecificaciones(), HashMap.class);
-
-
         %>
         <tr>
 
-            <td><%=entry.getKey().getEjercicio().getNombre()%>
+            <td><%=ejercicio.getNombre()%>
             </td>
             <td>
                 <%
-                    if (entry.getValue() == null) {
+                    if (informacionEjercicio == null) {
                         ejercicioSinCompletar = true;
                 %>
-
                 No has completado este ejercicio!
                 <%
-
                 } else {
-                    HashMap<String, String> resultados = gson.fromJson(entry.getValue().getEvaluacion(), HashMap.class);
+                    HashMap<String, String> resultados = gson.fromJson(informacionEjercicio.getEvaluacion(), HashMap.class);
                     for (int i = 0; i < especificaciones.size(); i++) {
                         String nombre = (String) especificaciones.keySet().toArray()[i];
-                        String valorInicial = (String) especificaciones.get(nombre);
-                        String valorFinal = (String) resultados.get(nombre);
+                        String valorInicial = especificaciones.get(nombre);
+                        String valorFinal = resultados.get(nombre);
 
                 %>
                 <%=nombre%>: <%=valorFinal%>/<%=valorInicial%> <br/>
@@ -134,10 +133,8 @@
                 %>
             </td>
             <td>
-
                 <button class="btn btn-secondary editar-btn"
-
-                        <%= entry.getValue() == null ? "disabled" : "onclick='editarDatos(" + entry.getKey().getId() + "," + gson.toJson(entry.getKey().getEspecificaciones()) + "," + gson.toJson(entry.getValue().getEvaluacion()) + ")'" %>>
+                        <%= informacionEjercicio == null ? "disabled" : "onclick='editarDatos(" + ejercicio.getId() + "," + gson.toJson(ejercicioSesion.getEspecificaciones()) + "," + gson.toJson(informacionEjercicio.getEvaluacion()) + ")'" %>>
                     <i class="bi bi-pencil"></i>
                     Editar
                 </button>
@@ -152,6 +149,8 @@
         <button class="btn btn-danger" onclick="borrarDatos()">Borrar Datos</button>
         <button class="btn btn-primary" onclick="mostrarFiltro()">Aplicar Filtro</button>
     </div>
+    <hr/>
+    <h3>Valoración de la sesión</h3>
     <form method="get" action="/client/rutina/sesion/valorarEntrenamiento">
         <input type="hidden" name="sesionEntrenamiento" value="<%=sesionEntrenamiento.getId()%>">
         <input type="hidden" name="informacionSesion" value="<%=informacionSesion.getId()%>">
@@ -163,7 +162,6 @@
                 %>
                 Completa los ejercicios para poder dejar un comentario
                 <%
-
                 } else {
                 %>
                 <div class="form-group">
@@ -199,7 +197,6 @@
                         class="full"
                         for="star1"
                         title="Horrible - 1 star"></label>
-                    <input type="radio" class="reset-option" name="rating" value="reset"/>
                 </fieldset>
                 <%
                     }
@@ -213,8 +210,8 @@
             </div>
         </div>
     </form>
-</div>
-<!-- Modal -->
+</main>
+<!-- Modal Borrado-->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <form method="post" action="/client/rutina/sesion/desempenyo/borrar">
         <input type="hidden" name="sesionEntrenamiento" value="<%=sesionEntrenamiento.getId()%>">
@@ -319,8 +316,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- Modal Editar-->
 <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
     <form id="editarForm" method="post" action="/client/rutina/sesion/ejercicio/guardar">
@@ -343,23 +338,21 @@
         </div>
     </form>
 </div>
+<!-- Modal Editar Confirmacion-->
 <div class="modal fade" id="confirmationUpdateModal" tabindex="-1" aria-labelledby="UpdateModalLabel"
      aria-hidden="true">
     <form method="post" action="/client/rutina/sesion/ejercicio/modificar">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="UpdateModalLabel">Seguro que lo snuevos datos son Correctos??</h1>
+                    <h1 class="modal-title fs-5" id="UpdateModalLabel">Seguro que los nuevos datos son Correctos??</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Una vez confirmados los datos no podrás modificarlos</p>
-
                     <input type="hidden" name="sesionEntrenamiento" value="<%=sesionEntrenamiento.getId()%>">
                     <input type="hidden" name="ejercicioSesion" id="confirmExercice" value="">
                     <input type="hidden" name="resultados" id="resultados" value="">
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -369,7 +362,6 @@
         </div>
     </form>
 </div>
-
 </body>
 <script>
     const jsonData = {};
@@ -401,8 +393,6 @@
                 '</div>';
             form.append(inputGroup);
         });
-
-
     }
 
     function guardarNuevosDatos() {
@@ -428,18 +418,6 @@
 
 
     /****** Style Star Rating Widget *****/
-
-    .rating {
-        border: none;
-        margin-right: 49px;
-    }
-
-    .myratings {
-
-        font-size: 85px;
-        color: green;
-    }
-
     .rating > [id^="star"] {
         display: none;
     }
@@ -478,17 +456,5 @@
     .rating > [id^="star"]:checked ~ label:hover ~ label {
         color: #FFED85;
     }
-
-    .reset-option {
-        display: none;
-    }
-
-    .reset-button {
-        margin: 6px 12px;
-        background-color: rgb(255, 255, 255);
-        text-transform: uppercase;
-    }
-
-
 </style>
 </html>

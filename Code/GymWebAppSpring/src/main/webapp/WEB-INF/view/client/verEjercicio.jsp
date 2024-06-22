@@ -1,5 +1,11 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: anton
+  Date: 22/04/2024
+  Time: 13:21
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.example.GymWebAppSpring.entity.*" %>
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="org.springframework.lang.NonNull" %>
@@ -9,13 +15,7 @@
 <%@ page import="com.example.GymWebAppSpring.dto.EjerciciosesionDTO" %>
 <%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: anton
-  Date: 22/04/2024
-  Time: 13:21
-  To change this template use File | Settings | File Templates.
---%>
+
 <%
     Gson gson = new Gson();
 
@@ -25,8 +25,6 @@
 
     EjercicioDTO ejercicio = ejercicioSesion.getEjercicio();
     HashMap<String, String> especificaciones = gson.fromJson(ejercicioSesion.getEspecificaciones(), HashMap.class);
-
-
 %>
 <%!
     public static String getVideoId(@NonNull String videoUrl) {
@@ -132,7 +130,6 @@
                                                        value="0"/>
                                                 <%= entrada.getKey().toLowerCase().contains("peso") ? "kg." : "" %>
                                                 <%= entrada.getKey().toLowerCase().contains("tiempo") || entrada.getKey().toLowerCase().contains("descanso") ? "seg." : "" %>
-
                                             </label>
                                             <%
                                                 }
@@ -222,6 +219,4 @@
     }
 
 </script>
-
-
 </html>
