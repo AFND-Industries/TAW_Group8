@@ -16,6 +16,12 @@ import java.util.List;
 @RequestMapping("/entrenador/rutinas/rutina")
 public class RutinaController extends BaseController {
 
+    @GetMapping("/volver")
+    public String doVolverFromRutina(HttpSession session) {
+        flushContext(session);
+        return "redirect:/entrenador/rutinas";
+    }
+
     @GetMapping("/ver")
     public String doVerRutina(@RequestParam("id") Integer id, Model model, HttpSession session) {
         RutinaArgument rutina = createRutinaArgument(id);

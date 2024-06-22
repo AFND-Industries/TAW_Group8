@@ -53,6 +53,25 @@
         </div>
     </div>
 
+    <div class="modal fade" id="volver-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="volver-modal-label">Volver</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="volver-modal-body">
+                    ¿Estás seguro de que quieres volver?
+                    Perderás toda la información añadida o editada hasta ahora.
+                </div>
+                <div class="modal-footer">
+                    <button id="volver-modal-button" type="button" class="btn btn-danger">Volver</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <%if (errorList != null && !errorList.isEmpty()) {%>
         <div class="row-mb-3">
@@ -69,7 +88,8 @@
                 <h1>Crear nueva rutina</h1>
             </div>
             <div class="col-8 d-flex justify-content-end align-items-center">
-                <a href="/entrenador/rutinas" class="btn btn-primary">Volver</a>
+                <button onClick="<%=readOnly ? "goVolverFromRutina()" : "showVolverModal()"%>"
+                        class="btn btn-primary">Volver</button>
             </div>
         </div>
 
@@ -166,6 +186,10 @@
             (add.length === 0 ? "" : "&") + add;
     }
 
+    function goVolverFromRutina() {
+        window.location.href = "/entrenador/rutinas/rutina/volver";
+    }
+
     function goVerSesion(id) {
         window.location.href = '/entrenador/rutinas/sesion/ver?id=' + id; // no necesita el nombre dificultad y demas
     }
@@ -197,6 +221,17 @@
         };
 
         deleteModal.show();
+    }
+
+    function showVolverModal(nombre, pos) {
+        const volverModal = new bootstrap.Modal(document.getElementById('volver-modal'));
+        const modalButton = document.getElementById("volver-modal-button");
+
+        modalButton.onclick = () => {
+            goVolverFromRutina(pos)
+        };
+
+        volverModal.show();
     }
 </script>
 </body>
