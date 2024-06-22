@@ -53,7 +53,7 @@
 </style>
 <jsp:include page="components/header.jsp"/>
 <body>
-<div class="container-fluid p-0">
+<div class="container-fluid">
     <div class="row blurry-background align-items-center justify-content-center vh-100 mb-5">
 
         <div class="text-center text-white py-5" style="z-index: 100">

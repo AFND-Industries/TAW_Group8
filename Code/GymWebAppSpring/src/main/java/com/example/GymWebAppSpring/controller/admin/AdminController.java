@@ -53,10 +53,12 @@ public class AdminController {
         if(!user.getTipo().getNombre().equals("Cliente"))
             return "redirect:/admin/users/";
 
-        TipousuarioDTO entrenador = tipoUsuarioService.findByName("Entrenador");
+        TipousuarioDTO fuerza = tipoUsuarioService.findByName("Entrenador de Fuerza");
+        TipousuarioDTO crossfit = tipoUsuarioService.findByName("Entrenador de Crossfit");
 
         model.addAttribute("user",user);
-        model.addAttribute("trainers", usuarioService.findUsuarioByTipoUsuario(entrenador));
+        model.addAttribute("strength-trainers", usuarioService.findUsuarioByTipoUsuario(fuerza));
+        model.addAttribute("crossfit-trainers", usuarioService.findUsuarioByTipoUsuario(crossfit));
         model.addAttribute("sTrainers", entrenadorAsignadoService.findEntrenadoresByClientID(user));
         return "admin/users/assign-trainer";
     }
