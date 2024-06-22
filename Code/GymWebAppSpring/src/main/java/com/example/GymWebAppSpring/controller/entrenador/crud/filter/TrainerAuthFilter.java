@@ -3,7 +3,6 @@ package com.example.GymWebAppSpring.controller.entrenador.crud.filter;
 import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;

@@ -12,25 +12,25 @@
     <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
         <!-- Left -->
         <div class="me-5 d-none d-lg-block">
-            <span>Get connected with us on social networks:</span>
+            <span>Siguenos en nuestras redes sociales:</span>
         </div>
         <!-- Left -->
 
         <!-- Right -->
         <div>
-            <a href="" class="me-4 text-reset">
+            <a href="https://afnd-industries.github.io/" class="me-4 text-reset">
                 <i class="bi bi-facebook"></i>
             </a>
-            <a href="" class="me-4 text-reset">
+            <a href="https://afnd-industries.github.io/" class="me-4 text-reset">
                 <i class="bi bi-twitter"></i>
             </a>
-            <a href="" class="me-4 text-reset">
+            <a href="https://afnd-industries.github.io/" class="me-4 text-reset">
                 <i class="bi bi-google"></i>
             </a>
-            <a href="" class="me-4 text-reset">
+            <a href="https://afnd-industries.github.io/" class="me-4 text-reset">
                 <i class="bi bi-instagram"></i>
             </a>
-            <a href="" class="me-4 text-reset">
+            <a href="https://afnd-industries.github.io/" class="me-4 text-reset">
                 <i class="bi bi-linkedin"></i>
             </a>
             <a href="https://github.com/AFND-Industries" class="me-4 text-reset">
@@ -53,33 +53,11 @@
                         <i class="fas fa-gem me-3"></i>TAW PROYECT
                     </h6>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi.
+                       Dale un giro a tu vida con TAW PROYECT, la mejor plataforma de entrenamiento personal. Ponte en forma con nosotros. ¡No te arrepentirás!
                     </p>
                 </div>
                 <!-- Grid column -->
 
-                <!-- Grid column -->
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                    <!-- Links -->
-                    <h6 class="text-uppercase fw-bold mb-4">
-                        Products
-                    </h6>
-                    <p>
-                        <a href="#!" class="text-reset">Angular</a>
-                    </p>
-                    <p>
-                        <a href="https://infochange.me" class="text-reset">React</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Vue</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Laravel</a>
-                    </p>
-                </div>
-                <!-- Grid column -->
 
                 <!-- Grid column -->
                 <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
@@ -105,14 +83,13 @@
                 <!-- Grid column -->
                 <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                     <!-- Links -->
-                    <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                    <h6 class="text-uppercase fw-bold mb-4">Contacto</h6>
                     <p><i class="fas fa-home me-3"></i> ETSII, Malaga, 29010, ES</p>
                     <p>
                         <i class="fas fa-envelope me-3"></i>
                         <a style="text-decoration: none" href="mailto:afndindustries@gmail.com">afndindustries@gmail.com</a>
                     </p>
-                    <p><i class="fas fa-phone me-3"></i> + 34 664 98 23 11</p>
-                    <p><i class="fas fa-print me-3"></i> + 34 982 33 12 44</p>
+
                 </div>
                 <!-- Grid column -->
             </div>

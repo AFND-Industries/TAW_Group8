@@ -1,11 +1,9 @@
 package com.example.GymWebAppSpring.controller;
 
 import com.example.GymWebAppSpring.dto.*;
-import com.example.GymWebAppSpring.iu.FiltroArgument;
 import com.example.GymWebAppSpring.iu.FiltroRendimientoArgument;
 import com.example.GymWebAppSpring.service.*;
 import com.example.GymWebAppSpring.util.AuthUtils;
-import com.google.gson.Gson;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +113,6 @@ public class ClienteController {
         return "client/verEjercicio";
     }
 
-
     @PostMapping("rutina/sesion/ejercicio/guardar")
     public String doGuardarEjercicio(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
                                      @RequestParam("resultados") String resultados,
@@ -169,7 +166,6 @@ public class ClienteController {
 
 
     }
-
 
     @GetMapping("rutina/sesion/valorarEntrenamiento")
     public String doValorarEntrenamiento(@RequestParam("sesionEntrenamiento") Integer sesionEntrenamientoId,
