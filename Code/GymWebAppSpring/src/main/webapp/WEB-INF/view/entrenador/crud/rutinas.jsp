@@ -56,6 +56,23 @@
         </div>
     </div>
 
+    <div class="modal fade" id="recover-modal" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="recover-modal-label">Recuperar rutina</h1>
+                </div>
+                <div class="modal-body" id="recover-modal-body">
+                    Hemos detectado que estabas editando o creando una rutina. ¿Deseas recuperar la rutina?
+                </div>
+                <div class="modal-footer">
+                    <button id="discard-modal-button" type="button" class="btn btn-danger">Descartar</button>
+                    <button id="recover-modal-button" type="button" class="btn btn-success">Recuperar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
@@ -252,6 +269,31 @@
 
         toastBootstrap.show();
     }
+
+    function showRecuperarModal() {
+        const recoverModalElement = document.getElementById('recover-modal');
+        const recoverModal = new bootstrap.Modal(recoverModalElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        const recoverButton = document.getElementById("recover-modal-button");
+        const discardButton = document.getElementById("discard-modal-button");
+
+        recoverButton.onclick = () => {
+            window.location.href = "/entrenador/rutinas/recuperar";
+        };
+
+        discardButton.onclick = () => {
+            window.location.href = "/entrenador/rutinas/descartar";
+        };
+
+        recoverModal.show();
+    }
+
+
+    if (<%=session.getAttribute("cache") != null%>)
+        showRecuperarModal();
 
     if (changedCase === 0)
         showToast('Rutina creada correctamente', 'Has <b>creado</b> la rutina <b>' + changedName + '</b> correctamente.');

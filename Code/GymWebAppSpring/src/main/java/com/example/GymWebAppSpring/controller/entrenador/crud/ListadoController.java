@@ -2,7 +2,10 @@ package com.example.GymWebAppSpring.controller.entrenador.crud;
 
 import com.example.GymWebAppSpring.dto.DificultadDTO;
 import com.example.GymWebAppSpring.dto.RutinaDTO;
+import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.FiltroArgument;
+import com.example.GymWebAppSpring.iu.RutinaArgument;
+import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
 
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,8 +27,6 @@ public class ListadoController extends BaseController {
     public String doRutinas(@RequestParam(value = "changedName", required = false, defaultValue = "") String changedName,
                             @RequestParam(value = "changedCase", required = false, defaultValue = "-1") Integer changedCase,
                             Model model, HttpSession session) {
-        flushContext(session);
-
         Integer entrenadorId = AuthUtils.getUser(session).getId();
         initializeListado(model, entrenadorId, new FiltroArgument());
 
@@ -46,6 +48,34 @@ public class ListadoController extends BaseController {
         }
 
         return strTo;
+    }
+
+    @GetMapping("/recuperar")
+    public String doRecuperarRutina(HttpSession session) {
+        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        String strTo = "redirect:/entrenador/rutinas";
+        if (rutina != null) {
+            strTo = "redirect:/entrenador/rutinas/rutina/editar";
+            SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
+            if (oldSesion != null) {
+                int sesionPos = (int) session.getAttribute("sesionPos");
+                SesionArgument sesion = rutina.getSesiones().get(sesionPos);
+                List<EjercicioArgument> ejercicioToDelete = new ArrayList<>();
+                for (EjercicioArgument ejercicio : sesion.getEjercicios())
+                    if (ejercicio.getOrden() < 0)
+                        ejercicioToDelete.add(ejercicio);
+                sesion.getEjercicios().removeAll(ejercicioToDelete);
+
+                strTo = "redirect:/entrenador/rutinas/sesion/editar";
+            }
+        }
+        return strTo;
+    }
+
+    @GetMapping("/descartar")
+    public String doDescartarRutina(HttpSession session) {
+        flushContext(session);
+        return "redirect:/entrenador/rutinas";
     }
 
     private void initializeListado(Model model, Integer entrenadorId, FiltroArgument filtro) {
