@@ -6,6 +6,8 @@ import com.example.GymWebAppSpring.iu.EjercicioArgument;
 import com.example.GymWebAppSpring.iu.RutinaArgument;
 import com.example.GymWebAppSpring.iu.SesionArgument;
 import com.example.GymWebAppSpring.util.AuthUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -85,18 +87,18 @@ public class EjercicioController extends BaseController {
                                    HttpSession session, Model model) {
         SesionArgument sesion = getSesionFromSession(session);
         EjercicioArgument ejercicioSesion = sesion.getEjercicios().get(ejpos);
-        ejercicioSesion.update(especificaciones);
 
+        List<String> errorList = validateEjercicio(especificaciones);
+        if (!errorList.isEmpty()) {
+            model.addAttribute("errorList", errorList);
+            return doEditarEjercicio(null, null, null, ejpos, session, model);
+        }
+
+        ejercicioSesion.update(especificaciones);
         if (ejercicioSesion.getId() < -1) {
             int maxOrden = getMaxOrderExceptCurrent(sesion.getEjercicios(), ejpos);
             ejercicioSesion.setOrden(maxOrden + 1);
             ejercicioSesion.setId(-1);
-        }
-
-        List<String> errorList = validateEjercicio(ejercicioSesion);
-        if (!errorList.isEmpty()) {
-            model.addAttribute("errorList", errorList);
-            return doEditarEjercicio(null, null, null, ejpos, session, model);
         }
 
         return "redirect:/entrenador/rutinas/sesion/editar";
@@ -130,13 +132,17 @@ public class EjercicioController extends BaseController {
         return "redirect:/entrenador/rutinas/sesion/editar";
     }
 
-    private List<String> validateEjercicio(EjercicioArgument ejercicio) {
+    private List<String> validateEjercicio(String especificaciones) {
+        JsonObject esp = new Gson().fromJson(especificaciones, JsonObject.class);
+
         List<String> errorList = new ArrayList<>();
-        for (String tipoBase : ejercicio.getEspecificaciones().keySet()) {
-            String value = ejercicio.getEspecificaciones().get(tipoBase).getAsString();
+        for (String tipoBase : esp.keySet()) {
+            String value = esp.get(tipoBase).getAsString();
 
             if (value.trim().isEmpty())
                 errorList.add("No has especificado el atributo " + tipoBase);
+            else if (Integer.parseInt(value) > 999999)
+                errorList.add("Has introducido un valor demasiado grande para " + tipoBase);
         }
 
         return errorList;

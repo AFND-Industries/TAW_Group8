@@ -98,7 +98,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-6">
-            <input id="nombre" type="text" class="form-control mt-2"
+            <input id="nombre" type="text" class="form-control mt-2" maxlength="32" autocomplete="off"
                    value="<%=sesion.getNombre()%>" <%=readOnly ? "disabled" : ""%>>
         </div>
         <div class="col-6">
@@ -120,7 +120,7 @@
     <div class="row mb-3">
         <div class="col-12">
             <span class="h4 text-secondary">Descripción de la sesión</span><br/>
-            <textarea id="descripcion" class="form-control mt-2" style="resize:none;"
+            <textarea id="descripcion" class="form-control mt-2" style="resize:none;" maxlength="256" autocomplete="off"
                       rows="3" <%=readOnly ? "disabled" : ""%>><%=sesion.getDescripcion()%></textarea>
         </div>
     </div>
