@@ -134,7 +134,7 @@
             </td>
             <td>
                 <button class="btn btn-secondary editar-btn"
-                        <%= informacionEjercicio == null ? "disabled" : "onclick='editarDatos(" + ejercicio.getId() + "," + gson.toJson(ejercicioSesion.getEspecificaciones()) + "," + gson.toJson(informacionEjercicio.getEvaluacion()) + ")'" %>>
+                        <%= informacionEjercicio == null ? "disabled" : "onclick='editarDatos(" + ejercicioSesion.getId() + "," + gson.toJson(ejercicioSesion.getEspecificaciones()) + "," + gson.toJson(informacionEjercicio.getEvaluacion()) + ")'" %>>
                     <i class="bi bi-pencil"></i>
                     Editar
                 </button>
