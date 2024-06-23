@@ -190,12 +190,12 @@ VALUES ('Hipertrofia', 'Ejercicios para aumentar el tamaño muscular'),
        ('Resistencia', 'Ejercicios para mejorar la resistencia muscular'),
        ('Fuerza máxima', 'Ejercicios para levantar el máximo peso posible');
 
-INSERT INTO tawbd.tipousuario (NOMBRE)
+INSERT INTO tipousuario (NOMBRE)
 VALUES ('Cliente'),
        ('Entrenador de Fuerza'),
        ('Entrenador de Crossfit'),
        ('Administrador');
 
-insert into tawbd.usuario (ID, NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
+insert into usuario (ID, NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
 values (1, 'Antonio Blas', 'Morál Sánchez', 'm', 20, '1', '6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B',
         4);
