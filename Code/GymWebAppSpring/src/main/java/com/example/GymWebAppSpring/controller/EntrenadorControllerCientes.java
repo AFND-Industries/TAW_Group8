@@ -132,7 +132,7 @@ public class EntrenadorControllerCientes {
         UsuarioDTO usuario = usuarioService.findById(usuarioId);
         session.setAttribute("cliente", usuario);
 
-        List<RutinaDTO> rutinas = rutinaService.findRutinaByUsuarioID(usuarioId);
+        List<RutinaDTO> rutinas = rutinaService.findRutinaByUsuarioIDandEntrenadorID(usuarioId, AuthUtils.getUser(session).getId());
         Map<RutinaDTO, LocalDate> map = new HashMap<>();
         int[] numSesiones = new int[rutinas.size()];
         for (RutinaDTO rutina : rutinas) {

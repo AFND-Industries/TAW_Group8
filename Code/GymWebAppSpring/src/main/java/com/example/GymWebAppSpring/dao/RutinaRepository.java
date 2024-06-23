@@ -27,4 +27,7 @@ public interface RutinaRepository extends JpaRepository<Rutina, Integer> {
 
     @Query("SELECT r from Rutina r, Rutinacliente rc where r=rc.rutina and rc.usuario.id= :id")
     public List<Rutina> findRutinaByUsuarioID(@Param("id") int id);
+
+    @Query("SELECT r from Rutina r, Rutinacliente rc where r=rc.rutina and rc.usuario.id= :id and r.entrenador.id= :entrenadorId")
+    public List<Rutina> findRutinaByUsuarioIDandEntrenadorID(@Param("id") int id, @Param("entrenadorId") int entrenadorId);
 }
