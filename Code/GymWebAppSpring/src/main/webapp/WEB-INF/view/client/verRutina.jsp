@@ -1,12 +1,3 @@
-<%@ page import="java.util.List" %>
-<%@ page import="java.time.DayOfWeek" %>
-<%@ page import="java.time.LocalDate" %>
-<%@ page import="com.example.GymWebAppSpring.entity.*" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
-<%@ page import="org.apache.commons.lang3.tuple.Triple" %>
-<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
 <%--
   Created by IntelliJ IDEA.
   User: anton
@@ -14,6 +5,15 @@
   Time: 13:21
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.time.DayOfWeek" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
+<%@ page import="org.apache.commons.lang3.tuple.Triple" %>
+<%@ page import="com.example.GymWebAppSpring.dto.RutinaDTO" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+
 <%
     DayOfWeek diaSemanaActual = LocalDate.now().getDayOfWeek();
     RutinaDTO rutina = (RutinaDTO) request.getAttribute("rutina");
@@ -54,7 +54,6 @@
                         <th scope="col">Progreso</th>
                         <th scope="col">Porgreso</th>
                         <th scope="col"></th>
-
                     </tr>
                     </thead>
                     <tbody>
@@ -75,45 +74,39 @@
                     <tr class="<%= esHoy ? "table-primary" : "" %>">
                         <td>
                             <%
+                                String buttonClass = "";
+                                String buttonText = "";
+                                boolean disabled = !hayEjercicios;
+
                                 if (numEjerciciosCompletados == 0) {
+                                    buttonClass = esHoy ? "btn btn-warning" : "btn btn-outline-primary";
+                                    buttonText = "Comenzar " + sesionEntrenamiento.getNombre();
+                                } else if (numEjerciciosCompletados >= numEjercicios) {
+                                    buttonClass = "btn btn-danger";
+                                    buttonText = sesionEntrenamiento.getNombre() + " Completada!";
+                                    disabled = true;
+                                } else {
+                                    buttonClass = esHoy ? "btn btn-warning" : "btn btn-success";
+                                    buttonText = "Continuar " + sesionEntrenamiento.getNombre();
+                                }
 
                             %>
-                            <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>"
-                                    value="<%= sesionEntrenamiento.getId()%>"
-                                    name="sesionEntrenamiento" <%=!hayEjercicios ? "disabled" : ""%>>Comenzar
-                                <%= sesionEntrenamiento.getNombre() %>
+                            <button type="submit" class="<%= buttonClass %>"
+                                    value="<%= sesionEntrenamiento.getId() %>"
+                                    name="sesionEntrenamiento" <%= disabled ? "disabled" : "" %>>
+                                <%= buttonText %>
                             </button>
-                            <%
-                            } else if (numEjerciciosCompletados >= numEjercicios) {
-                            %>
-                            <button type="submit" class="<%="btn btn-danger"  %>"
-                                    value="<%=sesionEntrenamiento.getId()%>" name="sesionEntrenamiento" disabled>
-                                <%= sesionEntrenamiento.getNombre() %>  Completada!
-                            </button>
-                            <%
-                            } else {
-                            %>
-                            <button type="submit" class="<%= esHoy ? "btn btn-warning" : "btn btn-success"  %>"
-                                    value="<%= sesionEntrenamiento.getId()%>" name="sesionEntrenamiento"
-                                    <%=!hayEjercicios ? "disabled" : ""%>>Continuar
-                                <%= sesionEntrenamiento.getNombre() %>
-                            </button>
-                            <%
-                                }
-                            %>
                         </td>
                         <td>
                             <%=hayEjercicios ? ((numEjerciciosCompletados * 100) / numEjercicios) + "% completada!" : "No hay ejercicios asignados!" %>
-
                         </td>
                         <td>
                             <button type="button" class="<%= esHoy ? "btn btn-warning" : "btn btn-outline-primary"  %>"
                                     value="<%= sesionEntrenamiento.getId()%>"
                                     name="sesionEntrenamiento"
-                                    onclick="goRendimiento()"
+                                    onclick="window.location.href = '/client/rutina/sesion/desempenyo?sesionEntrenamiento=' + this.value"
                                     <%=!hayEjercicios || numEjerciciosCompletados <= 0 || numEjerciciosCompletados > numEjercicios ? "disabled" : ""%>>
-                                Ver mi
-                                rendimiento
+                                Ver mi rendimiento
                             </button>
 
                         </td>
@@ -122,7 +115,6 @@
                                         Tu sesion del <%= esHoy ? "dia de hoy" : nombreDia %>
                                     </span>
                         </td>
-
                     </tr>
                     <% } %>
                     </tbody>
@@ -133,10 +125,4 @@
     </div>
 </div>
 </body>
-<script>
-    function goRendimiento() {
-        const sesionEntrenamientoId = document.querySelector("button[name='sesionEntrenamiento']").value;
-        window.location.href = "/client/rutina/sesion/desempenyo?sesionEntrenamiento=" + sesionEntrenamientoId;
-    }
-</script>
 </html>

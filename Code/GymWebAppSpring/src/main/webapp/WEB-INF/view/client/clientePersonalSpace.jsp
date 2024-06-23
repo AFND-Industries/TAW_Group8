@@ -30,12 +30,11 @@
 </head>
 <body>
 <jsp:include page="../components/header.jsp"/>
-<div class="text-center">
-    <h1 class="">Mi espacio personal</h1>
-    <h2 class="">Bienvenido de vuelta <%=cliente.getNombre() + " " + cliente.getApellidos()%>!</h2>
-</div>
-<p></p>
 <div class="container-fluid">
+    <div class="text-center mb-5">
+        <h1 class="">!Bienvenido de vuelta <%=cliente.getNombre() + " " + cliente.getApellidos()%>!</h1>
+        <h2 class="">Tu espacio personal</h2>
+    </div>
     <div class="row d-flex justify-content-center align-items-center ">
         <div class="col-6 flex-column mx-5 border border-primary border-3 rounded" style="height: 400px">
             <%
@@ -54,7 +53,6 @@
                     <button type="submit"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                             value="<%=r.getId()%>" name="rutinaElegida">
-
                         <span><%=r.getNombre()%></span>
                         <span>Fecha de inicio: <%=rutinacliente.getFechaInicio()%></span>
                     </button>
@@ -68,7 +66,7 @@
             %>
         </div>
         <div class="d-flex justify-content-center">
-            <nav aria-label="..." class="mt-1 ">
+            <nav aria-label="paginador" class="mt-1 ">
                 <ul class="pagination">
                     <li class="page-item disabled">
                         <a class="page-link">Previous</a>

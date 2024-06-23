@@ -36,6 +36,7 @@ public class BaseController {
 
     public void flushContext(HttpSession session) {
         session.removeAttribute("cache");
+        session.removeAttribute("recover");
         flushSesionEntrenamiento(session);
     }
 

@@ -27,7 +27,7 @@ public class RutinaController extends BaseController {
         RutinaArgument rutina = createRutinaArgument(id);
         initializeRutina(model, session, rutina, true);
 
-        return "/entrenador/crud/rutina";
+        return "entrenador/crud/rutina/rutina";
     }
 
     @GetMapping("/crear")
@@ -35,7 +35,7 @@ public class RutinaController extends BaseController {
         RutinaArgument rutina = new RutinaArgument(-1);
         initializeRutina(model, session, rutina, false);
 
-        return "/entrenador/crud/rutina";
+        return "entrenador/crud/rutina/rutina";
     }
 
     @GetMapping("/editar")
@@ -52,7 +52,7 @@ public class RutinaController extends BaseController {
             model.addAttribute("errorList", errorList);
         }
 
-        return "/entrenador/crud/rutina";
+        return "entrenador/crud/rutina/rutina";
     }
 
     @GetMapping("/guardar")
@@ -70,11 +70,12 @@ public class RutinaController extends BaseController {
         }
 
         rutinaService.updateRutina(rutina, AuthUtils.getUser(session));
+        flushContext(session);
 
         return "redirect:/entrenador/rutinas?changedName=" + nombre + "&changedCase=" + (rutina.getId() < 0 ? 0 : 1);
     }
 
-    @GetMapping("/borrar")
+    @PostMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         RutinaDTO rutina = rutinaService.findById(id);
 
@@ -106,6 +107,7 @@ public class RutinaController extends BaseController {
 
     private void initializeRutina(Model model, HttpSession session, RutinaArgument rutina, boolean readOnly) {
         session.setAttribute("cache", rutina);
+        session.setAttribute("recover", !readOnly);
 
         List<DificultadDTO> dificultades = dificultadService.findAll();
         model.addAttribute("dificultades", dificultades);

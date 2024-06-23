@@ -11,10 +11,7 @@ import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +30,14 @@ public class ListadoController extends BaseController {
         model.addAttribute("changedName", changedName);
         model.addAttribute("changedCase", changedCase);
 
-        return "/entrenador/crud/rutinas";
+        return "entrenador/crud/rutinas/rutinas";
     }
 
     @GetMapping("/filtrar")
     public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro, Model model, HttpSession session) {
         filtro.processFiltro();
 
-        String strTo = "/entrenador/crud/rutinas";
+        String strTo = "entrenador/crud/rutinas/rutinas";
         if (filtro.estaVacio()) strTo = "redirect:/entrenador/rutinas";
         else {
             Integer entrenadorId = AuthUtils.getUser(session).getId();
@@ -50,32 +47,47 @@ public class ListadoController extends BaseController {
         return strTo;
     }
 
-    @GetMapping("/recuperar")
-    public String doRecuperarRutina(HttpSession session) {
-        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
-        String strTo = "redirect:/entrenador/rutinas";
-        if (rutina != null) {
-            strTo = "redirect:/entrenador/rutinas/rutina/editar";
-            SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
-            if (oldSesion != null) {
-                int sesionPos = (int) session.getAttribute("sesionPos");
-                SesionArgument sesion = rutina.getSesiones().get(sesionPos);
-                List<EjercicioArgument> ejercicioToDelete = new ArrayList<>();
-                for (EjercicioArgument ejercicio : sesion.getEjercicios())
-                    if (ejercicio.getOrden() < 0)
-                        ejercicioToDelete.add(ejercicio);
-                sesion.getEjercicios().removeAll(ejercicioToDelete);
-
-                strTo = "redirect:/entrenador/rutinas/sesion/editar";
-            }
-        }
-        return strTo;
-    }
-
-    @GetMapping("/descartar")
+    @PostMapping("/descartar")
     public String doDescartarRutina(HttpSession session) {
         flushContext(session);
         return "redirect:/entrenador/rutinas";
+    }
+
+    @PostMapping("/recuperar")
+    public String doRecuperarRutina(HttpSession session) {
+        Object recoverObject = session.getAttribute("recover");
+        boolean recover = recoverObject != null && ((Boolean) recoverObject);
+
+        String strTo = "redirect:/entrenador/rutinas";
+        if (recover) {
+            RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+            if (rutina != null) {
+                strTo = "redirect:/entrenador/rutinas/rutina/editar";
+
+                SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
+                if (oldSesion != null) {
+                    strTo = "redirect:/entrenador/rutinas/sesion/editar";
+
+                    limpiarEjerciciosTemporales(session, rutina);
+                }
+            }
+        }
+
+        return strTo;
+    }
+
+    private void limpiarEjerciciosTemporales(HttpSession session, RutinaArgument rutina) {
+        int sesionPos = (int) session.getAttribute("sesionPos");
+        SesionArgument sesion = rutina.getSesiones().get(sesionPos);
+        List<EjercicioArgument> ejerciciosAEliminar = new ArrayList<>();
+
+        for (EjercicioArgument ejercicio : sesion.getEjercicios()) {
+            if (ejercicio.getOrden() < 0) {
+                ejerciciosAEliminar.add(ejercicio);
+            }
+        }
+
+        sesion.getEjercicios().removeAll(ejerciciosAEliminar);
     }
 
     private void initializeListado(Model model, Integer entrenadorId, FiltroArgument filtro) {

@@ -1,13 +1,12 @@
-<%@ page import="com.example.GymWebAppSpring.entity.Sesionentrenamiento" %>
-<%@ page import="com.example.GymWebAppSpring.entity.Informacionsesion" %>
-<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
-<%@ page import="com.example.GymWebAppSpring.dto.InformacionsesionDTO" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: anton
   Date: 14/06/2024
   Time: 19:54
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="com.example.GymWebAppSpring.dto.SesionentrenamientoDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.InformacionsesionDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     InformacionsesionDTO informacionSesion = (InformacionsesionDTO) request.getAttribute("informacionSesion");
