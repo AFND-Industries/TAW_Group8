@@ -170,32 +170,3 @@ create table informacionejercicio
     constraint INFORMACIONEJERCICIO_ibfk_2
         foreign key (INFORMACIONSESION_ID) references informacionsesion (ID)
 );
--- Insertar datos en la tabla 'dificultad'
-INSERT INTO dificultad (NOMBRE, LOGO)
-VALUES ('Principiante', '/svg/dificultades/principiante.svg'),
-       ('Intermedio', '/svg/dificultades/intermedio.svg'),
-       ('Avanzado', '/svg/dificultades/avanzado.svg');
-
--- Insertar datos en la tabla 'musculo'
-INSERT INTO musculo (NOMBRE, DESCRIPCION, IMAGEN)
-VALUES ('Pectoral mayor', 'Músculo del pecho, responsable de empujar y rotar el brazo', 'img/musculos/pectoral.png'),
-       ('Bíceps braquial', 'Músculo de la parte superior del brazo, responsable de flexionar el codo',
-        'img/musculos/biceps.png'),
-       ('Tríceps braquial', 'Músculo de la parte posterior del brazo, responsable de extender el codo',
-        'img/musculos/triceps.png');
-
--- Insertar datos en la tabla 'tipofuerza'
-INSERT INTO tipofuerza (NOMBRE, DESCRIPCION)
-VALUES ('Hipertrofia', 'Ejercicios para aumentar el tamaño muscular'),
-       ('Resistencia', 'Ejercicios para mejorar la resistencia muscular'),
-       ('Fuerza máxima', 'Ejercicios para levantar el máximo peso posible');
-
-INSERT INTO tipousuario (NOMBRE)
-VALUES ('Cliente'),
-       ('Entrenador de Fuerza'),
-       ('Entrenador de Crossfit'),
-       ('Administrador');
-
-insert into usuario (ID, NOMBRE, APELLIDOS, GENERO, EDAD, DNI, CLAVE, TIPO)
-values (1, 'Antonio Blas', 'Morál Sánchez', 'm', 20, '1', '6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B',
-        4);
