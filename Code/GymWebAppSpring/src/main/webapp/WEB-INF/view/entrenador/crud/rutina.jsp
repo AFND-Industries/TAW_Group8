@@ -3,7 +3,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.example.GymWebAppSpring.dto.DificultadDTO" %><%--
   Created by IntelliJ IDEA.
-  User: elgam
+  User: Eulogio Quemada
   Date: 22/04/2024
   Time: 13:18
   To change this template use File | Settings | File Templates.
@@ -46,7 +46,10 @@
                     ¿Estás seguro de que quieres eliminar la sesion?
                 </div>
                 <div class="modal-footer">
-                    <button id="delete-modal-button" type="button" class="btn btn-danger">Eliminar</button>
+                    <form action="/entrenador/rutinas/rutina/borrar" method="post">
+                        <input id="delete-modal-id" type="hidden" name="id" value=""/>
+                        <input type="submit" class="btn btn-danger" value="Eliminar"/>
+                    </form>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
@@ -213,12 +216,10 @@
     function showDeleteModal(nombre, pos) {
         const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
         const modalBody = document.getElementById("delete-modal-body");
-        const modalButton = document.getElementById("delete-modal-button");
+        const deleteModalId = document.getElementById("delete-modal-id");
 
         modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la sesión <b>` + nombre + `</b>?`;
-        modalButton.onclick = () => {
-            goBorrarSesion(pos)
-        };
+        deleteModalId.value = pos;
 
         deleteModal.show();
     }

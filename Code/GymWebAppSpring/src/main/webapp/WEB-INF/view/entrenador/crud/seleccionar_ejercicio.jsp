@@ -2,7 +2,7 @@
 <%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
 <%--
   Created by IntelliJ IDEA.
-  User: elgam
+  User: Eulogio Quemada
   Date: 22/04/2024
   Time: 13:18
   To change this template use File | Settings | File Templates.

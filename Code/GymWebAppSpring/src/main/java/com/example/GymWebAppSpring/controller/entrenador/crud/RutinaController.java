@@ -75,7 +75,7 @@ public class RutinaController extends BaseController {
         return "redirect:/entrenador/rutinas?changedName=" + nombre + "&changedCase=" + (rutina.getId() < 0 ? 0 : 1);
     }
 
-    @GetMapping("/borrar")
+    @PostMapping("/borrar")
     public String doBorrarRutina(@RequestParam("id") Integer id) {
         RutinaDTO rutina = rutinaService.findById(id);
 

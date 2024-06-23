@@ -5,7 +5,7 @@
 <%@ page import="com.example.GymWebAppSpring.dto.DificultadDTO" %>
 <%--
   Created by IntelliJ IDEA.
-  User: elgam
+  User: Eulogio Quemada
   Date: 22/04/2024
   Time: 13:18
   To change this template use File | Settings | File Templates.
@@ -49,7 +49,10 @@
                     ¿Estás seguro de que quieres eliminar la rutina?
                 </div>
                 <div class="modal-footer">
-                    <button id="delete-modal-button" type="button" class="btn btn-danger">Eliminar</button>
+                    <form action="/entrenador/rutinas/rutina/borrar" method="post">
+                        <input id="delete-modal-id" type="hidden" name="id" value=""/>
+                        <input type="submit" class="btn btn-danger" value="Eliminar"/>
+                    </form>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
@@ -66,8 +69,12 @@
                     Hemos detectado que estabas editando o creando una rutina. ¿Deseas recuperar la rutina?
                 </div>
                 <div class="modal-footer">
-                    <button id="discard-modal-button" type="button" class="btn btn-danger">Descartar</button>
-                    <button id="recover-modal-button" type="button" class="btn btn-success">Recuperar</button>
+                    <form action="/entrenador/rutinas/recuperar" method="post">
+                        <input type="submit" class="btn btn-success" value="Recuperar"/>
+                    </form>
+                    <form action="/entrenador/rutinas/descartar" method="post">
+                        <input type="submit" class="btn btn-danger" value="Descartar"/>
+                    </form>
                 </div>
             </div>
         </div>
@@ -250,10 +257,10 @@
     function showDeleteModal(nombre, id) {
         const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
         const modalBody = document.getElementById("delete-modal-body");
-        const modalButton = document.getElementById("delete-modal-button");
+        const deleteModalId = document.getElementById("delete-modal-id");
 
         modalBody.innerHTML = `¿Estás seguro de que quieres eliminar la rutina <b>` + nombre + `</b>?`;
-        modalButton.onclick = () => { window.location.href = `/entrenador/rutinas/rutina/borrar?id=` + id; };
+        deleteModalId.value = id;
 
         deleteModal.show();
     }
@@ -276,17 +283,6 @@
             backdrop: 'static',
             keyboard: false
         });
-
-        const recoverButton = document.getElementById("recover-modal-button");
-        const discardButton = document.getElementById("discard-modal-button");
-
-        recoverButton.onclick = () => {
-            window.location.href = "/entrenador/rutinas/recuperar";
-        };
-
-        discardButton.onclick = () => {
-            window.location.href = "/entrenador/rutinas/descartar";
-        };
 
         recoverModal.show();
     }

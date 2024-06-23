@@ -11,10 +11,7 @@ import com.example.GymWebAppSpring.util.AuthUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +47,18 @@ public class ListadoController extends BaseController {
         return strTo;
     }
 
-    @GetMapping("/recuperar")
+    @PostMapping("/descartar")
+    public String doDescartarRutina(HttpSession session) {
+        flushContext(session);
+        return "redirect:/entrenador/rutinas";
+    }
+
+    @PostMapping("/recuperar")
     public String doRecuperarRutina(HttpSession session) {
         Object recoverObject = session.getAttribute("recover");
         boolean recover = recoverObject != null && ((Boolean) recoverObject);
 
-        String strTo =  "redirect:/entrenador/rutinas";
+        String strTo = "redirect:/entrenador/rutinas";
         if (recover) {
             RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
             if (rutina != null) {
@@ -85,13 +88,6 @@ public class ListadoController extends BaseController {
         }
 
         sesion.getEjercicios().removeAll(ejerciciosAEliminar);
-    }
-
-
-    @GetMapping("/descartar")
-    public String doDescartarRutina(HttpSession session) {
-        flushContext(session);
-        return "redirect:/entrenador/rutinas";
     }
 
     private void initializeListado(Model model, Integer entrenadorId, FiltroArgument filtro) {
