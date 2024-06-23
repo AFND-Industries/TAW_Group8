@@ -48,7 +48,7 @@ public class AuthUtils {
     /**
      * Devuelve un booleano si un usuario es entrenador de fuerza
      * @param session Sesión HTTP activa
-     * @return True si el usuario está loggeado y es entrenador, False en caso contrario
+     * @return True si el usuario está loggeado y es entrenador de fuerza, False en caso contrario
      */
     public static boolean isStrengthTrainer(HttpSession session){
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");
@@ -56,9 +56,9 @@ public class AuthUtils {
     }
 
     /**
-     * Devuelve un booleano si un usuario es entrenador de fuerza
+     * Devuelve un booleano si un usuario es entrenador de CrossFit
      * @param session Sesión HTTP activa
-     * @return True si el usuario está loggeado y es entrenador, False en caso contrario
+     * @return True si el usuario está loggeado y es entrenador de CrossFit, False en caso contrario
      */
     public static boolean isCrossfitTrainer(HttpSession session){
         UsuarioDTO user = (UsuarioDTO) session.getAttribute("user");

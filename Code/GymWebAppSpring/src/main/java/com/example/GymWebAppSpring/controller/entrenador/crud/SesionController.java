@@ -43,7 +43,7 @@ public class SesionController extends BaseController {
         session.setAttribute("oldSesion", sesion.clone());
         session.setAttribute("sesionPos", sesionPos);
 
-        return "/entrenador/crud/sesion";
+        return "entrenador/crud/sesion/sesion";
     }
 
     @GetMapping("/crear")
@@ -54,7 +54,7 @@ public class SesionController extends BaseController {
         RutinaArgument rutina = getRutinaFromSession(session);
         rutina.update(nombre, dificultad, descripcion);
 
-        String strTo = "/entrenador/crud/sesion";
+        String strTo = "entrenador/crud/sesion/sesion";
         if (rutina.getSesiones().size() >= 7) strTo = "redirect:/entrenador/rutinas/rutina/editar?fullSesion=true";
         else {
             if (session.getAttribute("oldSesion") == null) { // Para que si recargas la pagina no se cree otra
@@ -90,7 +90,7 @@ public class SesionController extends BaseController {
         if (session.getAttribute("sesionPos") == null)
             session.setAttribute("sesionPos", sesionPos);
 
-        return "/entrenador/crud/sesion";
+        return "entrenador/crud/sesion/sesion";
     }
 
     @GetMapping("/guardar")

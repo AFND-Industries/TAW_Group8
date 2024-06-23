@@ -27,7 +27,7 @@ public class RutinaController extends BaseController {
         RutinaArgument rutina = createRutinaArgument(id);
         initializeRutina(model, session, rutina, true);
 
-        return "/entrenador/crud/rutina";
+        return "entrenador/crud/rutina/rutina";
     }
 
     @GetMapping("/crear")
@@ -35,7 +35,7 @@ public class RutinaController extends BaseController {
         RutinaArgument rutina = new RutinaArgument(-1);
         initializeRutina(model, session, rutina, false);
 
-        return "/entrenador/crud/rutina";
+        return "entrenador/crud/rutina/rutina";
     }
 
     @GetMapping("/editar")
@@ -52,7 +52,7 @@ public class RutinaController extends BaseController {
             model.addAttribute("errorList", errorList);
         }
 
-        return "/entrenador/crud/rutina";
+        return "entrenador/crud/rutina/rutina";
     }
 
     @GetMapping("/guardar")

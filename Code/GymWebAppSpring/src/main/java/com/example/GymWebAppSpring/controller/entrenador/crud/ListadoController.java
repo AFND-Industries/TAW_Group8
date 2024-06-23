@@ -30,14 +30,14 @@ public class ListadoController extends BaseController {
         model.addAttribute("changedName", changedName);
         model.addAttribute("changedCase", changedCase);
 
-        return "/entrenador/crud/rutinas";
+        return "entrenador/crud/rutinas/rutinas";
     }
 
     @GetMapping("/filtrar")
     public String doFiltrar(@ModelAttribute("filtro") FiltroArgument filtro, Model model, HttpSession session) {
         filtro.processFiltro();
 
-        String strTo = "/entrenador/crud/rutinas";
+        String strTo = "entrenador/crud/rutinas/rutinas";
         if (filtro.estaVacio()) strTo = "redirect:/entrenador/rutinas";
         else {
             Integer entrenadorId = AuthUtils.getUser(session).getId();

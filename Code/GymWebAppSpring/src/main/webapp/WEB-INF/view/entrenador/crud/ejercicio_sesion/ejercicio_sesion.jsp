@@ -47,56 +47,56 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-<jsp:include page="../../components/header.jsp"/>
+<jsp:include page="../../../components/header.jsp"/>
 
-    <div class="container">
-        <%if (errorList != null && !errorList.isEmpty()) {%>
-        <div class="row-mb-3">
-            <%for (String error : errorList) {%>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <%=error%>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <%}%>
+<div class="container mb-5">
+    <%if (errorList != null && !errorList.isEmpty()) {%>
+    <div class="row-mb-3">
+        <%for (String error : errorList) {%>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%=error%>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <%}%>
-        <div class="row mb-3">
-            <div class="col-4">
-                <h1>Añadir ejercicio</h1>
-            </div>
-            <div class="col-8 d-flex justify-content-end align-items-center">
-                <button class="btn btn-primary"
-                        onClick="<%=ejercicioExists ? (readOnly ? "goVolverVerSesion()" : "goVolverEditarSesion()") : "doVolverToSeleccionar()"%>">Volver</button>
-            </div>
-        </div>
-
-        <div class="row mb-4 d-flex justify-content-center">
-            <div class="col-6 d-flex flex-column justify-content-center">
-                <span class="h1 text-dark text-center"><%=ejercicioBase.getNombre()%> (<%=ejercicioBase.getCategoria().getNombre()%>)</span>
-                <img src="<%=ejercicioBase.getLogo()%>" alt="Logo" style="max-width: 100%; height: auto;">
-            </div>
-        </div>
-        <%for (int i = 0; i < tiposBase.size(); i++) {%>
-            <div class="row mb-3 d-flex align-items-center">
-                <div class="col-4">
-                    <span class="h4 text-secondary"><%=tiposBase.get(i)%></span><br/>
-                </div>
-                <div class="col-3">
-                    <input <%=readOnly ? "disabled" : ""%> value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(tiposBase.get(i)).getAsString()%>"
-                           id="especificacion<%=i%>" type="text" class="form-control mt-2">
-                </div>
-            </div>
-        <%}%>
-
-        <%if (!readOnly) {%>
-            <div class="row">
-                <div class="col-12 d-flex justify-content-end">
-                    <button class="btn btn-primary"
-                    onClick="goGuardarEjercicio()"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
-                </div>
-            </div>
         <%}%>
     </div>
+    <%}%>
+    <div class="row mb-3">
+        <div class="col-4">
+            <h1>Añadir ejercicio</h1>
+        </div>
+        <div class="col-8 d-flex justify-content-end align-items-center">
+            <button class="btn btn-primary"
+                    onClick="<%=ejercicioExists ? (readOnly ? "goVolverVerSesion()" : "goVolverEditarSesion()") : "doVolverToSeleccionar()"%>">Volver</button>
+        </div>
+    </div>
+
+    <div class="row mb-4 d-flex justify-content-center">
+        <div class="col-6 d-flex flex-column justify-content-center">
+            <span class="h1 text-dark text-center"><%=ejercicioBase.getNombre()%> (<%=ejercicioBase.getCategoria().getNombre()%>)</span>
+            <img src="<%=ejercicioBase.getLogo()%>" alt="Logo" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+    <%for (int i = 0; i < tiposBase.size(); i++) {%>
+        <div class="row mb-3 d-flex align-items-center">
+            <div class="col-4">
+                <span class="h4 text-secondary"><%=tiposBase.get(i)%></span><br/>
+            </div>
+            <div class="col-3">
+                <input <%=readOnly ? "disabled" : ""%> value="<%=ejercicio.getEspecificaciones().isEmpty() ? "" : ejercicio.getEspecificaciones().get(tiposBase.get(i)).getAsString()%>"
+                       id="especificacion<%=i%>" type="text" class="form-control mt-2">
+            </div>
+        </div>
+    <%}%>
+
+    <%if (!readOnly) {%>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-primary"
+                onClick="goGuardarEjercicio()"><%=ejercicioExists ? "Guardar" : "Añadir"%></button>
+            </div>
+        </div>
+    <%}%>
+</div>
 <script>
     function goVolverEditarSesion() {
         window.location.href = "/entrenador/rutinas/sesion/editar";

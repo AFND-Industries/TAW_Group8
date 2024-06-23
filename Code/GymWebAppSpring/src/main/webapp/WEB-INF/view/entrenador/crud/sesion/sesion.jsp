@@ -63,46 +63,11 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<jsp:include page="../../components/header.jsp"/>
-<div class="modal fade" id="delete-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="delete-modal-label">Eliminar ejercicio</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="delete-modal-body">
-                ¿Estás seguro de que quieres eliminar el ejercicio?
-            </div>
-            <div class="modal-footer">
-                <button id="delete-modal-button" type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar
-                </button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
+<jsp:include page="../../../components/header.jsp"/>
+<jsp:include page="../components/volver_modal.jsp"/>
+<jsp:include page="../components/eliminar_modal.jsp"/>
 
-<div class="modal fade" id="volver-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="volver-modal-label">Volver</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="volver-modal-body">
-                ¿Estás seguro de que quieres volver?
-                Perderás toda la información añadida o editada hasta ahora.
-            </div>
-            <div class="modal-footer">
-                <button id="volver-modal-button" type="button" class="btn btn-danger">Volver</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container">
+<div class="container mb-5">
     <%if (errorList != null && !errorList.isEmpty()) {%>
     <div class="row-mb-3">
         <%for (String error : errorList) {%>
@@ -178,62 +143,30 @@
         List<Integer> ordenOrdenados = new ArrayList<>(ejerciciosIndices.keySet());
         Collections.sort(ordenOrdenados);
 
-        Gson gson = new Gson();
         for (Integer orden : ordenOrdenados) {
             int posReal = ejerciciosIndices.get(orden);
             EjercicioArgument ejercicioSesion = ejerciciosArgument.get(posReal);
             EjercicioDTO ejercicio = getEjercicioByEjercicioSesion(ejercicioSesion, ejercicios);
-    %>
-    <div class="row">
-        <div class="col-9 d-flex align-items-center" style="cursor: pointer"
-             onClick="<%=readOnly ? ("goVerEjercicio(" + ejercicioSesion.getId() + ")") : ("goEditarEjercicio(" + posReal + ")")%>">
-            <div class="d-flex flex-column justify-content-center align-items-center"
-                 style="width:50px; height:50px">
-                <span class="h1 mb-0 text-dark"><%=ejercicioSesion.getOrden() + 1%>.</span>
-            </div>
-            <img src="<%=ejercicio.getCategoria().getIcono()%>" alt="Borrar" style="width:50px; height:50px">
-            <div class="ms-3">
-                <span class="h2"><%=ejercicio.getNombre()%> <span class="text-danger">(<%=ejercicio.getCategoria().getNombre()%>)</span></span></br>
-                <span class="h5 text-secondary">
-                    <%
-                        String data = "";
-                        List<String> tiposBase = gson.fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
-                        for (int j = 0; j < tiposBase.size(); j++) {
-                            String especificacion = ejercicioSesion.getEspecificaciones().get(tiposBase.get(j)).getAsString();%>
-                            <%="<span style='color: black'><b>" + tiposBase.get(j) + "</b></span>: " + (especificacion.isEmpty() ? "Sin especificar" : especificacion) + " "%></br><%
-                         }
-                    %>
-                    <%=data%>
-                </span>
-            </div>
-        </div>
-        <%if (!readOnly) {%>
-            <div class="col-3 d-flex justify-content-end align-items-center">
-                <div>
-                    <%if (!ordenOrdenados.getFirst().equals(orden)) {%>
-                    <div onClick="goMoverEjercicio(<%=posReal%>, -1)" style="cursor: pointer; text-decoration: none;">
-                        <img src="/svg/caret-up.svg" alt="Subir" style="width:60px; height:60px;">&nbsp;&nbsp;&nbsp;&nbsp;
-                    </div>
-                    <%}%>
-                    <%if (!ordenOrdenados.getLast().equals(orden)) {%>
-                    <div onClick="goMoverEjercicio(<%=posReal%>, 1)" style="cursor: pointer; text-decoration: none;">
-                        <img src="/svg/caret-down.svg" alt="Bajarr" style="width:60px; height:60px;">&nbsp;&nbsp;&nbsp;&nbsp;
-                    </div>
-                    <%}%>
-                </div>
-                <div onClick="goEditarEjercicio(<%=posReal%>)" style="cursor: pointer; text-decoration: none;">
-                    <img src="/svg/pencil.svg" alt="Editar" style="width:50px; height:50px;">&nbsp;&nbsp;&nbsp;&nbsp;
-                </div>
-                <div onClick="showDeleteModal('<%=ejercicio.getNombre()%>', <%=posReal%>)" style="cursor: pointer;">
-                    <img src="/svg/trash.svg" alt="Borrar" style="width:50px; height:50px">
-                </div>
-            </div>
-        <%}%>
-    </div>
-    <hr>
-    <%
-        }
-    %>
+
+            StringBuilder tiposBaseHTML = new StringBuilder();
+            List<String> tiposBase = new Gson().fromJson(ejercicio.getCategoria().getTiposBase(), ArrayList.class);
+            for (int j = 0; j < tiposBase.size(); j++) {
+                String especificacion = ejercicioSesion.getEspecificaciones().get(tiposBase.get(j)).getAsString();
+                tiposBaseHTML.append("<span style='color: black'><b>").append(tiposBase.get(j)).append("</b></span>: ").append(especificacion.isEmpty() ? "Sin especificar" : especificacion).append(" ").append("</br>");
+            }%>
+            <jsp:include page="components/ejercicio_item.jsp" >
+                <jsp:param name="readOnly" value="<%=readOnly%>" />
+                <jsp:param name="id" value="<%=ejercicioSesion.getId()%>" />
+                <jsp:param name="posReal" value="<%=posReal%>" />
+                <jsp:param name="orden" value="<%=ejercicioSesion.getOrden() + 1%>" />
+                <jsp:param name="icono" value="<%=ejercicio.getCategoria().getIcono()%>" />
+                <jsp:param name="nombre" value="<%=ejercicio.getNombre()%>" />
+                <jsp:param name="categoriaNombre" value="<%=ejercicio.getCategoria().getNombre()%>" />
+                <jsp:param name="tiposBaseHTML" value="<%=tiposBaseHTML.toString()%>" />
+                <jsp:param name="isFirst" value="<%=ordenOrdenados.getFirst().equals(orden)%>" />
+                <jsp:param name="isLast" value="<%=ordenOrdenados.getLast().equals(orden)%>" />
+            </jsp:include>
+    <%}%>
 
     <%if (!readOnly) {%>
         <div class="row">

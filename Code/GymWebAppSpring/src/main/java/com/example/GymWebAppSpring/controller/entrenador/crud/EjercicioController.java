@@ -38,7 +38,7 @@ public class EjercicioController extends BaseController {
                 : ejercicioService.findAll();
 
         model.addAttribute("ejerciciosBase", ejerciciosBase);
-        return "/entrenador/crud/seleccionar_ejercicio";
+        return "entrenador/crud/seleccionar_ejercicio/seleccionar_ejercicio";
     }
 
     @GetMapping("/ver")
@@ -50,7 +50,7 @@ public class EjercicioController extends BaseController {
         int ejbase = ejerciciosesion.getEjercicio().getId();
         inicializarEjercicio(model, ejbase, true, pos);
 
-        return "entrenador/crud/ejercicio_sesion";
+        return "entrenador/crud/ejercicio_sesion/ejercicio_sesion";
     }
 
     @GetMapping("/crear")
@@ -61,7 +61,7 @@ public class EjercicioController extends BaseController {
 
         inicializarEjercicio(model, ejbase, false, -1);
 
-        return "entrenador/crud/ejercicio_sesion";
+        return "entrenador/crud/ejercicio_sesion/ejercicio_sesion";
     }
 
     @GetMapping("/editar")
@@ -76,7 +76,7 @@ public class EjercicioController extends BaseController {
         int ejbase = sesion.getEjercicios().get(ejPos).getEjercicio();
         inicializarEjercicio(model, ejbase, false, ejPos);
 
-        return "entrenador/crud/ejercicio_sesion";
+        return "entrenador/crud/ejercicio_sesion/ejercicio_sesion";
     }
 
     @GetMapping("/guardar")

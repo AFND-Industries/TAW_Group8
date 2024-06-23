@@ -27,9 +27,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../../components/header.jsp"/>
+<jsp:include page="../../../components/header.jsp"/>
 
-<div id="select" class="container" style="display: block">
+<div id="select" class="container mb-5" style="display: block">
     <div class="row mb-3">
         <div class="col-4">
             <h1>Ejercicios</h1>
@@ -38,42 +38,36 @@
             <button class="btn btn-primary" onClick="goEditarSesion()">Volver</button>
         </div>
     </div>
-    <%
-        for (EjercicioDTO ejercicioBase : ejerciciosBase) {
-    %>
-    <div class="row">
-        <div class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
-           onClick="goCrearEjercicio(<%=ejercicioBase.getId()%>)">
-            <img src="<%=ejercicioBase.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
-            <div class="ms-3">
-                <span class="h2" style="color: black;"><%=ejercicioBase.getNombre()%></span><br>
-                <span class="h5 text-secondary"><%=ejercicioBase.getDescripcion()%></span>
+    <%for (EjercicioDTO ejercicioBase : ejerciciosBase) {%>
+        <div class="row">
+            <div class="col-8 d-flex align-items-center" style="height:75px; text-decoration: none; cursor: pointer;"
+               onClick="goCrearEjercicio(<%=ejercicioBase.getId()%>)">
+                <img src="<%=ejercicioBase.getCategoria().getIcono()%>" alt="Categoria" style="width:50px; height:50px">
+                <div class="ms-3">
+                    <span class="h2" style="color: black;"><%=ejercicioBase.getNombre()%></span><br>
+                    <span class="h5 text-secondary"><%=ejercicioBase.getDescripcion()%></span>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <a style="cursor: pointer;" onClick="setEjercicioInfo(
+                    '<%=ejercicioBase.getLogo()%>',
+                    '<%=ejercicioBase.getNombre()%>',
+                    '<%=ejercicioBase.getMusculo().getNombre()%>',
+                    '<%=ejercicioBase.getDescripcion()%>',
+                    '<%=ejercicioBase.getEquipamiento()%>',
+                    '<%=ejercicioBase.getTipofuerza().getNombre()%>',
+                    '<%=ejercicioBase.getMusculoSecundario() != null ? ejercicioBase.getMusculoSecundario().getNombre() : "No especificado"%>',
+                    '<%=ejercicioBase.getCategoria().getNombre()%>',
+                    '<%=ejercicioBase.getVideo()%>')">
+                    <img src="/svg/eye.svg" alt="Ver" style="width:50px; height:50px">
+                </a>
             </div>
         </div>
-        <div class="col-4 d-flex justify-content-end align-items-center">
-            <a style="cursor: pointer;" onClick="setEjercicioInfo(
-                '<%=ejercicioBase.getLogo()%>',
-                '<%=ejercicioBase.getNombre()%>',
-                '<%=ejercicioBase.getMusculo().getNombre()%>',
-                '<%=ejercicioBase.getDescripcion()%>',
-                '<%=ejercicioBase.getEquipamiento()%>',
-                '<%=ejercicioBase.getTipofuerza().getNombre()%>',
-                '<%=ejercicioBase.getMusculoSecundario() != null ? ejercicioBase.getMusculoSecundario().getNombre() : "No especificado"%>',
-                '<%=ejercicioBase.getCategoria().getNombre()%>',
-                '<%=ejercicioBase.getVideo()%>')">
-                <img src="/svg/eye.svg" alt="Ver" style="width:50px; height:50px">
-            </a>
-        </div>
-    </div>
-
-
-    <hr>
-    <%
-        }
-    %>
+        <hr>
+    <%}%>
 </div>
 
-<div id="watch" class="container" style="display: none">
+<div id="watch" class="container mb-5" style="display: none">
     <div class="row mb-3">
         <div class="col-8">
             <h1>Información del ejercicio</h1>
