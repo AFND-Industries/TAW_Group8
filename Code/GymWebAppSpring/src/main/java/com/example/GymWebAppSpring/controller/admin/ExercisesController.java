@@ -111,7 +111,7 @@ public class ExercisesController {
                                @RequestParam("descripcion") String descripcion,
                                @RequestParam("equipamiento") String equipamiento,
                                @RequestParam("musculo") Integer musculoID,
-                               @RequestParam("musculoSecundario") Integer musculoSecundarioID,
+                               @RequestParam(value = "musculoSecundario", required = false) Integer musculoSecundarioID,
                                @RequestParam("categoria") Integer categoriaID,
                                @RequestParam("tipofuerza") Integer tipofuerzaID,
                                @RequestParam("video") String video,

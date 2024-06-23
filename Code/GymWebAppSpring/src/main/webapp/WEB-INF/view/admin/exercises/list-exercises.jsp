@@ -44,7 +44,7 @@
 </head>
 <body>
 <jsp:include page="../../components/header.jsp" />
-<div class="container">
+<div class="container mb-2">
     <h1 class="text-center mb-2">Listado de ejercicios</h1>
     <form class="d-flex justify-content-between" method="post" action="">
         <input type="text" class="form-control" value="<%= _nombre != null ? _nombre : ""%>" name="nombre" placeholder="Nombre"/>
