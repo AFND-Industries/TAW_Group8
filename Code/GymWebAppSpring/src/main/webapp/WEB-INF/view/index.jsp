@@ -1,3 +1,4 @@
+<%@ page import="com.example.GymWebAppSpring.util.AuthUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -60,7 +61,10 @@
             <h1 class="custom-h1 fw-bolder mb-4">¡SIN DOLOR NO HAY GLORIA!</h1>
             <h2 class="mb-4" style="font-family: 'Arial', sans-serif;">Dale el gameOver a la flojera y comienza
                 con nuestro gimnasio virtual.</h2>
-            <button type="button" class="btn btn-outline-light btn-lg">¡Empieza ahora!</button>
+            <%if (!AuthUtils.isLogged(session)) {%>
+                <button type="button" class="btn btn-outline-light btn-lg"
+                onclick="window.location.href='/login'">¡Empieza ahora!</button>
+            <%}%>
         </div>
 
     </div>
