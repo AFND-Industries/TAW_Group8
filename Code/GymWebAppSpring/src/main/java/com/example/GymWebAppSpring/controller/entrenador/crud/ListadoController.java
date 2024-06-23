@@ -53,24 +53,35 @@ public class ListadoController extends BaseController {
     @GetMapping("/recuperar")
     public String doRecuperarRutina(HttpSession session) {
         RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
-        String strTo = "redirect:/entrenador/rutinas";
-        if (rutina != null) {
-            strTo = "redirect:/entrenador/rutinas/rutina/editar";
+
+        String strTo =  "redirect:/entrenador/rutinas";
+        if (rutina == null)  strTo = "redirect:/entrenador/rutinas/rutina/editar";
+        else {
             SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
             if (oldSesion != null) {
-                int sesionPos = (int) session.getAttribute("sesionPos");
-                SesionArgument sesion = rutina.getSesiones().get(sesionPos);
-                List<EjercicioArgument> ejercicioToDelete = new ArrayList<>();
-                for (EjercicioArgument ejercicio : sesion.getEjercicios())
-                    if (ejercicio.getOrden() < 0)
-                        ejercicioToDelete.add(ejercicio);
-                sesion.getEjercicios().removeAll(ejercicioToDelete);
-
+                limpiarEjerciciosTemporales(session, rutina);
                 strTo = "redirect:/entrenador/rutinas/sesion/editar";
             }
+
         }
+
         return strTo;
     }
+
+    private void limpiarEjerciciosTemporales(HttpSession session, RutinaArgument rutina) {
+        int sesionPos = (int) session.getAttribute("sesionPos");
+        SesionArgument sesion = rutina.getSesiones().get(sesionPos);
+        List<EjercicioArgument> ejerciciosAEliminar = new ArrayList<>();
+
+        for (EjercicioArgument ejercicio : sesion.getEjercicios()) {
+            if (ejercicio.getOrden() < 0) {
+                ejerciciosAEliminar.add(ejercicio);
+            }
+        }
+
+        sesion.getEjercicios().removeAll(ejerciciosAEliminar);
+    }
+
 
     @GetMapping("/descartar")
     public String doDescartarRutina(HttpSession session) {
