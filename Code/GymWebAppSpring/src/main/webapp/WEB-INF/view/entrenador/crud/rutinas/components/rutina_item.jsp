@@ -11,6 +11,8 @@
     String logo = request.getParameter("logo");
     String nombre = request.getParameter("nombre");
     String descripcion = request.getParameter("descripcion");
+
+    descripcion = descripcion.length() > 64 ? (descripcion.substring(0, 64) + "...") : descripcion;
 %>
 
 <div class="row">

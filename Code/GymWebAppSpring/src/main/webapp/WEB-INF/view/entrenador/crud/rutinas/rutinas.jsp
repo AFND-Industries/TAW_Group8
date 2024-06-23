@@ -96,7 +96,7 @@
                             <span>a</span>
                         </div>
                         <div class="col-4 d-flex align-items-center">
-                            <form:input path="sesionNum" type="text" class="form-control" id="num-sesiones-valor" placeholder="Número"/>
+                            <form:input path="sesionNum" type="number" class="form-control" id="num-sesiones-valor" placeholder="Número"/>
                         </div>
                     </div>
                     <div class="row">
@@ -244,7 +244,7 @@
     else if (changedCase === 1)
         showToast('Rutina editada correctamente', 'Has <b>editado</b> la rutina <b>' + changedName + '</b> correctamente.');
     else if (changedCase === 2)
-        showToast('Rutina borrado correctamente', 'Has <b>borrada</b> la rutina <b>' + changedName + '</b> correctamente.');
+        showToast('Rutina borrado correctamente', 'Has <b>borrado</b> la rutina <b>' + changedName + '</b> correctamente.');
 
     if (<%=session.getAttribute("cache") != null && ((boolean) session.getAttribute("recover"))%>)
         showRecuperarModal();

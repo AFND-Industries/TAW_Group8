@@ -63,7 +63,9 @@
     <div class="row mb-3">
         <div class="col-6">
             <span class="h4 text-secondary">Nombre de la rutina</span><br/>
-            <input id="nombre" name="nombre" value="<%=rutina.getNombre()%>" type="text" class="form-control mt-2" <%=readOnly ? "disabled" : ""%>>
+            <input id="nombre" name="nombre" maxlength="32" autocomplete="off"
+                   value="<%=rutina.getNombre()%>" type="text"
+                   class="form-control mt-2" <%=readOnly ? "disabled" : ""%>>
         </div>
         <div class="col-6">
             <span class="h4 text-secondary">Dificultad</span><br/>
@@ -78,7 +80,9 @@
     <div class="row mb-3">
         <div class="col-12">
             <span class="h4 text-secondary">Descripción de la rutina</span><br/>
-            <textarea id="descripcion" name="descripcion" class="form-control mt-2" style="resize:none;" rows="3" <%=readOnly ? "disabled" : ""%>><%=rutina.getDescripcion()%></textarea>
+            <textarea id="descripcion" name="descripcion" maxlength="256" autocomplete="off"
+                      class="form-control mt-2" style="resize:none;"
+                      rows="3" <%=readOnly ? "disabled" : ""%>><%=rutina.getDescripcion()%></textarea>
         </div>
     </div>
     <div class="row mb-2">
