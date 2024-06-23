@@ -70,6 +70,7 @@ public class RutinaController extends BaseController {
         }
 
         rutinaService.updateRutina(rutina, AuthUtils.getUser(session));
+        flushContext(session);
 
         return "redirect:/entrenador/rutinas?changedName=" + nombre + "&changedCase=" + (rutina.getId() < 0 ? 0 : 1);
     }
@@ -106,6 +107,7 @@ public class RutinaController extends BaseController {
 
     private void initializeRutina(Model model, HttpSession session, RutinaArgument rutina, boolean readOnly) {
         session.setAttribute("cache", rutina);
+        session.setAttribute("recover", !readOnly);
 
         List<DificultadDTO> dificultades = dificultadService.findAll();
         model.addAttribute("dificultades", dificultades);

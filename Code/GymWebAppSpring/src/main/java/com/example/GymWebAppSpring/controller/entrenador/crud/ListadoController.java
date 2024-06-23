@@ -52,17 +52,22 @@ public class ListadoController extends BaseController {
 
     @GetMapping("/recuperar")
     public String doRecuperarRutina(HttpSession session) {
-        RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+        Object recoverObject = session.getAttribute("recover");
+        boolean recover = recoverObject != null && ((Boolean) recoverObject);
 
         String strTo =  "redirect:/entrenador/rutinas";
-        if (rutina == null)  strTo = "redirect:/entrenador/rutinas/rutina/editar";
-        else {
-            SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
-            if (oldSesion != null) {
-                limpiarEjerciciosTemporales(session, rutina);
-                strTo = "redirect:/entrenador/rutinas/sesion/editar";
-            }
+        if (recover) {
+            RutinaArgument rutina = (RutinaArgument) session.getAttribute("cache");
+            if (rutina != null) {
+                strTo = "redirect:/entrenador/rutinas/rutina/editar";
 
+                SesionArgument oldSesion = (SesionArgument) session.getAttribute("oldSesion");
+                if (oldSesion != null) {
+                    strTo = "redirect:/entrenador/rutinas/sesion/editar";
+
+                    limpiarEjerciciosTemporales(session, rutina);
+                }
+            }
         }
 
         return strTo;

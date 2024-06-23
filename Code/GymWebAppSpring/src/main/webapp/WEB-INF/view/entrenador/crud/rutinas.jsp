@@ -292,7 +292,7 @@
     }
 
 
-    if (<%=session.getAttribute("cache") != null%>)
+    if (<%=session.getAttribute("cache") != null && ((boolean) session.getAttribute("recover"))%>)
         showRecuperarModal();
 
     if (changedCase === 0)
