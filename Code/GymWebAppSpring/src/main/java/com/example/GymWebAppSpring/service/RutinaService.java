@@ -61,6 +61,11 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
         return this.entidadesADTO(lista);
     }
 
+    public List<RutinaDTO> findRutinaByUsuarioIDandEntrenadorID(Integer usuarioId, Integer entrenadorId) {
+        List<Rutina> lista = this.rutinaRepository.findRutinaByUsuarioIDandEntrenadorID(usuarioId, entrenadorId);
+        return this.entidadesADTO(lista);
+    }
+
     public RutinaDTO findById(Integer rutinaId) {
         Rutina rutina = this.rutinaRepository.findById(rutinaId).orElse(null);
         return rutina == null ? null : rutina.toDTO();
@@ -103,7 +108,7 @@ public class RutinaService extends DTOService<RutinaDTO, Rutina> {
         rutina.setNombre(rutinaArgument.getNombre());
         rutina.setDificultad(dificultadRepository.findById(rutinaArgument.getDificultad()).orElse(null));
         rutina.setDescripcion(rutinaArgument.getDescripcion());
-        
+
         rutinaRepository.save(rutina);
 
         updateSesiones(rutinaArgument.getSesiones(), rutina);
