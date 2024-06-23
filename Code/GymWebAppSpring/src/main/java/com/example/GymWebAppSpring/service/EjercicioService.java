@@ -75,7 +75,7 @@ public class EjercicioService extends DTOService<EjercicioDTO, Ejercicio>{
         ejercicio.setLogo(ejercicioDTO.getLogo());
         ejercicio.setEquipamiento(ejercicioDTO.getEquipamiento());
         ejercicio.setMusculo(this.musculoRepository.findById(ejercicioDTO.getMusculo().getId()).orElse(null));
-        ejercicio.setMusculoSecundario(this.musculoRepository.findById(ejercicioDTO.getMusculoSecundario().getId()).orElse(null));
+        ejercicio.setMusculoSecundario(this.musculoRepository.findById(ejercicioDTO.getMusculoSecundario() == null ? -1 : ejercicioDTO.getMusculoSecundario().getId()).orElse(null));
         ejercicio.setTipofuerza(this.tipoFuerzaRepository.findById(ejercicioDTO.getTipofuerza().getId()).orElse(null));
         ejercicio.setVideo(ejercicioDTO.getVideo());
         this.ejercicioRepository.save(ejercicio);

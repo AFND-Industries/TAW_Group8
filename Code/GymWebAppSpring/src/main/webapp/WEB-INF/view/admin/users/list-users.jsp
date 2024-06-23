@@ -70,7 +70,7 @@
     <div class="row mb-2 g-2">
         <div class="col">
             <a href="/admin/users/register" class="btn btn-primary w-100">
-                <i class="bi bi-person"></i> Añadir ejercicio
+                <i class="bi bi-person"></i> Añadir usuario
             </a>
         </div>
         <div class="col">

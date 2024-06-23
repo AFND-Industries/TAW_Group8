@@ -1,5 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.example.GymWebAppSpring.dto.EjercicioDTO" %>
+<%@ page import="com.example.GymWebAppSpring.dto.MusculoDTO" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   ejercicio: tonib
@@ -11,6 +13,8 @@
 <html lang="es">
 <%
     EjercicioDTO ejercicio = (EjercicioDTO) request.getAttribute("ejercicio");
+    List<MusculoDTO> musculos2 = (List<MusculoDTO>) request.getAttribute("musculos");
+    musculos2.addFirst(new MusculoDTO(){{setId(-1);setNombre("No especificado");}});
 %>
 <head>
     <title><%=ejercicio.getId() != null ? "Editar" : "Nuevo"%> ejercicio</title>
@@ -58,7 +62,7 @@
         <div class="col-md-3 col-sm-6 col-12 mb-3">
             <label for="musculoSecInput" class="form-label">Músculo Secundario</label>
             <form:select path="musculoSecundario" class="form-select"
-                         items="${musculos}"
+                         items="<%=musculos2%>"
                          itemLabel="nombre"
                          itemValue="id"
                          id="musculoSecInput">
